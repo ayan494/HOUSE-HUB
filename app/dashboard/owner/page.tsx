@@ -1,0 +1,207 @@
+"use client"
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Building, Calendar, Plus, TrendingUp, Eye, Crown, DollarSign } from 'lucide-react'
+import { getCurrentUser, getBookings } from '@/lib/store'
+import { properties } from '@/lib/data'
+import type { User, Booking } from '@/lib/types'
+
+export default function OwnerDashboardPage() {
+  const [user, setUser] = useState<User | null>(null)
+  const [allBookings, setAllBookings] = useState<Booking[]>([])
+
+  useEffect(() => {
+    const currentUser = getCurrentUser()
+    if (currentUser) {
+      setUser(currentUser)
+      setAllBookings(getBookings())
+    }
+  }, [])
+
+  // For MVP, show all properties as owner's properties
+  const myProperties = properties.slice(0, 4)
+  const pendingBookings = allBookings.filter(b => b.status === 'pending')
+
+  const totalViews = myProperties.reduce((acc, p) => acc + p.reviews * 10, 0)
+  const totalRevenue = myProperties.reduce((acc, p) => acc + p.price, 0)
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Owner Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage your properties and bookings.
+          </p>
+        </div>
+        <Link href="/dashboard/owner/add">
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Property
+          </Button>
+        </Link>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Building className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{myProperties.length}</p>
+                <p className="text-sm text-muted-foreground">Properties</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-amber-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{pendingBookings.length}</p>
+                <p className="text-sm text-muted-foreground">Pending Bookings</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <Eye className="w-6 h-6 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{totalViews}</p>
+                <p className="text-sm text-muted-foreground">Total Views</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-green-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">PKR {(totalRevenue / 1000).toFixed(0)}K</p>
+                <p className="text-sm text-muted-foreground">Monthly Value</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Properties & Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* My Properties */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg">My Properties</CardTitle>
+            <Link href="/dashboard/owner/properties">
+              <Button variant="ghost" size="sm">View All</Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {myProperties.slice(0, 3).map((property) => (
+                <div
+                  key={property.id}
+                  className="flex items-center gap-4 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                >
+                  <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden flex-shrink-0">
+                    <img
+                      src={property.images[0] || "/placeholder.svg"}
+                      alt={property.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-foreground truncate">
+                        {property.name}
+                      </h4>
+                      {property.isPremium && (
+                        <Badge className="bg-[var(--premium)] text-[var(--premium-foreground)]">
+                          <Crown className="w-3 h-3 mr-1" />
+                          Premium
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {property.location}, {property.city}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-primary">
+                      PKR {property.price.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted-foreground">per month</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions & Premium */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Link href="/dashboard/owner/add" className="block">
+                <Button variant="outline" className="w-full justify-start bg-transparent">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Property
+                </Button>
+              </Link>
+              <Link href="/dashboard/owner/bookings" className="block">
+                <Button variant="outline" className="w-full justify-start bg-transparent">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  View Bookings
+                </Button>
+              </Link>
+              <Link href="/dashboard/owner/premium" className="block">
+                <Button variant="outline" className="w-full justify-start bg-transparent">
+                  <Crown className="w-4 h-4 mr-2" />
+                  Upgrade to Premium
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-[var(--premium)]/10 to-primary/5 border-[var(--premium)]/20">
+            <CardContent className="pt-6">
+              <Crown className="w-8 h-8 text-[var(--premium)] mb-4" />
+              <h3 className="font-semibold text-foreground mb-2">Go Premium</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Get featured placement and reach more tenants.
+              </p>
+              <Link href="/dashboard/owner/premium">
+                <Button className="w-full bg-[var(--premium)] hover:bg-[var(--premium)]/90 text-[var(--premium-foreground)]">
+                  Upgrade Now
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
