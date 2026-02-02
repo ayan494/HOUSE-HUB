@@ -4,19 +4,24 @@ import React from "react"
 
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { toast } from 'sonner'
+import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X } from 'lucide-react'
 import { registerUser } from '@/lib/store'
+import { validatePassword, isPasswordValid } from '@/lib/password-validator'
+import { emailExists, addRegisteredUser } from '@/lib/email-validator'
 
 function RegisterForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const defaultRole = searchParams.get('role') as 'user' | 'owner' || 'user'
-  
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -24,26 +29,68 @@ function RegisterForm() {
   const [role, setRole] = useState<'user' | 'owner'>(defaultRole)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [emailError, setEmailError] = useState('')
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value
+    setEmail(newEmail)
+
+    // Check email validity
+    if (newEmail && emailExists(newEmail)) {
+      setEmailError('This email is already registered')
+    } else if (newEmail && !newEmail.includes('@')) {
+      setEmailError('Please enter a valid email address')
+    } else {
+      setEmailError('')
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    
+
     if (!name || !email || !phone || !password) {
       setError('Please fill in all fields')
       return
     }
 
+    if (emailError) {
+      setError('Please fix the email error before proceeding')
+      return
+    }
+
+    if (!isPasswordValid(password)) {
+      setError('Password does not meet all requirements')
+      return
+    }
+
     setIsLoading(true)
-    
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500))
-    
+
     try {
-      registerUser(name, email, phone, role)
-      router.push(role === 'owner' ? '/dashboard/owner' : '/')
+      // Final check: ensure email is still available (prevent race/duplicates)
+      if (emailExists(email)) {
+        setError('This email is already registered')
+        setEmailError('This email is already registered')
+        return
+      }
+
+      // Add to registered users list first (will throw if duplicate)
+      addRegisteredUser({
+        email,
+        name,
+        phone,
+        role,
+        registeredAt: new Date().toISOString(),
+      })
+
+      // Then register and set current user
+      toast.success('Account created successfully! Please log in.')
+      router.push('/auth/login')
     } catch (err) {
-      setError('Registration failed')
+      setError('Something went wrong')
     } finally {
       setIsLoading(false)
     }
@@ -73,11 +120,10 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setRole('user')}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  role === 'user'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
-                }`}
+                className={`p-4 rounded-lg border-2 transition-all ${role === 'user'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
+                  }`}
               >
                 <Users className={`w-6 h-6 mx-auto mb-2 ${role === 'user' ? 'text-primary' : 'text-muted-foreground'}`} />
                 <p className={`text-sm font-medium ${role === 'user' ? 'text-primary' : 'text-foreground'}`}>
@@ -88,11 +134,10 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setRole('owner')}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  role === 'owner'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
-                }`}
+                className={`p-4 rounded-lg border-2 transition-all ${role === 'owner'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
+                  }`}
               >
                 <Building className={`w-6 h-6 mx-auto mb-2 ${role === 'owner' ? 'text-primary' : 'text-muted-foreground'}`} />
                 <p className={`text-sm font-medium ${role === 'owner' ? 'text-primary' : 'text-foreground'}`}>
@@ -133,10 +178,22 @@ function RegisterForm() {
                     type="email"
                     placeholder="you@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
+                    onChange={handleEmailChange}
+                    className={`pl-10 ${emailError ? 'border-destructive' : ''}`}
                   />
                 </div>
+                {emailError && (
+                  <div className="flex items-center gap-2 text-sm text-destructive">
+                    <X className="w-4 h-4" />
+                    <span>{emailError}</span>
+                  </div>
+                )}
+                {email && !emailError && (
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <Check className="w-4 h-4" />
+                    <span>Email is available</span>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -167,13 +224,98 @@ function RegisterForm() {
                     className="pl-10"
                   />
                 </div>
+
+                {/* Password Requirements */}
+                {password && (
+                  <div className="mt-3 p-3 bg-muted rounded-lg space-y-2">
+                    <p className="text-xs font-semibold text-foreground mb-2">Password Requirements:</p>
+                    {(() => {
+                      const reqs = validatePassword(password)
+                      return (
+                        <>
+                          <div className="flex items-center gap-2 text-xs">
+                            {reqs.minLength ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <X className="w-4 h-4 text-red-500" />
+                            )}
+                            <span className={reqs.minLength ? 'text-green-600' : 'text-muted-foreground'}>
+                              At least 8 characters
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            {reqs.hasUppercase ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <X className="w-4 h-4 text-red-500" />
+                            )}
+                            <span className={reqs.hasUppercase ? 'text-green-600' : 'text-muted-foreground'}>
+                              Uppercase Letters (A–Z)
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            {reqs.hasLowercase ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <X className="w-4 h-4 text-red-500" />
+                            )}
+                            <span className={reqs.hasLowercase ? 'text-green-600' : 'text-muted-foreground'}>
+                              Lowercase Letters (a–z)
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            {reqs.hasNumber ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <X className="w-4 h-4 text-red-500" />
+                            )}
+                            <span className={reqs.hasNumber ? 'text-green-600' : 'text-muted-foreground'}>
+                              Numbers (0–9)
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            {reqs.hasSpecialChar ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <X className="w-4 h-4 text-red-500" />
+                            )}
+                            <span className={reqs.hasSpecialChar ? 'text-green-600' : 'text-muted-foreground'}>
+                              Special Characters (! @ # $ % ^ & *)
+                            </span>
+                          </div>
+                        </>
+                      )
+                    })()}
+                  </div>
+                )}
               </div>
 
-              <Button type="submit" className="w-full h-11" disabled={isLoading}>
+              <Button type="submit" className="w-full h-11" disabled={isLoading || (password && !isPasswordValid(password)) || !!emailError}>
                 {isLoading ? 'Creating account...' : 'Create Account'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </form>
+
+            {/* Divider */}
+            <div className="mt-6 flex items-center gap-3">
+              <div className="flex-1 h-px bg-border"></div>
+              <span className="text-xs text-muted-foreground">Or continue with</span>
+              <div className="flex-1 h-px bg-border"></div>
+            </div>
+
+            {/* Google Sign Up Button */}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-11 mt-4"
+              onClick={() => {
+                const callbackUrl = role === 'owner' ? '/dashboard/owner' : '/'
+                signIn('google', { callbackUrl })
+              }}
+            >
+              <Chrome className="w-4 h-4 mr-2" />
+              Sign up with Google
+            </Button>
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Already have an account? </span>

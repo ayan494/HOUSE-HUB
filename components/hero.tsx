@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Search, MapPin, Bed, Calendar, Wallet } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 import { cities } from '@/lib/data'
 import Link from 'next/link'
 
@@ -14,8 +15,18 @@ export function Hero() {
   const [location, setLocation] = useState('')
   const [budget, setBudget] = useState('')
   const [bedrooms, setBedrooms] = useState('')
+  const { toast } = useToast()
 
   const handleSearch = () => {
+    // Require at least one selection before searching on home
+    if (!location && !budget && !bedrooms) {
+      toast({
+        title: 'Select a filter',
+        description: 'Please select at least one option before searching.',
+      })
+      return
+    }
+
     const params = new URLSearchParams()
     if (location) params.set('city', location)
     if (budget) params.set('maxPrice', budget)
@@ -24,7 +35,7 @@ export function Hero() {
   }
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
       {/* Background with overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -124,13 +135,16 @@ export function Hero() {
               </div>
 
               {/* Search Button */}
-              <Button 
-                onClick={handleSearch} 
-                className="h-12 text-base font-medium"
-              >
-                <Search className="w-5 h-5 mr-2" />
-                Search
-              </Button>
+                  <div className="flex items-end">
+                    <Button 
+                      onClick={handleSearch} 
+                      className="h-12 w-full md:w-auto text-base font-medium whitespace-nowrap gap-2"
+                      disabled={!location && !budget && !bedrooms}
+                    >
+                      <Search className="w-5 h-5" />
+                      <span>Search</span>
+                    </Button>
+                  </div>
             </div>
           </div>
 

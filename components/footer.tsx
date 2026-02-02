@@ -96,15 +96,15 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-background/70">
                 <Mail className="w-4 h-4" />
-                <span>support@househub.pk</span>
+                <span>ayansaeed09177@gmail.com</span>
               </li>
               <li className="flex items-center gap-3 text-background/70">
                 <Phone className="w-4 h-4" />
-                <span>+92 300 1234567</span>
+                <span>+92 3142412744</span>
               </li>
               <li className="flex items-start gap-3 text-background/70">
                 <MapPin className="w-4 h-4 mt-1" />
-                <span>123 Main Boulevard, Gulberg III, Lahore, Pakistan</span>
+                <span>shahrah-e-quideen khudadad colony karachi, Pakistan</span>
               </li>
             </ul>
           </div>

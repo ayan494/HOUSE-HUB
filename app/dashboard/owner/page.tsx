@@ -30,7 +30,7 @@ export default function OwnerDashboardPage() {
   const totalRevenue = myProperties.reduce((acc, p) => acc + p.price, 0)
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-foreground">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -111,9 +111,9 @@ export default function OwnerDashboardPage() {
         {/* My Properties */}
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">My Properties</CardTitle>
+            <CardTitle className="text-lg text-foreground">My Properties</CardTitle>
             <Link href="/dashboard/owner/properties">
-              <Button variant="ghost" size="sm">View All</Button>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">View All</Button>
             </Link>
           </CardHeader>
           <CardContent>
@@ -136,9 +136,10 @@ export default function OwnerDashboardPage() {
                         {property.name}
                       </h4>
                       {property.isPremium && (
-                        <Badge className="bg-[var(--premium)] text-[var(--premium-foreground)]">
+                        <Badge className="bg-[var(--premium)] text-[var(--premium-foreground)] text-xs sm:text-sm px-2 py-0.5">
                           <Crown className="w-3 h-3 mr-1" />
-                          Premium
+                          <span className="hidden sm:inline">Premium</span>
+                          <span className="sm:hidden">Prm</span>
                         </Badge>
                       )}
                     </div>
@@ -162,23 +163,23 @@ export default function OwnerDashboardPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
+              <CardTitle className="text-lg text-foreground">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-3 px-4 sm:px-6">
               <Link href="/dashboard/owner/add" className="block">
-                <Button variant="outline" className="w-full justify-start bg-transparent">
+                <Button variant="outline" className="w-full justify-start border-border text-foreground hover:bg-muted hover:text-foreground">
                   <Plus className="w-4 h-4 mr-2" />
                   Add New Property
                 </Button>
               </Link>
               <Link href="/dashboard/owner/bookings" className="block">
-                <Button variant="outline" className="w-full justify-start bg-transparent">
+                <Button variant="outline" className="w-full justify-start border-border text-foreground hover:bg-muted hover:text-foreground">
                   <Calendar className="w-4 h-4 mr-2" />
                   View Bookings
                 </Button>
               </Link>
               <Link href="/dashboard/owner/premium" className="block">
-                <Button variant="outline" className="w-full justify-start bg-transparent">
+                <Button variant="outline" className="w-full justify-start border-border text-foreground hover:bg-muted hover:text-foreground">
                   <Crown className="w-4 h-4 mr-2" />
                   Upgrade to Premium
                 </Button>
@@ -186,14 +187,14 @@ export default function OwnerDashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-[var(--premium)]/10 to-primary/5 border-[var(--premium)]/20">
-            <CardContent className="pt-6">
-              <Crown className="w-8 h-8 text-[var(--premium)] mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Go Premium</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+          <Card className="bg-gradient-to-br from-[var(--premium)]/20 to-primary/10 border-[var(--premium)]/30">
+            <CardContent className="p-4 sm:p-6 flex flex-col items-start">
+              <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--premium)] mb-3" />
+              <h3 className="font-semibold text-foreground text-lg sm:text-xl mb-2">Go Premium</h3>
+              <p className="text-sm sm:text-base text-muted-foreground mb-4">
                 Get featured placement and reach more tenants.
               </p>
-              <Link href="/dashboard/owner/premium">
+              <Link href="/dashboard/owner/premium" className="w-full mt-auto">
                 <Button className="w-full bg-[var(--premium)] hover:bg-[var(--premium)]/90 text-[var(--premium-foreground)]">
                   Upgrade Now
                 </Button>

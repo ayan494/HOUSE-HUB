@@ -11,6 +11,8 @@ import { Footer } from '@/components/footer'
 import { BookingModal } from '@/components/booking-modal'
 import { properties, getPremiumProperties, getFeaturedProperties } from '@/lib/data'
 import type { Property } from '@/lib/types'
+import { FadeIn } from '@/components/animations/fade-in'
+import { NightSky } from '@/components/animations/night-sky'
 
 export default function HomePage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
@@ -27,45 +29,58 @@ export default function HomePage() {
 
   // ✅ Yahan pe return block paste karna hai
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a] transition-colors duration-500">
+      <NightSky />
       <Header />
-      
+
       <main>
-        <Hero />
-        
-        <FeaturedCarousel 
-          properties={premiumProperties}
-          title="Premium Properties"
-          subtitle="Hand-picked luxury homes for discerning tenants"
-          onBookClick={handleBookClick}
-        />
-        
-        <div className="container mx-auto px-4">
-          <PropertyGrid 
-            properties={featuredProperties}
-            title="Featured Properties"
-            subtitle="Explore our handpicked selection of quality homes across Pakistan"
+        <FadeIn direction="none" fullWidth>
+          <Hero />
+        </FadeIn>
+
+        <FadeIn delay={0.2} direction="up" fullWidth>
+          <FeaturedCarousel
+            properties={premiumProperties}
+            title="Premium Properties"
+            subtitle="Hand-picked luxury homes for discerning tenants"
             onBookClick={handleBookClick}
           />
-        </div>
-        
-        <HowItWorks />
-        
+        </FadeIn>
+
         <div className="container mx-auto px-4">
-          <PropertyGrid 
-            properties={allProperties}
-            title="Browse All Properties"
-            subtitle="Find your next home from our extensive collection"
-            onBookClick={handleBookClick}
-          />
+          <FadeIn delay={0.3} direction="up" fullWidth>
+            <PropertyGrid
+              properties={featuredProperties}
+              title="Featured Properties"
+              subtitle="Explore our handpicked selection of quality homes across Pakistan"
+              onBookClick={handleBookClick}
+            />
+          </FadeIn>
         </div>
-        
-        <Testimonials />
+
+        <FadeIn delay={0.2} direction="right" fullWidth>
+          <HowItWorks />
+        </FadeIn>
+
+        <div className="container mx-auto px-4">
+          <FadeIn delay={0.3} direction="up" fullWidth>
+            <PropertyGrid
+              properties={allProperties}
+              title="Browse All Properties"
+              subtitle="Find your next home from our extensive collection"
+              onBookClick={handleBookClick}
+            />
+          </FadeIn>
+        </div>
+
+        <FadeIn delay={0.2} direction="left" fullWidth>
+          <Testimonials />
+        </FadeIn>
       </main>
 
       <Footer />
 
-      <BookingModal 
+      <BookingModal
         property={selectedProperty}
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}

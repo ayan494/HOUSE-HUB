@@ -26,7 +26,7 @@ export default function UserDashboardPage() {
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed')
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-foreground">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">
@@ -85,7 +85,7 @@ export default function UserDashboardPage() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-lg text-foreground">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Link href="/properties">
@@ -95,7 +95,7 @@ export default function UserDashboardPage() {
             </Button>
           </Link>
           <Link href="/dashboard/user/bookings">
-            <Button variant="outline">
+            <Button variant="outline" className="border-border text-foreground hover:bg-muted">
               <Calendar className="w-4 h-4 mr-2" />
               View My Bookings
             </Button>
@@ -106,9 +106,9 @@ export default function UserDashboardPage() {
       {/* Recent Bookings */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Recent Bookings</CardTitle>
+          <CardTitle className="text-lg text-foreground">Recent Bookings</CardTitle>
           <Link href="/dashboard/user/bookings">
-            <Button variant="ghost" size="sm">View All</Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">View All</Button>
           </Link>
         </CardHeader>
         <CardContent>
@@ -117,7 +117,7 @@ export default function UserDashboardPage() {
               <Home className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">No bookings yet</p>
               <Link href="/properties">
-                <Button variant="link" className="mt-2">
+                <Button variant="link" className="mt-2 text-primary hover:text-primary/90">
                   Start browsing properties
                 </Button>
               </Link>

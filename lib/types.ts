@@ -7,6 +7,7 @@ export interface Property {
   bedrooms: number
   bathrooms: number
   area: number
+  propertyType: 'flat' | 'house' | 'apartment' | 'villa' | 'studio'
   amenities: string[]
   images: string[]
   owner: Owner
@@ -33,6 +34,8 @@ export interface User {
   email: string
   phone: string
   avatar?: string
+  image?: string
+  location?: string
   role: 'user' | 'owner'
 }
 
@@ -45,6 +48,7 @@ export interface Booking {
   notes: string
   status: 'pending' | 'confirmed' | 'cancelled'
   createdAt: string
+  totalPrice?: number
 }
 
 export interface SearchFilters {

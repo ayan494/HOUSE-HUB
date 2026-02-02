@@ -59,7 +59,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
     if (!property || !user || !checkIn || !checkOut) return
 
     setIsLoading(true)
-    
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -129,7 +129,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 )}
 
                 {/* Date Selection */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Check-in Date</Label>
                     <Popover>
@@ -225,9 +225,9 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 </div>
 
                 {/* Submit */}
-                <Button 
-                  type="submit" 
-                  className="w-full h-12" 
+                <Button
+                  type="submit"
+                  className="w-full h-12"
                   disabled={!checkIn || !checkOut || isLoading}
                 >
                   {isLoading ? 'Processing...' : 'Confirm Booking'}
@@ -243,15 +243,15 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
             </div>
             <h3 className="text-2xl font-bold text-foreground mb-2">Booking Submitted!</h3>
             <p className="text-muted-foreground mb-6">
-              Your booking request has been sent to the property owner. 
+              Your booking request has been sent to the property owner.
               They will contact you shortly to confirm.
             </p>
             <div className="space-y-3">
               <Button onClick={onClose} className="w-full">
                 Close
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full bg-transparent"
                 onClick={() => router.push('/dashboard/user')}
               >

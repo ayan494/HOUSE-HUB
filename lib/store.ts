@@ -59,6 +59,19 @@ export function getBookings(): Booking[] {
   return stored ? JSON.parse(stored) : []
 }
 
+export function updateUser(userId: string, data: Partial<User>): User | null {
+  const currentUser = getCurrentUser()
+  if (!currentUser) return null
+
+  if (currentUser.id === userId) {
+    const updatedUser = { ...currentUser, ...data }
+    setCurrentUser(updatedUser)
+    return updatedUser
+  }
+
+  return null
+}
+
 export function addBooking(booking: Omit<Booking, 'id' | 'createdAt'>): Booking {
   const newBooking: Booking = {
     ...booking,

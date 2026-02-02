@@ -41,6 +41,7 @@ export const properties: Property[] = [
     bedrooms: 5,
     bathrooms: 4,
     area: 1200,
+    propertyType: 'villa',
     amenities: ['Parking', 'Garden', 'Security', 'AC', 'Furnished'],
     images: [
       'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800',
@@ -63,6 +64,7 @@ export const properties: Property[] = [
     bedrooms: 3,
     bathrooms: 2,
     area: 1800,
+    propertyType: 'apartment',
     amenities: ['Parking', 'Lift', 'Security', 'AC'],
     images: [
       'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
@@ -85,6 +87,7 @@ export const properties: Property[] = [
     bedrooms: 4,
     bathrooms: 3,
     area: 2500,
+    propertyType: 'house',
     amenities: ['Parking', 'Garden', 'Security', 'AC', 'Servant Quarter'],
     images: [
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
@@ -107,6 +110,7 @@ export const properties: Property[] = [
     bedrooms: 2,
     bathrooms: 1,
     area: 900,
+    propertyType: 'flat',
     amenities: ['Parking', 'Security'],
     images: [
       'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800',
@@ -129,6 +133,7 @@ export const properties: Property[] = [
     bedrooms: 4,
     bathrooms: 4,
     area: 3500,
+    propertyType: 'apartment',
     amenities: ['Parking', 'Rooftop', 'Security', 'AC', 'Furnished', 'Sea View'],
     images: [
       'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800',
@@ -151,6 +156,7 @@ export const properties: Property[] = [
     bedrooms: 5,
     bathrooms: 3,
     area: 2800,
+    propertyType: 'house',
     amenities: ['Parking', 'Garden', 'Security', 'AC', 'Community Pool'],
     images: [
       'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800',
@@ -173,6 +179,7 @@ export const properties: Property[] = [
     bedrooms: 1,
     bathrooms: 1,
     area: 600,
+    propertyType: 'studio',
     amenities: ['Parking', 'Lift', 'Security', 'AC'],
     images: [
       'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800',
@@ -195,6 +202,7 @@ export const properties: Property[] = [
     bedrooms: 6,
     bathrooms: 5,
     area: 4000,
+    propertyType: 'house',
     amenities: ['Parking', 'Garden', 'Security', 'AC', 'Furnished', 'Home Office'],
     images: [
       'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800',
@@ -256,4 +264,35 @@ export function filterProperties(filters: {
     }
     return true
   })
+}
+
+// --- LocalStorage helpers to persist properties on the client ---
+const PROPERTIES_STORAGE_KEY = 'househub_properties'
+
+export function getSavedProperties(): Property[] {
+  if (typeof window === 'undefined') return properties
+  const raw = localStorage.getItem(PROPERTIES_STORAGE_KEY)
+  if (!raw) return properties
+  try {
+    const parsed = JSON.parse(raw) as Property[]
+    return parsed
+  } catch {
+    return properties
+  }
+}
+
+export function saveProperties(list: Property[]) {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(PROPERTIES_STORAGE_KEY, JSON.stringify(list))
+}
+
+// Seed storage on client first load
+if (typeof window !== 'undefined') {
+  if (!localStorage.getItem(PROPERTIES_STORAGE_KEY)) {
+    try {
+      localStorage.setItem(PROPERTIES_STORAGE_KEY, JSON.stringify(properties))
+    } catch (e) {
+      // ignore storage errors
+    }
+  }
 }
