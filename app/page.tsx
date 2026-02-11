@@ -29,8 +29,8 @@ export default function HomePage() {
 
   // ✅ Yahan pe return block paste karna hai
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a] transition-colors duration-500">
-      <NightSky />
+    <div className="min-h-screen bg-background transition-colors duration-500">
+      {/* <NightSky /> - Disabled to match light mode appearance in dark mode as requested */}
       <Header />
 
       <main>

@@ -37,6 +37,7 @@ export interface User {
   image?: string
   location?: string
   role: 'user' | 'owner'
+  credits: number
 }
 
 export interface Booking {
@@ -48,7 +49,6 @@ export interface Booking {
   notes: string
   status: 'pending' | 'confirmed' | 'cancelled'
   createdAt: string
-  totalPrice?: number
 }
 
 export interface SearchFilters {

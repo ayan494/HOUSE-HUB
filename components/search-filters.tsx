@@ -15,7 +15,7 @@ import { cities, amenitiesList } from '@/lib/data'
 export function SearchFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   const [city, setCity] = useState(searchParams.get('city') || '')
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '')
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '')
@@ -32,7 +32,7 @@ export function SearchFilters() {
     if (maxPrice) params.set('maxPrice', maxPrice)
     if (bedrooms) params.set('bedrooms', bedrooms)
     if (selectedAmenities.length > 0) params.set('amenities', selectedAmenities.join(','))
-    
+
     router.push(`/properties?${params.toString()}`)
     setIsOpen(false)
   }
@@ -48,8 +48,8 @@ export function SearchFilters() {
   }
 
   const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prev => 
-      prev.includes(amenity) 
+    setSelectedAmenities(prev =>
+      prev.includes(amenity)
         ? prev.filter(a => a !== amenity)
         : [...prev, amenity]
     )
@@ -127,11 +127,11 @@ export function SearchFilters() {
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-full sm:w-[400px] overflow-y-auto">
+        <SheetContent side="right" className="w-[90vw] sm:w-[400px] md:w-[450px] overflow-y-auto p-6">
           <SheetHeader>
             <SheetTitle>Filter Properties</SheetTitle>
           </SheetHeader>
-          
+
           <div className="mt-6 space-y-6">
             {/* City */}
             <div className="space-y-2">
@@ -169,7 +169,7 @@ export function SearchFilters() {
             {/* Price Range */}
             <div className="space-y-4">
               <Label>Price Range (PKR)</Label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Input
                     type="number"
@@ -194,22 +194,20 @@ export function SearchFilters() {
             {/* Amenities */}
             <div className="space-y-3">
               <Label>Amenities</Label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {amenitiesList.map((amenity) => (
                   <div
                     key={amenity}
                     onClick={() => toggleAmenity(amenity)}
-                    className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition-all ${
-                      selectedAmenities.includes(amenity)
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
-                    }`}
+                    className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${selectedAmenities.includes(amenity)
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/50'
+                      }`}
                   >
-                    <div className={`w-5 h-5 rounded flex items-center justify-center ${
-                      selectedAmenities.includes(amenity)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    }`}>
+                    <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${selectedAmenities.includes(amenity)
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
+                      }`}>
                       {selectedAmenities.includes(amenity) && (
                         <Check className="w-3 h-3" />
                       )}
@@ -221,11 +219,11 @@ export function SearchFilters() {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-4 border-t border-border">
-              <Button variant="outline" className="flex-1 bg-transparent" onClick={clearFilters}>
+            <div className="flex gap-3 pt-6 mt-6 border-t border-border sticky bottom-0 bg-background pb-2">
+              <Button variant="outline" className="flex-1 h-11" onClick={clearFilters}>
                 Clear All
               </Button>
-              <Button className="flex-1" onClick={applyFilters}>
+              <Button className="flex-1 h-11" onClick={applyFilters}>
                 Apply Filters
               </Button>
             </div>

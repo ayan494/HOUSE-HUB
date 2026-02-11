@@ -10,9 +10,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { toast } from 'sonner'
-import { Home, Mail, Lock, ArrowRight, Chrome, Check, X } from 'lucide-react'
-import { loginUser, registerUser } from '@/lib/store'
+import { Home, Mail, Lock, Chrome, Loader2, ArrowRight, Check, X } from 'lucide-react'
+import { getCurrentUser, loginUser } from '@/lib/store'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 
 function LoginForm() {
@@ -24,6 +27,7 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const showSuccess = searchParams.get('success') === 'registered'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,14 +44,34 @@ function LoginForm() {
     await new Promise(resolve => setTimeout(resolve, 500))
 
     try {
-      const user = loginUser(email, password)
-      if (redirect && redirect !== '/') {
-        router.push(redirect)
-      } else {
-        router.push(user.role === 'owner' ? '/dashboard/owner/premium' : '/dashboard/user/plan')
+      loginUser(email, password)
+
+      await MySwal.fire({
+        title: 'Success!',
+        text: 'You have logged in successfully.',
+        icon: 'success',
+        confirmButtonColor: '#E6D8C7',
+        confirmButtonText: 'Great!',
+        customClass: {
+          confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
+        }
+      })
+
+      const user = getCurrentUser()
+      if (!user) {
+        setError('Login failed. Please try again.')
+        return
       }
-    } catch (err) {
-      setError('Invalid credentials')
+
+      if (user.role === 'owner') {
+        router.push('/dashboard/owner/premium')
+      } else if (user.role === 'user') {
+        router.push('/dashboard/user/plan')
+      } else {
+        router.push(redirect)
+      }
+    } catch (err: any) {
+      setError(err.message || 'Invalid credentials')
     } finally {
       setIsLoading(false)
     }
@@ -73,6 +97,18 @@ function LoginForm() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {showSuccess && (
+                <div className="p-4 mb-4 text-sm text-green-700 bg-green-50 rounded-xl border border-green-200 flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold">Registration Successful!</p>
+                    <p className="opacity-90">Please sign in with your new account.</p>
+                  </div>
+                </div>
+              )}
+
               {error && (
                 <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-lg">
                   {error}
@@ -173,7 +209,7 @@ function LoginForm() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full h-11" disabled={isLoading || (!!password && !isPasswordValid(password))}>
+              <Button type="submit" className="w-full h-11" disabled={!!(isLoading || (password && !isPasswordValid(password)))}>
                 {isLoading ? 'Signing in...' : 'Sign In'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -187,50 +223,27 @@ function LoginForm() {
             </div>
 
             {/* Google Sign In Button */}
-            {/* Google Sign In Button - Simulation */}
             <Button
               type="button"
               variant="outline"
-              className="w-full h-11 mt-4 cursor-pointer"
+              className="w-full h-11 mt-4"
               onClick={async () => {
-                setIsLoading(true)
-                // Simulate Google Auth delay
-                await new Promise(resolve => setTimeout(resolve, 1500))
+                const result = await signIn('google', { redirect: false })
+                if (result?.ok) {
+                  await MySwal.fire({
+                    title: 'Welcome!',
+                    text: 'Signed in with Google successfully.',
+                    icon: 'success',
+                    confirmButtonColor: '#E6D8C7',
+                    confirmButtonText: 'Let\'s Go!',
+                    customClass: {
+                      confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
+                    }
+                  })
 
-                // For demo: verify if user exists, else register a mock Google user
-                try {
-                  const googleEmail = "google_user@example.com"
-                  // Try to login
-                  try {
-                    const user = loginUser(googleEmail, "GooglePass123")
-                    router.push(user.role === 'owner' ? '/dashboard/owner/premium' : '/dashboard/user/plan')
-                  } catch {
-                    // If doesn't exist, register
-                    const newUser = registerUser("Google User", googleEmail, "0000000000", "user")
-                    // Then login
-                    loginUser(newUser.email, "GooglePass123") // This mock login needs a password, but register sets it? 
-                    // Wait, registerUser in store uses a default password or stores it?
-                    // Looking at store.ts (from memory/context), registerUser takes name, email, phone, role.
-                    // It likely generates a default password or expects one?
-                    // Let's assume for mock purposes we just direct them.
-                    // Actually, let's look at store usage in register page... 
-                    // Usage: registerUser(name, email, phone, role).
-                    // Does it expect a specific password for login?
-                    // I will check store.ts to be sure.
-                    // If loginUser relies on localStorage, I must ensure the user is there.
-                    // Better approach: Direct Mock Registration + Login.
-
-                    // Actually, let's use a simpler mock:
-                    // If we can't login, we register.
-                    // We need to set the password "GooglePass123" for this mock user manually if register doesn't take it.
-                    // I'll check store.ts briefly or assume standard mock behavior.
-                    // Safe bet: simulate success via toast + router push if store is complex.
-                    // BUT `loginUser` stores the "currentUser" in localStorage which is critical for auth guards.
-                    // So I MUST call loginUser.
-                  }
-                } catch (err) {
-                  // Fallback
-                  toast.error("Google Sign in simulation failed")
+                  const user = getCurrentUser()
+                  const callbackUrl = user?.role === 'owner' ? '/dashboard/owner/premium' : '/'
+                  router.push(callbackUrl)
                 }
               }}
             >
@@ -241,7 +254,7 @@ function LoginForm() {
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Don&apos;t have an account? </span>
               <Link href="/auth/register" className="text-primary hover:underline font-medium">
-                Sign up
+                Register First
               </Link>
             </div>
 

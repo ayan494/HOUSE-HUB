@@ -17,6 +17,7 @@ import { format } from 'date-fns'
 import { getCurrentUser, addBooking } from '@/lib/store'
 import type { Property, User as UserType } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { ReviewDialog } from '@/components/review-dialog'
 
 interface BookingModalProps {
   property: Property | null
@@ -32,6 +33,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
   const [checkOut, setCheckOut] = useState<Date>()
   const [notes, setNotes] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showReviewDialog, setShowReviewDialog] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -247,7 +249,9 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
               They will contact you shortly to confirm.
             </p>
             <div className="space-y-3">
-              <Button onClick={onClose} className="w-full">
+              <Button onClick={() => {
+                setShowReviewDialog(true)
+              }} className="w-full">
                 Close
               </Button>
               <Button
@@ -261,6 +265,17 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
           </div>
         )}
       </DialogContent>
+
+      {/* Review Dialog */}
+      <ReviewDialog
+        open={showReviewDialog}
+        onOpenChange={(open) => {
+          setShowReviewDialog(open)
+          if (!open) {
+            onClose() // Close booking modal when review dialog closes
+          }
+        }}
+      />
     </Dialog>
   )
 }

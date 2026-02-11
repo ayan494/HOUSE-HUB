@@ -26,10 +26,10 @@ export default function UserDashboardPage() {
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed')
 
   return (
-    <div className="space-y-8 text-foreground">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">
+        <h1 className="text-3xl font-bold">
           Welcome back, {user?.name?.split(' ')[0]}!
         </h1>
         <p className="text-muted-foreground mt-1">
@@ -39,42 +39,42 @@ export default function UserDashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
+        <Card className="border-border/50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{bookings.length}</p>
+                <p className="text-2xl font-bold">{bookings.length}</p>
                 <p className="text-sm text-muted-foreground">Total Bookings</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center">
                 <Clock className="w-6 h-6 text-amber-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{pendingBookings.length}</p>
+                <p className="text-2xl font-bold">{pendingBookings.length}</p>
                 <p className="text-sm text-muted-foreground">Pending</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{confirmedBookings.length}</p>
+                <p className="text-2xl font-bold">{confirmedBookings.length}</p>
                 <p className="text-sm text-muted-foreground">Confirmed</p>
               </div>
             </div>
@@ -82,10 +82,28 @@ export default function UserDashboardPage() {
         </Card>
       </div>
 
+      {/* Credits Card */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="py-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl">
+              C
+            </div>
+            <div>
+              <p className="text-sm font-medium text-primary uppercase tracking-wider">Available Credits</p>
+              <p className="text-3xl font-bold text-foreground">{user?.credits || 0}</p>
+            </div>
+          </div>
+          <Link href="/dashboard/user/plan">
+            <Button size="sm">Get More Credits</Button>
+          </Link>
+        </CardContent>
+      </Card>
+
       {/* Quick Actions */}
-      <Card>
+      <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-lg text-foreground">Quick Actions</CardTitle>
+          <CardTitle className="text-lg">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Link href="/properties">
@@ -95,7 +113,7 @@ export default function UserDashboardPage() {
             </Button>
           </Link>
           <Link href="/dashboard/user/bookings">
-            <Button variant="outline" className="border-border text-foreground hover:bg-muted">
+            <Button variant="outline">
               <Calendar className="w-4 h-4 mr-2" />
               View My Bookings
             </Button>
@@ -104,9 +122,9 @@ export default function UserDashboardPage() {
       </Card>
 
       {/* Recent Bookings */}
-      <Card>
+      <Card className="border-border/50">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg text-foreground">Recent Bookings</CardTitle>
+          <CardTitle className="text-lg">Recent Bookings</CardTitle>
           <Link href="/dashboard/user/bookings">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">View All</Button>
           </Link>
@@ -131,7 +149,7 @@ export default function UserDashboardPage() {
                 return (
                   <div
                     key={booking.id}
-                    className="flex items-center gap-4 p-4 rounded-lg border border-border"
+                    className="flex items-center gap-4 p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors"
                   >
                     <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden">
                       <img
@@ -141,7 +159,7 @@ export default function UserDashboardPage() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-foreground truncate">
+                      <h4 className="font-medium truncate">
                         {property.name}
                       </h4>
                       <p className="text-sm text-muted-foreground">

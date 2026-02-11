@@ -13,11 +13,11 @@ interface FeaturedCarouselProps {
   onBookClick?: (property: Property) => void
 }
 
-export function FeaturedCarousel({ 
-  properties, 
-  title = "Premium Properties", 
+export function FeaturedCarousel({
+  properties,
+  title = "Premium Properties",
   subtitle = "Hand-picked luxury homes for discerning tenants",
-  onBookClick 
+  onBookClick
 }: FeaturedCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -26,8 +26,8 @@ export function FeaturedCarousel({
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
-      setCanScrollLeft(scrollLeft > 0)
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+      setCanScrollLeft(scrollLeft > 20)
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 20)
     }
   }
 
@@ -36,7 +36,11 @@ export function FeaturedCarousel({
     const ref = scrollRef.current
     if (ref) {
       ref.addEventListener('scroll', checkScroll)
-      return () => ref.removeEventListener('scroll', checkScroll)
+      window.addEventListener('resize', checkScroll)
+      return () => {
+        ref.removeEventListener('scroll', checkScroll)
+        window.removeEventListener('resize', checkScroll)
+      }
     }
   }, [])
 
@@ -53,81 +57,78 @@ export function FeaturedCarousel({
   if (properties.length === 0) return null
 
   return (
-    <section className="py-12 md:py-16 bg-secondary/30">
+    <section className="py-24 bg-white dark:bg-transparent overflow-hidden">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Crown className="w-6 h-6 text-[var(--premium)]" />
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                {title}
-              </h2>
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-0.5 bg-primary" />
+              <span className="text-primary font-bold uppercase tracking-widest text-sm">Exclusive Selection</span>
             </div>
-            <p className="text-muted-foreground text-lg">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-foreground mb-3 tracking-tight">
+              {title}
+            </h2>
+            <p className="text-muted-foreground text-sm md:text-base font-medium max-w-xl">
               {subtitle}
             </p>
           </div>
-          <div className="hidden md:flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
+
+          {/* Progress or manual controls could go here, but we'll use floating ones */}
+        </div>
+
+        {/* Carousel Wrapper with Floating Controls */}
+        <div className="relative group">
+          {/* Gradient Masks */}
+          <div className={`absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white dark:from-background to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`} />
+          <div className={`absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white dark:from-background to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`} />
+
+          {/* Floating Navigation Buttons */}
+          <div className="hidden md:block">
+            <button
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              className="rounded-full"
+              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-white dark:bg-card shadow-2xl border border-border flex items-center justify-center z-20 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white disabled:opacity-0 disabled:pointer-events-none ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`}
+              aria-label="Scroll left"
             >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
-              className="rounded-full"
+              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-14 h-14 rounded-full bg-white dark:bg-card shadow-2xl border border-border flex items-center justify-center z-20 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white disabled:opacity-0 disabled:pointer-events-none ${canScrollRight ? 'opacity-100' : 'opacity-0'}`}
+              aria-label="Scroll right"
             >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Carousel */}
+          <div
+            ref={scrollRef}
+            className="flex gap-8 overflow-x-auto scrollbar-hide pb-8 -mx-4 px-4 snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {properties.map((property) => (
+              <div
+                key={property.id}
+                className="flex-shrink-0 w-[90%] sm:w-[45%] lg:w-[32%] xl:w-[24%] snap-start"
+              >
+                <PropertyCard
+                  property={property}
+                  onBookClick={onBookClick}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Carousel */}
-        <div 
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {properties.map((property) => (
-            <div 
-              key={property.id}
-              className="flex-shrink-0 w-[85%] sm:w-[45%] lg:w-[30%] xl:w-[23%] snap-start"
-            >
-              <PropertyCard 
-                property={property} 
-                onBookClick={onBookClick}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Mobile scroll indicators */}
-        <div className="flex md:hidden items-center justify-center gap-2 mt-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <span className="text-sm text-muted-foreground">Scroll to see more</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => scroll('right')}
-            disabled={!canScrollRight}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
+        {/* Mobile Swipe Indicator */}
+        <div className="flex justify-center md:hidden mt-4">
+          <div className="flex gap-1">
+            <div className={`h-1 rounded-full transition-all duration-500 ${canScrollLeft ? 'bg-primary w-8' : 'bg-gray-200 w-4'}`} />
+            <div className={`h-1 rounded-full transition-all duration-500 ${canScrollRight ? 'bg-primary w-8' : 'bg-gray-200 w-4'}`} />
+          </div>
         </div>
       </div>
     </section>

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react'
@@ -46,8 +45,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
     { href: '/dashboard/owner', icon: LayoutDashboard, label: 'Overview' },
     { href: '/dashboard/owner/properties', icon: Building, label: 'My Properties' },
     { href: '/dashboard/owner/add', icon: Plus, label: 'Add Property' },
-    { href: '/dashboard/owner/bookings', icon: Calendar, label: 'Property Bookings' },
-    { href: '/dashboard/owner/my-bookings', icon: Calendar, label: 'My Bookings' },
+    { href: '/dashboard/owner/bookings', icon: Calendar, label: 'Bookings' },
     { href: '/dashboard/owner/premium', icon: Crown, label: 'Premium' },
     { href: '/dashboard/owner/profile', icon: User, label: 'Profile' },
   ]
@@ -135,9 +133,9 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden fixed top-3 left-3 z-[60] bg-background/80 backdrop-blur-sm shadow-sm border h-8 w-8"
+            className="md:hidden fixed top-4 left-4 z-50 bg-background shadow-sm border h-9 w-9 sm:h-10 sm:w-10"
           >
-            <Menu className="w-4 h-4" />
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="p-0 w-full max-w-full">

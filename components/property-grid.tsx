@@ -39,43 +39,46 @@ export function PropertyGrid({ properties, title, subtitle, onBookClick }: Prope
 
   if (properties.length === 0) {
     return (
-      <div className="text-center py-16">
-        <p className="text-muted-foreground text-lg">No properties found matching your criteria.</p>
+      <div className="text-center py-20 bg-gray-50 dark:bg-white/5 rounded-[3rem]">
+        <p className="text-muted-foreground text-xl font-medium">No properties found matching your criteria.</p>
       </div>
     )
   }
 
   return (
-    <section className="py-12 md:py-16">
+    <section className="py-24">
       {(title || subtitle) && (
-        <div className="text-center mb-10">
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-0.5 bg-primary" />
+            <span className="text-primary font-bold uppercase tracking-widest text-sm">Our Collection</span>
+          </div>
           {title && (
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 text-balance">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground mb-3 tracking-tight">
               {title}
             </h2>
           )}
           {subtitle && (
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto text-pretty">
+            <p className="text-muted-foreground text-sm md:text-base font-medium max-w-xl">
               {subtitle}
             </p>
           )}
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
         {properties.map((property, index) => (
           <div
             key={property.id}
             ref={(el) => { itemRefs.current[index] = el }}
-            className={`transition-all duration-500 ${
-              visibleItems.has(index)
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-8'
-            }`}
-            style={{ transitionDelay: `${(index % 4) * 100}ms` }}
+            className={`transition-all duration-700 ease-out ${visibleItems.has(index)
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-12'
+              }`}
+            style={{ transitionDelay: `${(index % 4) * 150}ms` }}
           >
-            <PropertyCard 
-              property={property} 
+            <PropertyCard
+              property={property}
               onBookClick={onBookClick}
             />
           </div>

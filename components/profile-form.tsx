@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Loader2, Upload, User, Lock, MapPin, Mail, Phone as PhoneIcon, CheckCircle } from 'lucide-react'
+import { Loader2, Upload, User, Lock, MapPin, Mail, Phone as PhoneIcon, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
 import type { User as UserType } from '@/lib/types'
 import {
@@ -50,6 +50,8 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
     const [isLoading, setIsLoading] = useState(false)
     const [showSuccessDialog, setShowSuccessDialog] = useState(false)
     const [previewImage, setPreviewImage] = useState(user.image || user.avatar || '')
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+    const [showNewPassword, setShowNewPassword] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const form = useForm<ProfileFormValues>({
@@ -216,10 +218,21 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
                                         <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                                         <Input
                                             id="currentPassword"
-                                            type="password"
-                                            className="pl-10"
+                                            type={showCurrentPassword ? "text" : "password"}
+                                            className="pl-10 pr-10"
                                             {...form.register('currentPassword')}
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground focus:outline-none"
+                                        >
+                                            {showCurrentPassword ? (
+                                                <EyeOff className="h-5 w-5" />
+                                            ) : (
+                                                <Eye className="h-5 w-5" />
+                                            )}
+                                        </button>
                                     </div>
                                     {form.formState.errors.currentPassword && (
                                         <p className="text-sm text-destructive">{form.formState.errors.currentPassword.message}</p>
@@ -232,10 +245,21 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
                                         <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                                         <Input
                                             id="newPassword"
-                                            type="password"
-                                            className="pl-10"
+                                            type={showNewPassword ? "text" : "password"}
+                                            className="pl-10 pr-10"
                                             {...form.register('newPassword')}
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowNewPassword(!showNewPassword)}
+                                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground focus:outline-none"
+                                        >
+                                            {showNewPassword ? (
+                                                <EyeOff className="h-5 w-5" />
+                                            ) : (
+                                                <Eye className="h-5 w-5" />
+                                            )}
+                                        </button>
                                     </div>
                                     {form.formState.errors.newPassword && (
                                         <p className="text-sm text-destructive">{form.formState.errors.newPassword.message}</p>

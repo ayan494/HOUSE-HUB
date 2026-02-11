@@ -11,6 +11,7 @@ const testimonials = [
     name: 'Aisha Rahman',
     location: 'Lahore',
     avatar: 'A',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
     rating: 5,
     text: 'HouseHub made finding my dream apartment so easy! The direct connection with owners saved me from dealing with agents and their fees.',
   },
@@ -19,6 +20,7 @@ const testimonials = [
     name: 'Bilal Ahmed',
     location: 'Karachi',
     avatar: 'B',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
     rating: 5,
     text: 'As a property owner, listing on HouseHub has been fantastic. I found reliable tenants within a week and the premium features really helped.',
   },
@@ -27,6 +29,7 @@ const testimonials = [
     name: 'Fatima Hassan',
     location: 'Islamabad',
     avatar: 'F',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
     rating: 5,
     text: 'The filtering options are excellent. I could easily find properties within my budget and preferred locations. Highly recommended!',
   },
@@ -35,6 +38,7 @@ const testimonials = [
     name: 'Omar Khan',
     location: 'Rawalpindi',
     avatar: 'O',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
     rating: 4,
     text: 'Great platform for both tenants and owners. The booking system is smooth and the customer support team is very responsive.',
   },
@@ -43,6 +47,7 @@ const testimonials = [
     name: 'Sara Malik',
     location: 'Lahore',
     avatar: 'S',
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
     rating: 5,
     text: 'I was skeptical at first, but HouseHub exceeded my expectations. Found a beautiful house in DHA within days of searching.',
   },
@@ -135,11 +140,10 @@ export function Testimonials() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-4 h-4 ${
-                        i < testimonial.rating
-                          ? 'fill-amber-400 text-amber-400'
-                          : 'text-muted'
-                      }`}
+                      className={`w-4 h-4 ${i < testimonial.rating
+                        ? 'fill-amber-400 text-amber-400'
+                        : 'text-muted'
+                        }`}
                     />
                   ))}
                 </div>
@@ -151,9 +155,11 @@ export function Testimonials() {
 
                 {/* Author */}
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                    {testimonial.avatar}
-                  </div>
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
                   <div>
                     <p className="font-medium text-foreground">{testimonial.name}</p>
                     <p className="text-sm text-muted-foreground">{testimonial.location}</p>

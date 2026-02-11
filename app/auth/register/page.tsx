@@ -10,10 +10,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { toast } from 'sonner'
 import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X } from 'lucide-react'
 import { registerUser } from '@/lib/store'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import { emailExists, addRegisteredUser } from '@/lib/email-validator'
 
@@ -87,17 +89,30 @@ function RegisterForm() {
       })
 
       // Then register and set current user
-      toast.success('Account created successfully! Please log in.')
-      router.push('/auth/login')
+      registerUser(name, email, phone, role)
+
+      await MySwal.fire({
+        title: 'Welcome to HouseHub!',
+        text: 'Your account has been created successfully.',
+        icon: 'success',
+        confirmButtonColor: '#E6D8C7',
+        confirmButtonText: 'Login Now',
+        customClass: {
+          confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
+        }
+      })
+
+      // Redirect to login page with success parameter
+      router.push('/auth/login?success=registered')
     } catch (err) {
-      setError('Something went wrong')
+      setError(err instanceof Error ? err.message : 'Registration failed')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12 pt-20">
       <div className="w-full max-w-md">
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
