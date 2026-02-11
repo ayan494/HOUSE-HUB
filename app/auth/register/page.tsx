@@ -12,6 +12,10 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X } from 'lucide-react'
 import { registerUser } from '@/lib/store'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import { emailExists, addRegisteredUser } from '@/lib/email-validator'
 
@@ -19,7 +23,7 @@ function RegisterForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const defaultRole = searchParams.get('role') as 'user' | 'owner' || 'user'
-  
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -32,7 +36,7 @@ function RegisterForm() {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value
     setEmail(newEmail)
-    
+
     // Check email validity
     if (newEmail && emailExists(newEmail)) {
       setEmailError('This email is already registered')
@@ -46,7 +50,7 @@ function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    
+
     if (!name || !email || !phone || !password) {
       setError('Please fill in all fields')
       return
@@ -63,10 +67,10 @@ function RegisterForm() {
     }
 
     setIsLoading(true)
-    
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500))
-    
+
     try {
       // Final check: ensure email is still available (prevent race/duplicates)
       if (emailExists(email)) {
@@ -87,7 +91,18 @@ function RegisterForm() {
       // Then register and set current user
       registerUser(name, email, phone, role)
 
-      router.push(role === 'owner' ? '/dashboard/owner' : '/')
+      await MySwal.fire({
+        title: 'Welcome to HouseHub!',
+        text: 'Your account has been created successfully.',
+        icon: 'success',
+        confirmButtonColor: '#E6D8C7',
+        confirmButtonText: 'Login Now',
+        customClass: {
+          confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
+        }
+      })
+
+      router.push(role === 'owner' ? '/dashboard/owner/premium' : '/dashboard/user/plan')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed')
     } finally {
@@ -119,11 +134,10 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setRole('user')}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  role === 'user'
+                className={`p-4 rounded-lg border-2 transition-all ${role === 'user'
                     ? 'border-primary bg-primary/5'
                     : 'border-border hover:border-primary/50'
-                }`}
+                  }`}
               >
                 <Users className={`w-6 h-6 mx-auto mb-2 ${role === 'user' ? 'text-primary' : 'text-muted-foreground'}`} />
                 <p className={`text-sm font-medium ${role === 'user' ? 'text-primary' : 'text-foreground'}`}>
@@ -134,11 +148,10 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setRole('owner')}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  role === 'owner'
+                className={`p-4 rounded-lg border-2 transition-all ${role === 'owner'
                     ? 'border-primary bg-primary/5'
                     : 'border-border hover:border-primary/50'
-                }`}
+                  }`}
               >
                 <Building className={`w-6 h-6 mx-auto mb-2 ${role === 'owner' ? 'text-primary' : 'text-muted-foreground'}`} />
                 <p className={`text-sm font-medium ${role === 'owner' ? 'text-primary' : 'text-foreground'}`}>
@@ -225,7 +238,7 @@ function RegisterForm() {
                     className="pl-10"
                   />
                 </div>
-                
+
                 {/* Password Requirements */}
                 {password && (
                   <div className="mt-3 p-3 bg-muted rounded-lg space-y-2">

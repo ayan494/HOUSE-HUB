@@ -13,18 +13,13 @@ const handler = NextAuth({
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
-          // Auto-register user if they don't exist
-          const existingUser = localStorage.getItem(`user_${user.email}`)
-          
-          if (!existingUser && user.email && user.name) {
-            // Register as tenant by default (can be modified by user later)
-            registerUser(user.name, user.email, "", "user")
-          }
-          
+          // Note: In a real app with a DB, we would check/register the user here.
+          // Since we are using localStorage (client-side only), we can't persist 
+          // to it from this server-side callback.
           return true
         } catch (error) {
           console.error("Error during Google sign in:", error)
-          return false
+          return true
         }
       }
       return true
@@ -43,7 +38,7 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub as string
+        (session.user as any).id = token.sub as string
       }
       return session
     },
