@@ -17,165 +17,168 @@ export function Hero() {
   const [bedrooms, setBedrooms] = useState('')
   const { toast } = useToast()
 
-  const handleSearch = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-
+  const handleSearch = () => {
+    // Require at least one selection before searching on home
     if (!location && !budget && !bedrooms) {
-      return // Button should be disabled anyway, but safety check
+      toast({
+        title: 'Select a filter',
+        description: 'Please select at least one option before searching.',
+      })
+      return
     }
 
     const params = new URLSearchParams()
     if (location) params.set('city', location)
     if (budget) params.set('maxPrice', budget)
     if (bedrooms) params.set('bedrooms', bedrooms)
-
     router.push(`/properties?${params.toString()}`)
   }
 
-  const isSearchDisabled = !location.trim() && !budget.trim() && !bedrooms.trim()
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-0 m-0">
-      {/* Background with dark luxury overlay */}
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+      {/* Background with overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat m-0 p-0"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=80)',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920)',
         }}
       >
-        {/* Dark gradient overlay for maximum readability (60-70% opacity) */}
-        <div className="absolute inset-0 bg-black/60 md:bg-black/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-20 flex flex-col items-center">
+      <div className="relative z-10 container mx-auto px-4 pt-32">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-6 py-2 rounded-full text-sm font-semibold mb-8 animate-fade-in"
+            className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-in"
             style={{ animationDelay: '0.1s' }}
           >
-            <MapPin className="w-4 h-4 text-primary" />
-            PAKISTAN&apos;S PREMIER RENTAL PLATFORM
+            <MapPin className="w-4 h-4" />
+            Pakistan&apos;s Premier Rental Platform
           </div>
 
           {/* Headline */}
           <h1
-            className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[1.1] animate-fade-in tracking-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight text-balance animate-fade-in"
             style={{ animationDelay: '0.2s' }}
           >
-            Find Your <span className="text-primary italic">Dream</span>{' '}
-            Home
+            Find Your Perfect{' '}
+            <span className="text-primary">Home</span>{' '}
+            in Pakistan
           </h1>
 
           {/* Subheadline */}
           <p
-            className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto animate-fade-in font-medium"
+            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto text-pretty animate-fade-in"
             style={{ animationDelay: '0.3s' }}
           >
-            Discover premium apartments and houses across Pakistan with zero middlemen. Enter your requirements below.
+            Search, discover, and connect directly with house owners near you.
+            No middlemen, no hidden fees.
           </p>
 
-          {/* Structured Modern Search Bar */}
+          {/* Search Form */}
           <div
-            className="w-full max-w-5xl mx-auto animate-fade-in"
+            className="bg-card rounded-2xl p-4 md:p-6 shadow-xl border border-border animate-fade-in"
             style={{ animationDelay: '0.4s' }}
           >
-            <form
-              onSubmit={handleSearch}
-              className="bg-white/95 backdrop-blur-xl p-3 md:p-4 rounded-[2rem] md:rounded-full shadow-2xl border-4 border-white/20 flex flex-col md:flex-row items-center gap-3"
-            >
-              {/* Location Input */}
-              <div className="flex-1 w-full flex items-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-100 group">
-                <MapPin className="w-5 h-5 text-primary mr-3 shrink-0 transition-transform group-focus-within:scale-110" />
-                <div className="flex-1 text-left">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 ml-0.5">Location</label>
-                  <input
-                    type="text"
-                    placeholder="Which city?"
-                    className="w-full bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-bold text-lg"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Location */}
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger className="pl-10 h-12 bg-background">
+                    <SelectValue placeholder="Select City" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cities.map((city) => (
+                      <SelectItem key={city} value={city}>
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Budget Input */}
-              <div className="flex-1 w-full flex items-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-100 group">
-                <Wallet className="w-5 h-5 text-primary mr-3 shrink-0 transition-transform group-focus-within:scale-110" />
-                <div className="flex-1 text-left">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 ml-0.5">Max Budget</label>
-                  <input
-                    type="number"
-                    placeholder="PKR 50,000"
-                    className="w-full bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-bold text-lg"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                  />
-                </div>
+              {/* Budget */}
+              <div className="relative">
+                <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Select value={budget} onValueChange={setBudget}>
+                  <SelectTrigger className="pl-10 h-12 bg-background">
+                    <SelectValue placeholder="Max Budget" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="50000">Up to PKR 50,000</SelectItem>
+                    <SelectItem value="100000">Up to PKR 100,000</SelectItem>
+                    <SelectItem value="150000">Up to PKR 150,000</SelectItem>
+                    <SelectItem value="200000">Up to PKR 200,000</SelectItem>
+                    <SelectItem value="300000">Up to PKR 300,000</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Rooms Input */}
-              <div className="flex-1 w-full flex items-center px-4 py-2 group">
-                <Bed className="w-5 h-5 text-primary mr-3 shrink-0 transition-transform group-focus-within:scale-110" />
-                <div className="flex-1 text-left">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 ml-0.5">Rooms</label>
-                  <input
-                    type="number"
-                    placeholder="Min 2"
-                    className="w-full bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-bold text-lg"
-                    value={bedrooms}
-                    onChange={(e) => setBedrooms(e.target.value)}
-                  />
-                </div>
+              {/* Bedrooms */}
+              <div className="relative">
+                <Bed className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Select value={bedrooms} onValueChange={setBedrooms}>
+                  <SelectTrigger className="pl-10 h-12 bg-background">
+                    <SelectValue placeholder="Bedrooms" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1+ Bedroom</SelectItem>
+                    <SelectItem value="2">2+ Bedrooms</SelectItem>
+                    <SelectItem value="3">3+ Bedrooms</SelectItem>
+                    <SelectItem value="4">4+ Bedrooms</SelectItem>
+                    <SelectItem value="5">5+ Bedrooms</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <Button
-                type="submit"
-                disabled={isSearchDisabled}
-                className={`w-full md:w-auto rounded-xl md:rounded-full px-10 py-8 text-xl font-black shadow-xl transition-all active:scale-95 ${isSearchDisabled
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed border-none'
-                  : 'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/20 shadow-primary/10'
-                  }`}
-              >
-                <Search className="w-6 h-6 mr-2" />
-                Search Now
-              </Button>
-            </form>
+              {/* Search Button */}
+              <div className="flex items-end">
+                <Button
+                  onClick={handleSearch}
+                  className="h-12 w-full md:w-auto text-base font-medium whitespace-nowrap gap-2"
+                  disabled={!location && !budget && !bedrooms}
+                >
+                  <Search className="w-5 h-5" />
+                  <span>Search</span>
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Owner CTA */}
           <div
-            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in"
+            className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in"
             style={{ animationDelay: '0.5s' }}
           >
-            <p className="text-gray-300 font-medium">Are you a home owner?</p>
+            <p className="text-muted-foreground">Are you a home owner?</p>
             <Link href="/auth/register?role=owner">
-              <Button variant="outline" className="rounded-full px-8 py-6 border-2 border-white/30 text-white hover:bg-white hover:text-black transition-all bg-white/5 backdrop-blur-sm">
+              <Button variant="outline" className="group bg-transparent">
                 List Your Property
-                <Calendar className="w-5 h-5 ml-2" />
+                <Calendar className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
-        </div>
 
-        {/* Stats Section with Glassmorphism */}
-        <div
-          className="mt-20 grid grid-cols-3 gap-4 md:gap-12 w-full max-w-4xl px-4 py-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 animate-fade-in"
-          style={{ animationDelay: '0.6s' }}
-        >
-          <div className="text-center">
-            <div className="text-3xl md:text-5xl font-black text-primary">500+</div>
-            <div className="text-xs md:text-base text-gray-400 mt-2 font-bold tracking-widest uppercase">Properties</div>
-          </div>
-          <div className="text-center border-x border-white/10">
-            <div className="text-3xl md:text-5xl font-black text-primary">7+</div>
-            <div className="text-xs md:text-base text-gray-400 mt-2 font-bold tracking-widest uppercase">Major Cities</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-5xl font-black text-primary">1000+</div>
-            <div className="text-xs md:text-base text-gray-400 mt-2 font-bold tracking-widest uppercase">Happy Tenants</div>
+          {/* Stats */}
+          <div
+            className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto animate-fade-in"
+            style={{ animationDelay: '0.6s' }}
+          >
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary">500+</div>
+              <div className="text-sm text-muted-foreground mt-1">Properties</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary">7</div>
+              <div className="text-sm text-muted-foreground mt-1">Cities</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary">1000+</div>
+              <div className="text-sm text-muted-foreground mt-1">Happy Tenants</div>
+            </div>
           </div>
         </div>
       </div>

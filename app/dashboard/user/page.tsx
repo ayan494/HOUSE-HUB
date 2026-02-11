@@ -26,84 +26,66 @@ export default function UserDashboardPage() {
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed')
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-white">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold text-white">
           Welcome back, {user?.name?.split(' ')[0]}!
         </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-gray-400 mt-1">
           Manage your bookings and find your perfect home.
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-border/50">
+        <Card className="bg-slate-900 border-slate-800">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{bookings.length}</p>
-                <p className="text-sm text-muted-foreground">Total Bookings</p>
+                <p className="text-2xl font-bold text-white">{bookings.length}</p>
+                <p className="text-sm text-gray-400">Total Bookings</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-border/50">
+        <Card className="bg-slate-900 border-slate-800">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center">
                 <Clock className="w-6 h-6 text-amber-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{pendingBookings.length}</p>
-                <p className="text-sm text-muted-foreground">Pending</p>
+                <p className="text-2xl font-bold text-white">{pendingBookings.length}</p>
+                <p className="text-sm text-gray-400">Pending</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-border/50">
+        <Card className="bg-slate-900 border-slate-800">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{confirmedBookings.length}</p>
-                <p className="text-sm text-muted-foreground">Confirmed</p>
+                <p className="text-2xl font-bold text-white">{confirmedBookings.length}</p>
+                <p className="text-sm text-gray-400">Confirmed</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Credits Card */}
-      <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="py-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl">
-              C
-            </div>
-            <div>
-              <p className="text-sm font-medium text-primary uppercase tracking-wider">Available Credits</p>
-              <p className="text-3xl font-bold text-foreground">{user?.credits || 0}</p>
-            </div>
-          </div>
-          <Link href="/dashboard/user/plan">
-            <Button size="sm">Get More Credits</Button>
-          </Link>
-        </CardContent>
-      </Card>
-
       {/* Quick Actions */}
-      <Card className="border-border/50">
+      <Card className="bg-slate-900 border-slate-800">
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-lg text-white">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Link href="/properties">
@@ -113,7 +95,7 @@ export default function UserDashboardPage() {
             </Button>
           </Link>
           <Link href="/dashboard/user/bookings">
-            <Button variant="outline">
+            <Button variant="outline" className="border-slate-700 text-white hover:bg-slate-800">
               <Calendar className="w-4 h-4 mr-2" />
               View My Bookings
             </Button>
@@ -122,18 +104,18 @@ export default function UserDashboardPage() {
       </Card>
 
       {/* Recent Bookings */}
-      <Card className="border-border/50">
+      <Card className="bg-slate-900 border-slate-800">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Recent Bookings</CardTitle>
+          <CardTitle className="text-lg text-white">Recent Bookings</CardTitle>
           <Link href="/dashboard/user/bookings">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">View All</Button>
+            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">View All</Button>
           </Link>
         </CardHeader>
         <CardContent>
           {bookings.length === 0 ? (
             <div className="text-center py-8">
-              <Home className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">No bookings yet</p>
+              <Home className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <p className="text-gray-400">No bookings yet</p>
               <Link href="/properties">
                 <Button variant="link" className="mt-2 text-primary hover:text-primary/90">
                   Start browsing properties
@@ -149,9 +131,9 @@ export default function UserDashboardPage() {
                 return (
                   <div
                     key={booking.id}
-                    className="flex items-center gap-4 p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                    className="flex items-center gap-4 p-4 rounded-lg border border-slate-700"
                   >
-                    <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden">
+                    <div className="w-16 h-16 rounded-lg bg-slate-800 overflow-hidden">
                       <img
                         src={property.images[0] || "/placeholder.svg"}
                         alt={property.name}
@@ -159,10 +141,10 @@ export default function UserDashboardPage() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium truncate">
+                      <h4 className="font-medium text-white truncate">
                         {property.name}
                       </h4>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-gray-400">
                         {property.location}, {property.city}
                       </p>
                     </div>

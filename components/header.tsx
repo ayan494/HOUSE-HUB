@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Menu, Home, User, LogOut, ChevronRight } from 'lucide-react'
+import { Menu, Home, User, LogOut } from 'lucide-react'
 import { getCurrentUser, logoutUser } from '@/lib/store'
 import type { User as UserType } from '@/lib/types'
 import {
@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 export function Header() {
@@ -51,47 +51,42 @@ export function Header() {
         : 'bg-transparent'
         }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 sm:h-20 md:grid md:grid-cols-3">
-          {/* Logo - Left Col */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
-                <Home className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
-              </div>
-              <span className={`text-lg sm:text-xl font-semibold transition-colors ${scrolled ? 'text-foreground' : 'text-white'}`}>HouseHub</span>
-            </Link>
-          </div>
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="flex items-center justify-between h-14 sm:h-16 md:h-20">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
+              <Home className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
+            </div>
+            <span className="text-lg sm:text-xl font-semibold text-foreground">HouseHub</span>
+          </Link>
 
-          {/* Desktop Navigation - Center Col */}
-          <nav className="hidden md:flex justify-center items-center gap-6 lg:gap-8">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex md:flex-1 md:justify-center items-center gap-4 md:gap-6 xl:gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors whitespace-nowrap ${scrolled ? 'text-muted-foreground hover:text-foreground' : 'text-gray-200 hover:text-white'}`}
+                className="text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Desktop Actions - Right Col */}
-          <div className="hidden md:flex items-center justify-end gap-3">
-            <div className={`${scrolled ? '' : 'brightness-200'}`}>
-              <ThemeToggle />
-            </div>
+          {/* Desktop Actions */}
+          <div className="hidden md:flex md:flex-shrink-0 md:justify-end items-center gap-2 sm:gap-3">
+            <ThemeToggle />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className={`flex items-center gap-2 ${scrolled ? '' : 'text-white hover:bg-white/10'}`}>
+                  <Button variant="ghost" className="flex items-center gap-2">
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={user.image || user.avatar || ''} />
                       <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                         {user.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium">{user.name}</span>
+                    <span className="text-xs sm:text-sm font-medium">{user.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -110,13 +105,13 @@ export function Header() {
               </DropdownMenu>
             ) : (
               <>
-                <Link href="/auth/register">
-                  <Button variant="ghost" size="sm" className={`text-sm ${scrolled ? '' : 'text-white hover:bg-white/10'}`}>
+                <Link href="/auth/login">
+                  <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
                     Log in
                   </Button>
                 </Link>
                 <Link href="/auth/register?role=owner">
-                  <Button size="sm" className="text-sm shadow-lg shadow-primary/20">
+                  <Button size="sm" className="text-xs sm:text-sm">
                     List Your Property
                   </Button>
                 </Link>
@@ -124,76 +119,70 @@ export function Header() {
             )}
           </div>
 
-          {/* Mobile Menu Trigger */}
-          <div className="flex md:hidden items-center">
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button aria-label="Open menu" variant="ghost" size="icon" className={`h-9 w-9 sm:h-10 sm:w-10 ${scrolled ? '' : 'text-white hover:bg-white/10'}`}>
-                  <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] border-l border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-2xl p-0">
-                <div className="flex flex-col h-full">
-                  <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-white/10">
-                    <span className="text-xl font-bold tracking-tight">Menu</span>
-                    <ThemeToggle />
-                  </div>
-                  <div className="flex-1 overflow-y-auto p-6">
-                    <nav className="flex flex-col gap-2">
-                      {navLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => setIsOpen(false)}
-                          className="group flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
-                        >
-                          <span className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{link.label}</span>
-                          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      ))}
-                    </nav>
-                  </div>
-                  <div className="p-6 border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/5">
-                    {user ? (
-                      <div className="flex flex-col gap-3">
-                        <Link
-                          href={user.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'}
-                          onClick={() => setIsOpen(false)}
-                          className="w-full"
-                        >
-                          <Button className="w-full rounded-2xl h-12 font-bold">
-                            <User className="w-5 h-5 mr-2" />
-                            Dashboard
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          className="w-full rounded-2xl h-12 text-destructive font-bold hover:bg-destructive/10"
-                          onClick={handleLogout}
-                        >
-                          <LogOut className="w-5 h-5 mr-2" />
-                          Logout
+          {/* Mobile Menu */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button aria-label="Open menu" variant="ghost" size="icon" className="h-9 w-9 sm:h-10 sm:w-10 md:hidden">
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px] sm:w-[320px]">
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-lg font-semibold">Menu</span>
+                <ThemeToggle />
+              </div>
+              <div className="flex flex-col gap-6">
+                <nav className="flex flex-col gap-4">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className="text-base sm:text-lg font-medium text-foreground hover:text-primary transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </nav>
+                <div className="border-t border-border pt-6 flex flex-col gap-3">
+                  {user ? (
+                    <>
+                      <Link
+                        href={user.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Button variant="outline" className="w-full justify-start bg-transparent text-sm sm:text-base">
+                          <User className="w-4 h-4 mr-2" />
+                          Dashboard
                         </Button>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col gap-3">
-                        <Link href="/auth/register" onClick={() => setIsOpen(false)}>
-                          <Button variant="outline" className="w-full rounded-2xl h-12 font-bold bg-white dark:bg-transparent">
-                            Log in
-                          </Button>
-                        </Link>
-                        <Link href="/auth/register?role=owner" onClick={() => setIsOpen(false)}>
-                          <Button className="w-full rounded-2xl h-12 font-bold shadow-lg shadow-primary/20">
-                            List Your Property
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
-                  </div>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-destructive text-sm sm:text-base"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full bg-transparent text-sm sm:text-base">
+                          Log in
+                        </Button>
+                      </Link>
+                      <Link href="/auth/register?role=owner" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full text-sm sm:text-base">
+                          List Your Property
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
