@@ -46,19 +46,19 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-        ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border'
-        : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+        ? 'bg-background/80 backdrop-blur-xl shadow-2xl border-b border-border/50 py-2'
+        : 'bg-transparent py-4'
         }`}
     >
-      <div className="container mx-auto px-3 sm:px-4">
-        <div className="flex items-center justify-between h-14 sm:h-16 md:h-20">
+      <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex items-center justify-between h-12 sm:h-14 md:h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
-              <Home className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
+          <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center transition-all duration-500 group-hover:rotate-[10deg] group-hover:scale-110 shadow-lg shadow-primary/20">
+              <Home className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-lg sm:text-xl font-semibold text-foreground">HouseHub</span>
+            <span className="text-xl sm:text-2xl font-black text-foreground tracking-tighter">HouseHub</span>
           </Link>
 
           {/* Desktop Navigation */}

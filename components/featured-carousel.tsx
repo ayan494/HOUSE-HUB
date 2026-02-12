@@ -57,19 +57,19 @@ export function FeaturedCarousel({
   if (properties.length === 0) return null
 
   return (
-    <section className="py-24 bg-white dark:bg-transparent overflow-hidden">
+    <section className="py-24 md:py-32 bg-white dark:bg-transparent overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-0.5 bg-primary" />
-              <span className="text-primary font-bold uppercase tracking-widest text-sm">Exclusive Selection</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-1 bg-primary rounded-full" />
+              <span className="text-primary font-black uppercase tracking-[0.3em] text-xs sm:text-sm">Exclusive Selection</span>
             </div>
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-foreground mb-3 tracking-tight">
+            <h2 className="text-4xl md:text-6xl font-black text-foreground mb-6 tracking-tighter">
               {title}
             </h2>
-            <p className="text-muted-foreground text-sm md:text-base font-medium max-w-xl">
+            <p className="text-lg md:text-xl text-muted-foreground/80 font-medium leading-relaxed">
               {subtitle}
             </p>
           </div>

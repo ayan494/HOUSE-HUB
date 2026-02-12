@@ -27,31 +27,32 @@ export function PropertyCard({ property, onBookClick }: PropertyCardProps) {
   }
 
   return (
-    <Card className="group overflow-hidden bg-card border-border hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
+    <Card className="group overflow-hidden bg-card border border-border/50 hover:border-primary/30 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full rounded-[2rem]">
       {/* Image Container */}
-      <div className="relative h-56 sm:h-64 md:h-72 w-full flex-shrink-0 p-0 m-0 overflow-hidden bg-gray-200">
+      <div className="relative h-64 sm:h-72 w-full flex-shrink-0 overflow-hidden bg-muted">
         <Image
           src={property.images[imageIndex] || "/placeholder.svg"}
           alt={property.name}
           fill
-          className="object-cover object-center block transition-transform duration-500 group-hover:scale-110 w-full h-full"
+          className="object-cover object-center transition-transform duration-1000 group-hover:scale-110"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
 
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Premium Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
 
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
+        {/* Badges - Glassmorphism style */}
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
           {property.isPremium && (
-            <Badge className="bg-[var(--premium)] text-[var(--premium-foreground)] hover:bg-[var(--premium)]/90 text-xs sm:text-sm px-2 py-0.5">
-              <Crown className="w-3 h-3 mr-1" />
-              <span className="hidden sm:inline">Premium</span>
-              <span className="sm:hidden">Prm</span>
+            <Badge className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+              <Crown className="w-3 h-3 mr-1 text-primary" />
+              Premium
             </Badge>
           )}
           {property.isFeatured && !property.isPremium && (
-            <Badge variant="secondary" className="text-xs sm:text-sm px-2 py-0.5">Featured</Badge>
+            <Badge className="bg-primary/20 backdrop-blur-md border border-primary/20 text-primary hover:bg-primary/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+              Featured
+            </Badge>
           )}
         </div>
 
@@ -61,14 +62,14 @@ export function PropertyCard({ property, onBookClick }: PropertyCardProps) {
             e.preventDefault()
             setIsLiked(!isLiked)
           }}
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center transition-transform hover:scale-110"
+          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center transition-all hover:bg-white hover:text-black hover:scale-110"
         >
-          <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+          <Heart className={`w-5 h-5 transition-colors ${isLiked ? 'fill-red-500 text-red-500 border-none' : 'text-white'}`} />
         </button>
 
-        {/* Image dots */}
+        {/* Image Pagination Dots */}
         {property.images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 p-1.5 bg-black/20 backdrop-blur-sm rounded-full">
             {property.images.map((_, idx) => (
               <button
                 key={idx}
@@ -76,83 +77,67 @@ export function PropertyCard({ property, onBookClick }: PropertyCardProps) {
                   e.preventDefault()
                   setImageIndex(idx)
                 }}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  idx === imageIndex ? 'bg-white w-4' : 'bg-white/60'
-                }`}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${idx === imageIndex ? 'bg-primary w-4' : 'bg-white/50'
+                  }`}
               />
             ))}
           </div>
         )}
       </div>
 
-      <CardContent className="p-3 sm:p-4 flex-1 flex flex-col">
-        {/* Location & Rating */}
-        <div className="flex items-center justify-between mb-1.5 gap-2">
-          <div className="flex items-center gap-1 text-muted-foreground text-xs sm:text-sm flex-1 min-w-0">
-            <MapPin className="w-3 h-3 flex-shrink-0" />
-            <span className="truncate">{property.location}, {property.city}</span>
+      {/* Content Section */}
+      <CardContent className="p-6 flex-1 flex flex-col">
+        {/* Price & Rating Row */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col">
+            <span className="text-2xl font-black text-primary leading-none">{formatPrice(property.price)}</span>
+            <span className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">per month</span>
           </div>
-          <div className="flex items-center gap-0.5 flex-shrink-0">
-            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-            <span className="text-xs sm:text-sm font-medium">{property.rating}</span>
-            <span className="text-xs text-muted-foreground hidden sm:inline">({property.reviews})</span>
+          <div className="flex items-center gap-1 px-3 py-1 bg-primary/5 rounded-full">
+            <Star className="w-4 h-4 fill-primary text-primary" />
+            <span className="text-sm font-black text-primary">{property.rating}</span>
           </div>
         </div>
 
         {/* Title */}
         <Link href={`/property/${property.id}`}>
-          <h3 className="font-semibold text-sm sm:text-base text-foreground mb-2 hover:text-primary transition-colors line-clamp-1">
+          <h3 className="text-xl font-bold text-foreground mb-3 hover:text-primary transition-colors line-clamp-1 h-7">
             {property.name}
           </h3>
         </Link>
 
-        {/* Features */}
-        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-2">
-          <div className="flex items-center gap-1">
-            <Bed className="w-3 h-3" />
-            <span>{property.bedrooms}</span>
+        {/* Location */}
+        <div className="flex items-center gap-2 text-muted-foreground text-sm mb-6">
+          <MapPin className="w-4 h-4 text-primary/60" />
+          <span className="truncate">{property.location}, {property.city}</span>
+        </div>
+
+        {/* Specs Table-like design */}
+        <div className="grid grid-cols-3 gap-4 py-4 border-y border-border/50 mb-6">
+          <div className="flex flex-col items-center gap-1">
+            <Bed className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs font-bold">{property.bedrooms} Beds</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Bath className="w-3 h-3" />
-            <span>{property.bathrooms}</span>
+          <div className="border-x border-border/50 flex flex-col items-center gap-1">
+            <Bath className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs font-bold">{property.bathrooms} Baths</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Square className="w-3 h-3" />
-            <span>{property.area}</span>
+          <div className="flex flex-col items-center gap-1">
+            <Square className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs font-bold">{property.area} sqft</span>
           </div>
         </div>
 
-        {/* Amenities preview */}
-        <div className="flex flex-wrap gap-1 mb-2 hidden sm:flex">
-          {property.amenities.slice(0, 2).map((amenity) => (
-            <Badge key={amenity} variant="secondary" className="text-xs font-normal">
-              {amenity}
-            </Badge>
-          ))}
-          {property.amenities.length > 2 && (
-            <Badge variant="outline" className="text-xs font-normal">
-              +{property.amenities.length - 2}
-            </Badge>
-          )}
-        </div>
-
-        {/* Price & CTA */}
-        <div className="flex items-center justify-between pt-2 border-t border-border mt-auto gap-2">
-          <div>
-            <span className="text-base sm:text-lg font-bold text-primary">{formatPrice(property.price)}</span>
-            <span className="text-xs text-muted-foreground">/mo</span>
-          </div>
-          <Button 
-            size="sm" 
-            className="text-xs sm:text-sm"
-            onClick={(e) => {
-              e.preventDefault()
-              onBookClick?.(property)
-            }}
-          >
-            Book
-          </Button>
-        </div>
+        {/* CTA Button */}
+        <Button
+          className="w-full h-12 rounded-2xl text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/10 mt-auto"
+          onClick={(e) => {
+            e.preventDefault()
+            onBookClick?.(property)
+          }}
+        >
+          Schedule a Tour
+        </Button>
       </CardContent>
     </Card>
   )
