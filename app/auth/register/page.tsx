@@ -12,12 +12,9 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X } from 'lucide-react'
 import { registerUser } from '@/lib/store'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-
-const MySwal = withReactContent(Swal)
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import { emailExists, addRegisteredUser } from '@/lib/email-validator'
+import Swal from 'sweetalert2'
 
 function RegisterForm() {
   const router = useRouter()
@@ -91,18 +88,17 @@ function RegisterForm() {
       // Then register and set current user
       registerUser(name, email, phone, role)
 
-      await MySwal.fire({
-        title: 'Welcome to HouseHub!',
-        text: 'Your account has been created successfully.',
+      await Swal.fire({
+        title: 'Account Created!',
+        text: 'Your account has been successfully created.',
         icon: 'success',
-        confirmButtonColor: '#E6D8C7',
-        confirmButtonText: 'Login Now',
-        customClass: {
-          confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
-        }
+        timer: 2000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        borderRadius: '20px',
       })
 
-      router.push(role === 'owner' ? '/dashboard/owner/premium' : '/dashboard/user/plan')
+      router.push(role === 'owner' ? '/dashboard/owner' : '/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed')
     } finally {
@@ -135,8 +131,8 @@ function RegisterForm() {
                 type="button"
                 onClick={() => setRole('user')}
                 className={`p-4 rounded-lg border-2 transition-all ${role === 'user'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
                   }`}
               >
                 <Users className={`w-6 h-6 mx-auto mb-2 ${role === 'user' ? 'text-primary' : 'text-muted-foreground'}`} />
@@ -149,8 +145,8 @@ function RegisterForm() {
                 type="button"
                 onClick={() => setRole('owner')}
                 className={`p-4 rounded-lg border-2 transition-all ${role === 'owner'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
                   }`}
               >
                 <Building className={`w-6 h-6 mx-auto mb-2 ${role === 'owner' ? 'text-primary' : 'text-muted-foreground'}`} />

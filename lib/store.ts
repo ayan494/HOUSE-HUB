@@ -1,7 +1,6 @@
 "use client"
 
 import type { User, Booking } from './types'
-import { getRegisteredUsers } from './email-validator'
 
 const STORAGE_KEYS = {
   USER: 'househub_user',
@@ -24,23 +23,14 @@ export function setCurrentUser(user: User | null): void {
   }
 }
 
-export function loginUser(email: string, password: string): User {
-  const registeredUsers = getRegisteredUsers()
-  const foundUser = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase())
-
-  if (!foundUser) {
-    throw new Error('Email not registered. Please register first.')
-  }
-
+export function loginUser(email: string, password: string, role: 'user' | 'owner' = 'user'): User {
+  // MVP: Simple mock login
   const user: User = {
-    id: crypto.randomUUID(), // In real app, this would come from DB
-    name: foundUser.name,
-    email: foundUser.email,
-    phone: foundUser.phone,
-    role: foundUser.role,
-    avatar: '', // Initial empty
-    image: '',
-    credits: 0, // Initial credits
+    id: crypto.randomUUID(),
+    name: email.split('@')[0],
+    email,
+    phone: '+92 300 0000000',
+    role,
   }
   setCurrentUser(user)
   return user
@@ -53,7 +43,6 @@ export function registerUser(name: string, email: string, phone: string, role: '
     email,
     phone,
     role,
-    credits: 0,
   }
   setCurrentUser(user)
   return user

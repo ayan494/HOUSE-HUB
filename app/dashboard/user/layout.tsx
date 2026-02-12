@@ -38,9 +38,9 @@ export default function UserDashboardLayout({
   if (!user) return null
 
   return (
-    <div className="flex min-h-screen bg-black">
+    <div className="flex min-h-screen bg-[#F8FAFC]">
       <DashboardSidebar role="user" />
-      <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden bg-black">
+      <main className="flex-1 p-3 pt-20 sm:p-4 md:p-6 md:pt-6 lg:p-8 overflow-x-hidden">
         <div className="max-w-6xl mx-auto">
           {children}
         </div>

@@ -11,12 +11,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Home, Mail, Lock, ArrowRight, Chrome, Check, X } from 'lucide-react'
-import { getCurrentUser, loginUser } from '@/lib/store'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-
-const MySwal = withReactContent(Swal)
+import { loginUser } from '@/lib/store'
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
+import Swal from 'sweetalert2'
 
 function LoginForm() {
   const router = useRouter()
@@ -27,7 +24,6 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const showSuccess = searchParams.get('success') === 'registered'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,25 +42,17 @@ function LoginForm() {
     try {
       loginUser(email, password)
 
-      await MySwal.fire({
-        title: 'Success!',
-        text: 'You have logged in successfully.',
+      await Swal.fire({
+        title: 'Welcome Back!',
+        text: 'You have successfully signed in.',
         icon: 'success',
-        confirmButtonColor: '#E6D8C7',
-        confirmButtonText: 'Great!',
-        customClass: {
-          confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
-        }
+        timer: 1500,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        borderRadius: '20px',
       })
 
-      const user = getCurrentUser()
-      if (user?.role === 'owner') {
-        router.push('/dashboard/owner/premium')
-      } else if (user?.role === 'user') {
-        router.push('/dashboard/user/plan')
-      } else {
-        router.push(redirect)
-      }
+      router.push(redirect)
     } catch (err) {
       setError('Invalid credentials')
     } finally {
@@ -192,7 +180,7 @@ function LoginForm() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full h-11" disabled={!!(isLoading || (password && !isPasswordValid(password)))}>
+              <Button type="submit" className="w-full h-11" disabled={isLoading || (password && !isPasswordValid(password))}>
                 {isLoading ? 'Signing in...' : 'Sign In'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -210,25 +198,7 @@ function LoginForm() {
               type="button"
               variant="outline"
               className="w-full h-11 mt-4"
-              onClick={async () => {
-                const result = await signIn('google', { redirect: false })
-                if (result?.ok) {
-                  await MySwal.fire({
-                    title: 'Welcome!',
-                    text: 'Signed in with Google successfully.',
-                    icon: 'success',
-                    confirmButtonColor: '#E6D8C7',
-                    confirmButtonText: 'Let\'s Go!',
-                    customClass: {
-                      confirmButton: 'text-slate-900 font-bold px-8 py-3 rounded-xl'
-                    }
-                  })
-
-                  const user = getCurrentUser()
-                  const callbackUrl = user?.role === 'owner' ? '/dashboard/owner/premium' : '/'
-                  router.push(callbackUrl)
-                }
-              }}
+              onClick={() => signIn('google', { callbackUrl: redirect })}
             >
               <Chrome className="w-4 h-4 mr-2" />
               Sign in with Google

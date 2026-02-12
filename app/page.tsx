@@ -33,8 +33,8 @@ export default function HomePage() {
       {/* <NightSky /> - Disabled to match light mode appearance in dark mode as requested */}
       <Header />
 
-      <main>
-        <FadeIn direction="none" fullWidth>
+      <main className="m-0 p-0">
+        <FadeIn direction="none" fullWidth className="m-0 p-0">
           <Hero />
         </FadeIn>
 

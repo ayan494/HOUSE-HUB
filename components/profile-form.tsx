@@ -225,7 +225,7 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
                                         <button
                                             type="button"
                                             onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground focus:outline-none"
+                                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
                                         >
                                             {showCurrentPassword ? (
                                                 <EyeOff className="h-5 w-5" />
@@ -252,7 +252,7 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
                                         <button
                                             type="button"
                                             onClick={() => setShowNewPassword(!showNewPassword)}
-                                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground focus:outline-none"
+                                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
                                         >
                                             {showNewPassword ? (
                                                 <EyeOff className="h-5 w-5" />

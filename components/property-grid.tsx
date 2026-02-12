@@ -46,23 +46,23 @@ export function PropertyGrid({ properties, title, subtitle, onBookClick }: Prope
   }
 
   return (
-    <section className="py-20 md:py-32">
+    <section className="py-12 md:py-16">
       {(title || subtitle) && (
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           {title && (
-            <h2 className="text-4xl md:text-6xl font-black text-foreground mb-6 tracking-tight text-balance">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 text-balance">
               {title}
             </h2>
           )}
           {subtitle && (
-            <p className="text-lg md:text-xl text-muted-foreground/80 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto text-pretty">
               {subtitle}
             </p>
           )}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         {properties.map((property, index) => (
           <div
             key={property.id}

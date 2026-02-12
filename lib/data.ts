@@ -252,12 +252,30 @@ export function filterProperties(filters: {
   maxPrice?: number
   bedrooms?: number
   amenities?: string[]
+  query?: string
 }): Property[] {
   return properties.filter(property => {
     if (filters.city && property.city !== filters.city) return false
     if (filters.minPrice && property.price < filters.minPrice) return false
     if (filters.maxPrice && property.price > filters.maxPrice) return false
     if (filters.bedrooms && property.bedrooms < filters.bedrooms) return false
+
+    if (filters.query) {
+      const searchTerms = filters.query.toLowerCase().split(' ')
+      const propertyText = `${property.name} ${property.location} ${property.city} ${property.description} ${property.propertyType}`.toLowerCase()
+
+      const matchesText = searchTerms.every(term => propertyText.includes(term))
+      if (!matchesText) {
+        const queryNumbers = filters.query.match(/\d+/g)?.map(Number) || []
+        const hasMatchingNumber = queryNumbers.some(num =>
+          num === property.price ||
+          num === property.bedrooms ||
+          (num >= 1000 && Math.abs(num - property.price) < 10000)
+        )
+        if (!hasMatchingNumber && searchTerms.length > 0) return false
+      }
+    }
+
     if (filters.amenities && filters.amenities.length > 0) {
       const hasAllAmenities = filters.amenities.every(a => property.amenities.includes(a))
       if (!hasAllAmenities) return false

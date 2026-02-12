@@ -42,9 +42,9 @@ export default function OwnerDashboardLayout({
   if (!user) return null
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen bg-[#F8FAFC]">
       <DashboardSidebar role="owner" />
-      <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden bg-background">
+      <main className="flex-1 p-3 pt-20 sm:p-4 md:p-6 md:pt-6 lg:p-8 overflow-x-hidden">
         <div className="max-w-6xl mx-auto">
           {children}
         </div>

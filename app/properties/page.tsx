@@ -17,6 +17,7 @@ function PropertiesContent() {
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties)
 
   useEffect(() => {
+    const query = searchParams.get('q') || undefined
     const city = searchParams.get('city') || undefined
     const minPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined
     const maxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined
@@ -29,6 +30,7 @@ function PropertiesContent() {
       maxPrice,
       bedrooms,
       amenities,
+      query,
     })
 
     // Sort: featured first, then premium, then by rating
@@ -51,7 +53,7 @@ function PropertiesContent() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           {/* Page Header */}
@@ -82,7 +84,7 @@ function PropertiesContent() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProperties.map((property) => (
-                <PropertyCard 
+                <PropertyCard
                   key={property.id}
                   property={property}
                   onBookClick={handleBookClick}
@@ -96,7 +98,7 @@ function PropertiesContent() {
       <Footer />
 
       {/* Booking Modal */}
-      <BookingModal 
+      <BookingModal
         property={selectedProperty}
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}

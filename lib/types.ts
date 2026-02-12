@@ -34,10 +34,7 @@ export interface User {
   email: string
   phone: string
   avatar?: string
-  image?: string
-  location?: string
   role: 'user' | 'owner'
-  credits: number
 }
 
 export interface Booking {

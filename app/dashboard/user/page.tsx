@@ -9,6 +9,7 @@ import { Calendar, Home, Clock, CheckCircle, Search } from 'lucide-react'
 import { getCurrentUser, getUserBookings } from '@/lib/store'
 import { getPropertyById } from '@/lib/data'
 import type { Booking, User } from '@/lib/types'
+import { cn } from '@/lib/utils'
 
 export default function UserDashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -26,56 +27,56 @@ export default function UserDashboardPage() {
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed')
 
   return (
-    <div className="space-y-8 text-white">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">
+        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
           Welcome back, {user?.name?.split(' ')[0]}!
         </h1>
-        <p className="text-gray-400 mt-1">
+        <p className="text-slate-500 mt-1 font-medium">
           Manage your bookings and find your perfect home.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-slate-900 border-slate-800">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <Card className="bg-white border-slate-200 shadow-sm rounded-2xl">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-primary" />
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <Calendar className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{bookings.length}</p>
-                <p className="text-sm text-gray-400">Total Bookings</p>
+                <p className="text-3xl font-black text-slate-900">{bookings.length}</p>
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Total Bookings</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-white border-slate-200 shadow-sm rounded-2xl">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-amber-500" />
+              <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+                <Clock className="w-7 h-7 text-amber-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{pendingBookings.length}</p>
-                <p className="text-sm text-gray-400">Pending</p>
+                <p className="text-3xl font-black text-slate-900">{pendingBookings.length}</p>
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Pending</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-white border-slate-200 shadow-sm rounded-2xl">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-500" />
+              <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center">
+                <CheckCircle className="w-7 h-7 text-green-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{confirmedBookings.length}</p>
-                <p className="text-sm text-gray-400">Confirmed</p>
+                <p className="text-3xl font-black text-slate-900">{confirmedBookings.length}</p>
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Confirmed</p>
               </div>
             </div>
           </CardContent>
@@ -83,20 +84,20 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-white border-slate-200 shadow-sm rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-lg text-white">Quick Actions</CardTitle>
+          <CardTitle className="text-xl font-bold text-slate-900">Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
+        <CardContent className="flex flex-wrap gap-4">
           <Link href="/properties">
-            <Button>
-              <Search className="w-4 h-4 mr-2" />
+            <Button className="rounded-xl px-6 py-6 font-bold shadow-lg shadow-primary/20">
+              <Search className="w-5 h-5 mr-2" />
               Browse Properties
             </Button>
           </Link>
           <Link href="/dashboard/user/bookings">
-            <Button variant="outline" className="border-slate-700 text-white hover:bg-slate-800">
-              <Calendar className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="rounded-xl px-6 py-6 border-slate-200 font-bold hover:bg-slate-50">
+              <Calendar className="w-5 h-5 mr-2" />
               View My Bookings
             </Button>
           </Link>
@@ -104,20 +105,22 @@ export default function UserDashboardPage() {
       </Card>
 
       {/* Recent Bookings */}
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-white border-slate-200 shadow-sm rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg text-white">Recent Bookings</CardTitle>
+          <CardTitle className="text-xl font-bold text-slate-900">Recent Bookings</CardTitle>
           <Link href="/dashboard/user/bookings">
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">View All</Button>
+            <Button variant="ghost" size="sm" className="font-bold text-primary hover:text-primary/80">View All</Button>
           </Link>
         </CardHeader>
         <CardContent>
           {bookings.length === 0 ? (
-            <div className="text-center py-8">
-              <Home className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-400">No bookings yet</p>
+            <div className="text-center py-12">
+              <div className="w-20 h-20 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                <Home className="w-10 h-10 text-slate-400" />
+              </div>
+              <p className="text-slate-500 font-medium text-lg">No bookings yet</p>
               <Link href="/properties">
-                <Button variant="link" className="mt-2 text-primary hover:text-primary/90">
+                <Button variant="link" className="mt-2 text-primary font-bold">
                   Start browsing properties
                 </Button>
               </Link>
@@ -131,25 +134,31 @@ export default function UserDashboardPage() {
                 return (
                   <div
                     key={booking.id}
-                    className="flex items-center gap-4 p-4 rounded-lg border border-slate-700"
+                    className="flex items-center gap-5 p-5 rounded-2xl border border-slate-100 hover:border-primary/20 hover:bg-primary/5 transition-all group"
                   >
-                    <div className="w-16 h-16 rounded-lg bg-slate-800 overflow-hidden">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 shadow-md">
                       <img
                         src={property.images[0] || "/placeholder.svg"}
                         alt={property.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-white truncate">
+                      <h4 className="font-bold text-slate-900 text-lg line-clamp-1">
                         {property.name}
                       </h4>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
+                        <Search className="w-4 h-4" />
                         {property.location}, {property.city}
                       </p>
                     </div>
                     <Badge
-                      variant={booking.status === 'confirmed' ? 'default' : 'secondary'}
+                      className={cn(
+                        "rounded-full px-4 py-1.5 font-bold uppercase tracking-widest text-[10px]",
+                        booking.status === 'confirmed'
+                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                          : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                      )}
                     >
                       {booking.status}
                     </Badge>

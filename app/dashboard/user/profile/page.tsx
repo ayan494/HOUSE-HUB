@@ -36,10 +36,10 @@ export default function UserProfilePage() {
     if (!user) return null
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
-                <p className="text-muted-foreground mt-1">
+                <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">My Profile</h1>
+                <p className="text-slate-500 mt-1 font-medium">
                     Manage your account settings and preferences.
                 </p>
             </div>
