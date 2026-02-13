@@ -1,12 +1,7 @@
-"use client"
-
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '@/components/ui/sheet'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { SlidersHorizontal, X, MapPin, Bed, Wallet, Check } from 'lucide-react'
@@ -127,119 +122,162 @@ export function SearchFilters() {
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[90vw] sm:w-[400px] md:w-[450px] overflow-y-auto p-6">
-          <SheetHeader>
-            <SheetTitle>Filter Properties</SheetTitle>
+        <SheetContent side="right" className="w-full sm:w-[400px] md:w-[450px] p-0 border-none flex flex-col h-full">
+          <SheetHeader className="p-6 border-b border-border/50">
+            <SheetTitle className="text-2xl font-black text-slate-900">Filter Properties</SheetTitle>
+            <SheetDescription className="text-slate-500 font-medium">
+              Fine-tune your search to find the perfect match.
+            </SheetDescription>
           </SheetHeader>
 
-          <div className="mt-6 space-y-6">
-            {/* City */}
-            <div className="space-y-2">
-              <Label>City</Label>
+          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            {/* City Selection */}
+            <div className="space-y-3">
+              <Label className="text-base font-bold text-slate-700 ml-1 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#6699cc]" />
+                Target City
+              </Label>
               <Select value={city} onValueChange={setCity}>
-                <SelectTrigger className="bg-background">
+                <SelectTrigger className="h-12 rounded-2xl border-2 bg-background focus:ring-[#6699cc]">
                   <SelectValue placeholder="Select city" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Cities</SelectItem>
+                <SelectContent className="rounded-2xl border-2">
+                  <SelectItem value="all" className="font-medium">All Cities</SelectItem>
                   {cities.map((c) => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                    <SelectItem key={c} value={c} className="font-medium">{c}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Bedrooms */}
-            <div className="space-y-2">
-              <Label>Bedrooms</Label>
-              <Select value={bedrooms} onValueChange={setBedrooms}>
-                <SelectTrigger className="bg-background">
-                  <SelectValue placeholder="Select bedrooms" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1+ Bedroom</SelectItem>
-                  <SelectItem value="2">2+ Bedrooms</SelectItem>
-                  <SelectItem value="3">3+ Bedrooms</SelectItem>
-                  <SelectItem value="4">4+ Bedrooms</SelectItem>
-                  <SelectItem value="5">5+ Bedrooms</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Price Range */}
-            <div className="space-y-4">
-              <Label>Price Range (PKR)</Label>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Input
-                    type="number"
-                    placeholder="Min"
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                    className="bg-background"
-                  />
-                </div>
-                <div>
-                  <Input
-                    type="number"
-                    placeholder="Max"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                    className="bg-background"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Amenities */}
+            {/* Bedrooms Selection */}
             <div className="space-y-3">
-              <Label>Amenities</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {amenitiesList.map((amenity) => (
-                  <div
-                    key={amenity}
-                    onClick={() => toggleAmenity(amenity)}
-                    className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${selectedAmenities.includes(amenity)
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50'
-                      }`}
+              <Label className="text-base font-bold text-slate-700 ml-1 flex items-center gap-2">
+                <Bed className="w-4 h-4 text-[#6699cc]" />
+                Bedrooms
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                {['1', '2', '3', '4', '5'].map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setBedrooms(num === bedrooms ? '' : num)}
+                    className={cn(
+                      "h-12 rounded-2xl border-2 font-bold transition-all",
+                      bedrooms === num
+                        ? "border-[#6699cc] bg-[#6699cc]/5 text-[#6699cc]"
+                        : "border-slate-100 bg-slate-50/50 text-slate-500 hover:border-slate-200"
+                    )}
                   >
-                    <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${selectedAmenities.includes(amenity)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted'
-                      }`}>
-                      {selectedAmenities.includes(amenity) && (
-                        <Check className="w-3 h-3" />
-                      )}
-                    </div>
-                    <span className="text-sm">{amenity}</span>
-                  </div>
+                    {num}{num === '5' ? '+' : ''}
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3 pt-6 mt-6 border-t border-border sticky bottom-0 bg-background pb-2">
-              <Button variant="outline" className="flex-1 h-11" onClick={clearFilters}>
-                Clear All
-              </Button>
-              <Button className="flex-1 h-11" onClick={applyFilters}>
-                Apply Filters
-              </Button>
+            {/* Price Range */}
+            <div className="space-y-4">
+              <Label className="text-base font-bold text-slate-700 ml-1 flex items-center gap-2">
+                <Wallet className="w-4 h-4 text-[#6699cc]" />
+                Price Range (PKR)
+              </Label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Minimum</span>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">PKR</span>
+                    <Input
+                      type="number"
+                      placeholder="0"
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value)}
+                      className="h-12 pl-12 rounded-2xl border-2 bg-background font-bold focus-visible:ring-[#6699cc]"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Maximum</span>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">PKR</span>
+                    <Input
+                      type="number"
+                      placeholder="Any"
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                      className="h-12 pl-12 rounded-2xl border-2 bg-background font-bold focus-visible:ring-[#6699cc]"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {/* Amenities Section */}
+            <div className="space-y-4">
+              <Label className="text-base font-bold text-slate-700 ml-1 flex items-center gap-2">
+                <Check className="w-4 h-4 text-[#6699cc]" />
+                Must-Have Amenities
+              </Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {amenitiesList.map((amenity) => (
+                  <div
+                    key={amenity}
+                    onClick={() => toggleAmenity(amenity)}
+                    className={cn(
+                      "flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all",
+                      selectedAmenities.includes(amenity)
+                        ? "border-[#6699cc] bg-[#6699cc]/5 shadow-sm"
+                        : "border-slate-100 hover:border-slate-200 bg-slate-50/50"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors",
+                      selectedAmenities.includes(amenity)
+                        ? "bg-[#6699cc] text-white"
+                        : "bg-white border-2 border-slate-200"
+                    )}>
+                      {selectedAmenities.includes(amenity) && <Check className="w-3.5 h-3.5" />}
+                    </div>
+                    <span className={cn(
+                      "text-sm font-bold",
+                      selectedAmenities.includes(amenity) ? "text-[#6699cc]" : "text-slate-600"
+                    )}>
+                      {amenity}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Fixed Footer Actions */}
+          <div className="p-6 border-t border-border/50 bg-background/80 backdrop-blur-md grid grid-cols-2 gap-4">
+            <Button
+              variant="outline"
+              className="h-14 rounded-2xl font-bold border-2 hover:bg-slate-50 transition-all"
+              onClick={clearFilters}
+            >
+              Clear All
+            </Button>
+            <Button
+              className="h-14 rounded-2xl font-black text-lg shadow-xl shadow-[#6699cc]/20 transition-all hover:scale-[1.02]"
+              style={{ backgroundColor: '#6699cc' }}
+              onClick={applyFilters}
+            >
+              Apply Filters
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
 
       {/* More Filters Button - Desktop */}
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="sm" className="hidden lg:flex bg-transparent">
-            <SlidersHorizontal className="w-4 h-4 mr-2" />
-            More Filters
-          </Button>
-        </SheetTrigger>
-      </Sheet>
+      <Button
+        variant="outline"
+        size="sm"
+        className="hidden lg:flex bg-transparent"
+        onClick={() => setIsOpen(true)}
+      >
+        <SlidersHorizontal className="w-4 h-4 mr-2" />
+        More Filters
+      </Button>
     </div>
   )
 }

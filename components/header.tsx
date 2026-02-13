@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet'
 import { Menu, Home, User, LogOut } from 'lucide-react'
 import { getCurrentUser, logoutUser } from '@/lib/store'
 import type { User as UserType } from '@/lib/types'
@@ -188,6 +188,10 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-full sm:w-[400px] p-0 border-none bg-background">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Navigation Menu</SheetTitle>
+                  <SheetDescription>Main navigation for mobile devices</SheetDescription>
+                </SheetHeader>
                 <div className="h-full flex flex-col p-8">
                   <div className="flex items-center justify-between mb-12">
                     <div className="flex items-center gap-3">

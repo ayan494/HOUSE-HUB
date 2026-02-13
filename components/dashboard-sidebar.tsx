@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet'
 import {
   Home,
   Calendar,
@@ -184,6 +184,10 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
       {/* Mobile Sidebar Overlay */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetContent side="left" className="p-0 border-none w-[280px]">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Dashboard Navigation</SheetTitle>
+            <SheetDescription>Mobile navigation sidebar for the dashboard</SheetDescription>
+          </SheetHeader>
           <SidebarContent />
         </SheetContent>
       </Sheet>
