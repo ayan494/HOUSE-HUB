@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import type { User } from '@/lib/types'
 import { useSearchParams } from 'next/navigation'
 
 const plans = [
+    // ... same plans array
     {
         name: 'Basic',
         price: 'PKR 1,500',
@@ -42,7 +43,7 @@ const plans = [
     },
 ]
 
-export default function PlansPage() {
+function PlansContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [user, setUser] = useState<User | null>(null)
@@ -164,5 +165,17 @@ export default function PlansPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function PlansPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <div className="animate-pulse text-muted-foreground">Loading plans...</div>
+            </div>
+        }>
+            <PlansContent />
+        </Suspense>
     )
 }

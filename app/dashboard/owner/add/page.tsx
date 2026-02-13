@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,7 @@ import { cities, amenitiesList, addProperty, updateProperty, getSavedProperties 
 import { getCurrentUser } from '@/lib/store'
 import type { Property, PropertyType } from '@/lib/types'
 
-export default function AddPropertyPage() {
+function AddPropertyContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const editId = searchParams.get('edit')
@@ -25,7 +25,7 @@ export default function AddPropertyPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
-  // Form State
+  // ... rest of the component state and logic
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [city, setCity] = useState('')
@@ -323,13 +323,13 @@ export default function AddPropertyPage() {
                       key={amenity}
                       onClick={() => toggleAmenity(amenity)}
                       className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${selectedAmenities.includes(amenity)
-                          ? 'border-[#6699cc] bg-[#6699cc]/5 shadow-sm'
-                          : 'border-slate-100 hover:border-slate-200 bg-slate-50/50'
+                        ? 'border-[#6699cc] bg-[#6699cc]/5 shadow-sm'
+                        : 'border-slate-100 hover:border-slate-200 bg-slate-50/50'
                         }`}
                     >
                       <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${selectedAmenities.includes(amenity)
-                          ? 'bg-[#6699cc] text-white'
-                          : 'bg-white border-2 border-slate-200'
+                        ? 'bg-[#6699cc] text-white'
+                        : 'bg-white border-2 border-slate-200'
                         }`}>
                         {selectedAmenities.includes(amenity) && (
                           <Check className="w-4 h-4" />
@@ -421,5 +421,17 @@ export default function AddPropertyPage() {
         </div>
       </form>
     </div>
+  )
+}
+
+export default function AddPropertyPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground">Loading form...</div>
+      </div>
+    }>
+      <AddPropertyContent />
+    </Suspense>
   )
 }
