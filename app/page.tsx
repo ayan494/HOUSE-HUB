@@ -9,6 +9,8 @@ import { HowItWorks } from '@/components/how-it-works'
 import { Testimonials } from '@/components/testimonials'
 import { Footer } from '@/components/footer'
 import { BookingModal } from '@/components/booking-modal'
+import { CategoryCards } from '@/components/category-cards'
+import { TrustedPartners } from '@/components/trusted-partners'
 import { properties, getPremiumProperties, getFeaturedProperties } from '@/lib/data'
 import type { Property } from '@/lib/types'
 import { FadeIn } from '@/components/animations/fade-in'
@@ -36,6 +38,10 @@ export default function HomePage() {
       <main className="m-0 p-0">
         <FadeIn direction="none" fullWidth className="m-0 p-0">
           <Hero />
+        </FadeIn>
+
+        <FadeIn delay={0.1} direction="up" fullWidth>
+          <CategoryCards />
         </FadeIn>
 
         <FadeIn delay={0.2} direction="up" fullWidth>
@@ -72,6 +78,10 @@ export default function HomePage() {
             />
           </FadeIn>
         </div>
+
+        <FadeIn delay={0.2} direction="up" fullWidth>
+          <TrustedPartners />
+        </FadeIn>
 
         <FadeIn delay={0.2} direction="left" fullWidth>
           <Testimonials />

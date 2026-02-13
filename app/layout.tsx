@@ -15,21 +15,17 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'HouseHub - Find Your Perfect Home in Pakistan',
   description: 'Search, discover, and connect directly with house owners near you. HouseHub is Pakistan\'s premier house and apartment rental platform.',
-  generator: 'v0.app',
   icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/logo.svg',
+    shortcut: '/logo.svg',
+    apple: '/logo.svg',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.className} font-sans antialiased`}>
+      <body className={`${poppins.className} font-sans antialiased overflow-x-hidden`}>
         <CustomThemeProvider>
           {children}
           <Analytics />

@@ -45,7 +45,7 @@ export default function OwnerBookingsPage() {
     const getStatusColor = (status: Booking['status']) => {
         switch (status) {
             case 'confirmed':
-                return 'bg-green-500/10 text-green-600 border-green-500/20'
+                return 'bg-primary/10 text-primary border-primary/20'
             case 'pending':
                 return 'bg-amber-500/10 text-amber-600 border-amber-500/20'
             case 'cancelled':
@@ -152,7 +152,7 @@ export default function OwnerBookingsPage() {
                                             </Button>
                                             <Button
                                                 size="sm"
-                                                className="bg-green-600 hover:bg-green-700"
+                                                className="bg-primary hover:bg-primary/90"
                                                 onClick={() => handleStatusUpdate(booking.id, 'confirmed')}
                                             >
                                                 <CheckCircle className="w-4 h-4 mr-2" />

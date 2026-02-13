@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Mail, Lock, ArrowRight, Chrome, Check, X } from 'lucide-react'
+import { Home, Mail, Lock, ArrowRight, Chrome, Check, X, Eye, EyeOff } from 'lucide-react'
 import { loginUser } from '@/lib/store'
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import Swal from 'sweetalert2'
@@ -22,6 +22,7 @@ function LoginForm() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -40,7 +41,7 @@ function LoginForm() {
     await new Promise(resolve => setTimeout(resolve, 500))
 
     try {
-      loginUser(email, password)
+      const loggedUser = loginUser(email, password)
 
       await Swal.fire({
         title: 'Welcome Back!',
@@ -52,9 +53,17 @@ function LoginForm() {
         borderRadius: '20px',
       })
 
-      router.push(redirect)
+      const redirectUrl = searchParams.get('redirect')
+
+      if (!loggedUser.activePlan) {
+        // Redirect to plans if no plan, passing the original redirect
+        const plansUrl = redirectUrl ? `/plans?redirect=${redirectUrl}` : '/plans'
+        router.push(plansUrl)
+      } else {
+        router.push(redirectUrl || (loggedUser.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'))
+      }
     } catch (err) {
-      setError('Invalid credentials')
+      setError(err instanceof Error ? err.message : 'Invalid credentials')
     } finally {
       setIsLoading(false)
     }
@@ -107,12 +116,23 @@ function LoginForm() {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 pr-10"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
                 </div>
 
                 {/* Password Requirements */}
@@ -125,51 +145,51 @@ function LoginForm() {
                         <>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.minLength ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.minLength ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.minLength ? 'text-primary' : 'text-muted-foreground'}>
                               At least 8 characters
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasUppercase ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasUppercase ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasUppercase ? 'text-primary' : 'text-muted-foreground'}>
                               Uppercase Letters (A–Z)
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasLowercase ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasLowercase ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasLowercase ? 'text-primary' : 'text-muted-foreground'}>
                               Lowercase Letters (a–z)
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasNumber ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasNumber ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasNumber ? 'text-primary' : 'text-muted-foreground'}>
                               Numbers (0–9)
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasSpecialChar ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasSpecialChar ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasSpecialChar ? 'text-primary' : 'text-muted-foreground'}>
                               Special Characters (! @ # $ % ^ & *)
                             </span>
                           </div>
@@ -198,6 +218,7 @@ function LoginForm() {
               type="button"
               variant="outline"
               className="w-full h-11 mt-4"
+              style={{ borderColor: '#6699cc', color: '#6699cc' }}
               onClick={() => signIn('google', { callbackUrl: redirect })}
             >
               <Chrome className="w-4 h-4 mr-2" />
@@ -206,13 +227,21 @@ function LoginForm() {
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Don&apos;t have an account? </span>
-              <Link href="/auth/register" className="text-primary hover:underline font-medium">
+              <Link
+                href={searchParams.get('redirect') ? `/auth/register?redirect=${searchParams.get('redirect')}` : "/auth/register"}
+                className="hover:underline font-medium"
+                style={{ color: '#6699cc' }}
+              >
                 Sign up
               </Link>
             </div>
 
             <div className="mt-4 text-center text-sm">
-              <Link href="/auth/register?role=owner" className="text-primary hover:underline font-medium">
+              <Link
+                href="/auth/register?role=owner"
+                className="hover:underline font-medium"
+                style={{ color: '#6699cc' }}
+              >
                 List your property as an owner
               </Link>
             </div>

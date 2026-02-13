@@ -10,13 +10,13 @@ import { BookingModal } from '@/components/booking-modal'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  ArrowLeft, 
-  MapPin, 
-  Bed, 
-  Bath, 
-  Square, 
-  Star, 
+import {
+  ArrowLeft,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  Star,
   Crown,
   Phone,
   Mail,
@@ -30,13 +30,21 @@ import {
 import { getPropertyById, properties } from '@/lib/data'
 import type { Property } from '@/lib/types'
 
+import { addToRecentlyViewed } from '@/lib/store'
+
 export default function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params)
   const property = getPropertyById(resolvedParams.id)
-  
+
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
   const [isLiked, setIsLiked] = useState(false)
+
+  useEffect(() => {
+    if (property) {
+      addToRecentlyViewed(property)
+    }
+  }, [property])
 
   if (!property) {
     notFound()
@@ -65,7 +73,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-20">
         {/* Back button */}
         <div className="container mx-auto px-4 py-4">
@@ -86,7 +94,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
             className="object-cover"
             priority
           />
-          
+
           {/* Navigation arrows */}
           {property.images.length > 1 && (
             <>
@@ -111,9 +119,8 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
               <button
                 key={idx}
                 onClick={() => setCurrentImage(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  idx === currentImage ? 'bg-white w-6' : 'bg-white/60'
-                }`}
+                className={`w-2 h-2 rounded-full transition-all ${idx === currentImage ? 'bg-white w-6' : 'bg-white/60'
+                  }`}
               />
             ))}
           </div>
@@ -133,7 +140,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
 
           {/* Actions */}
           <div className="absolute top-4 right-4 flex gap-2">
-            <button 
+            <button
               onClick={() => setIsLiked(!isLiked)}
               className="w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white transition-colors"
             >
@@ -242,7 +249,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
                     <span>Available from {new Date(property.availableFrom).toLocaleDateString()}</span>
                   </div>
 
-                  <Button 
+                  <Button
                     className="w-full h-12 text-base mb-4"
                     onClick={() => setIsBookingOpen(true)}
                   >
@@ -312,7 +319,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
       <Footer />
 
       {/* Booking Modal */}
-      <BookingModal 
+      <BookingModal
         property={property}
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}

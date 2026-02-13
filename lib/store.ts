@@ -1,10 +1,12 @@
 "use client"
 
 import type { User, Booking } from './types'
+import { getUserByEmail } from './email-validator'
 
 const STORAGE_KEYS = {
   USER: 'househub_user',
   BOOKINGS: 'househub_bookings',
+  RECENTLY_VIEWED: 'househub_recently_viewed',
 }
 
 // User management
@@ -23,29 +25,56 @@ export function setCurrentUser(user: User | null): void {
   }
 }
 
-export function loginUser(email: string, password: string, role: 'user' | 'owner' = 'user'): User {
-  // MVP: Simple mock login
-  const user: User = {
-    id: crypto.randomUUID(),
-    name: email.split('@')[0],
-    email,
-    phone: '+92 300 0000000',
-    role,
+export function loginUser(email: string, password: string): User {
+  // Check if user is registered
+  const registeredUser = getUserByEmail(email)
+
+  if (!registeredUser) {
+    throw new Error('No account found with this email. Please register first.')
   }
+
+  const user: User = {
+    id: registeredUser.email, // Use email as ID for consistency with registered list
+    name: registeredUser.name,
+    email: registeredUser.email,
+    phone: registeredUser.phone,
+    role: registeredUser.role,
+    activePlan: undefined, // Default to no plan on login if not stored
+  }
+
+  // Check if we have an active plan stored for this user
+  const stored = localStorage.getItem(`househub_plan_${email}`)
+  if (stored) {
+    user.activePlan = stored as any
+  }
+
   setCurrentUser(user)
   return user
 }
 
 export function registerUser(name: string, email: string, phone: string, role: 'user' | 'owner'): User {
   const user: User = {
-    id: crypto.randomUUID(),
+    id: email,
     name,
     email,
     phone,
     role,
   }
-  setCurrentUser(user)
+  // In a real app, registration doesn't login automatically if we want strict flow
+  // but for this MVP we'll allow it if needed, or follow the USER's strict flow.
+  // The user requested: Register -> Login
   return user
+}
+
+export function updateUserPlan(email: string, plan: User['activePlan']): void {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(`househub_plan_${email}`, plan || '')
+
+  const currentUser = getCurrentUser()
+  if (currentUser && currentUser.email === email) {
+    currentUser.activePlan = plan
+    setCurrentUser(currentUser)
+  }
 }
 
 export function logoutUser(): void {
@@ -99,4 +128,21 @@ export function getUserBookings(userId: string): Booking[] {
 
 export function getPropertyBookings(propertyId: string): Booking[] {
   return getBookings().filter(b => b.propertyId === propertyId)
+}
+
+// Recently Viewed management
+export function getRecentlyViewed(): Property[] {
+  if (typeof window === 'undefined') return []
+  const stored = localStorage.getItem(STORAGE_KEYS.RECENTLY_VIEWED)
+  return stored ? JSON.parse(stored) : []
+}
+
+export function addToRecentlyViewed(property: Property): void {
+  if (typeof window === 'undefined') return
+  const viewed = getRecentlyViewed()
+  // Remove if already exists to move to top
+  const filtered = viewed.filter(p => p.id !== property.id)
+  // Add to beginning
+  const updated = [property, ...filtered].slice(0, 12) // Keep last 12
+  localStorage.setItem(STORAGE_KEYS.RECENTLY_VIEWED, JSON.stringify(updated))
 }

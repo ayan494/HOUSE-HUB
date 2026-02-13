@@ -304,6 +304,36 @@ export function saveProperties(list: Property[]) {
   localStorage.setItem(PROPERTIES_STORAGE_KEY, JSON.stringify(list))
 }
 
+export function addProperty(property: Omit<Property, 'id' | 'rating' | 'reviews'>): Property {
+  const newProperty: Property = {
+    ...property,
+    id: crypto.randomUUID(),
+    rating: 0,
+    reviews: 0,
+  }
+  const current = getSavedProperties()
+  const updated = [newProperty, ...current]
+  saveProperties(updated)
+  return newProperty
+}
+
+export function updateProperty(property: Property): void {
+  const current = getSavedProperties()
+  const updated = current.map(p => p.id === property.id ? property : p)
+  saveProperties(updated)
+}
+
+export function deleteProperty(id: string): void {
+  const current = getSavedProperties()
+  const updated = current.filter(p => p.id !== id)
+  saveProperties(updated)
+}
+
+export function getOwnerProperties(ownerEmail: string): Property[] {
+  const all = getSavedProperties()
+  return all.filter(p => p.owner.email === ownerEmail)
+}
+
 // Seed storage on client first load
 if (typeof window !== 'undefined') {
   if (!localStorage.getItem(PROPERTIES_STORAGE_KEY)) {

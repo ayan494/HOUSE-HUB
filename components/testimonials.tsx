@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Star, Quote, MapPin } from 'lucide-react'
 
 const testimonials = [
   {
@@ -123,46 +123,56 @@ export function Testimonials() {
         {/* Carousel */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
+          className="flex gap-8 overflow-x-auto scrollbar-hide pb-12 -mx-4 px-4 snap-x snap-mandatory pt-4"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {testimonials.map((testimonial) => (
             <Card
               key={testimonial.id}
-              className="flex-shrink-0 w-[300px] snap-start border-border"
+              className="flex-shrink-0 w-[320px] md:w-[400px] snap-start border-none bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-900/80 dark:to-slate-900/40 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-3 rounded-[2.5rem] overflow-visible mb-4 group"
             >
-              <CardContent className="pt-6">
-                {/* Quote icon */}
-                <Quote className="w-8 h-8 text-primary/20 mb-4" />
+              <CardContent className="p-8 relative">
+                {/* Decorative Elements */}
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center -rotate-12 transition-transform group-hover:rotate-0 group-hover:scale-110 duration-500">
+                  <Quote className="w-6 h-6 text-primary" />
+                </div>
 
                 {/* Rating */}
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-1.5 mb-8 justify-end">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-4 h-4 ${i < testimonial.rating
-                        ? 'fill-amber-400 text-amber-400'
-                        : 'text-muted'
-                        }`}
+                      className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110`}
+                      style={{ transitionDelay: `${i * 50}ms` }}
+                      fill={i < testimonial.rating ? "#fbbf24" : "transparent"}
+                      color={i < testimonial.rating ? "#fbbf24" : "#e2e8f0"}
                     />
                   ))}
                 </div>
 
-                {/* Text */}
-                <p className="text-foreground mb-6 leading-relaxed">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
+                {/* Text with elegant typography */}
+                <div className="relative mb-10">
+                  <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed font-medium italic">
+                    &ldquo;{testimonial.text}&rdquo;
+                  </p>
+                </div>
 
-                {/* Author */}
-                <div className="flex items-center gap-3">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
+                {/* Author with premium feel */}
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
+                  <div className="relative">
+                    <div className="absolute -inset-1 bg-gradient-to-tr from-primary to-blue-400 rounded-full blur-[2px] opacity-20 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-14 h-14 rounded-full object-cover relative border-2 border-white dark:border-slate-900 shadow-sm"
+                    />
+                  </div>
                   <div>
-                    <p className="font-medium text-foreground">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.location}</p>
+                    <p className="font-bold text-slate-900 dark:text-white text-lg tracking-tight">{testimonial.name}</p>
+                    <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-semibold text-sm">
+                      <MapPin className="w-3 h-3 text-primary" />
+                      {testimonial.location}
+                    </div>
                   </div>
                 </div>
               </CardContent>

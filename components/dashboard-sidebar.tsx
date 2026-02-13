@@ -18,6 +18,7 @@ import {
   Menu,
   ChevronLeft,
   LayoutDashboard,
+  Clock,
 } from 'lucide-react'
 import { logoutUser } from '@/lib/store'
 import Swal from 'sweetalert2'
@@ -63,6 +64,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const userLinks = [
     { href: '/dashboard/user', icon: LayoutDashboard, label: 'Overview' },
     { href: '/dashboard/user/bookings', icon: Calendar, label: 'My Bookings' },
+    { href: '/dashboard/history', icon: Clock, label: 'History' },
     { href: '/dashboard/user/premium', icon: Crown, label: 'Get Plus' },
     { href: '/dashboard/user/profile', icon: User, label: 'Profile' },
   ]

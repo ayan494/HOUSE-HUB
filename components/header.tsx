@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ThemeToggle } from '@/components/theme-toggle'
 import Swal from 'sweetalert2'
 
@@ -121,10 +121,17 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className={`flex items-center gap-3 px-2 hover:bg-muted ${textColor}`}
+                    className={`relative flex items-center gap-3 px-2 hover:bg-muted ${textColor}`}
                     onMouseEnter={() => setIsDropdownOpen(true)}
                   >
-                    <Avatar className="w-9 h-9 border-2" style={{ borderColor: 'rgba(102, 153, 204, 0.2)' }}>
+                    <Avatar className="w-10 h-10 border-2" style={{ borderColor: 'rgba(102, 153, 204, 0.2)' }}>
+                      {user.avatar && (
+                        <AvatarImage
+                          src={user.avatar}
+                          alt={user.name}
+                          className="object-cover rounded-full"
+                        />
+                      )}
                       <AvatarFallback className="text-white font-bold" style={{ backgroundColor: '#6699cc' }}>
                         {user.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
@@ -134,17 +141,18 @@ export function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-56 p-2 rounded-2xl"
+                  sideOffset={8}
+                  className="w-56 p-2 rounded-2xl absolute right-0 top-full z-[100] shadow-2xl border border-border bg-popover ring-1 ring-black/5"
                   onMouseLeave={() => setIsDropdownOpen(false)}
                 >
-                  <DropdownMenuItem asChild className="rounded-xl cursor-pointer py-3">
+                  <DropdownMenuItem asChild className="rounded-xl cursor-pointer py-3 focus:bg-primary/5">
                     <Link href={user.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'}>
-                      <User className="w-4 h-4 mr-3" />
+                      <User className="w-4 h-4 mr-3 text-primary" />
                       User Dashboard
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="my-2" />
-                  <DropdownMenuItem onClick={handleLogout} className="rounded-xl cursor-pointer py-3 text-destructive">
+                  <DropdownMenuItem onClick={handleLogout} className="rounded-xl cursor-pointer py-3 text-destructive focus:bg-destructive/5">
                     <LogOut className="w-4 h-4 mr-3" />
                     Sign Out
                   </DropdownMenuItem>

@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CalendarIcon, CheckCircle, MapPin, User, Phone, Star } from 'lucide-react'
+import { CalendarIcon, CheckCircle, MapPin, User, Phone, Star, X, ShieldAlert, CreditCard } from 'lucide-react'
 import { format } from 'date-fns'
 import { getCurrentUser, addBooking } from '@/lib/store'
 import type { Property, User as UserType } from '@/lib/types'
@@ -28,7 +28,7 @@ interface BookingModalProps {
 export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
   const router = useRouter()
   const [user, setUser] = useState<UserType | null>(null)
-  const [step, setStep] = useState<'form' | 'success'>('form')
+  const [step, setStep] = useState<'form' | 'success' | 'plan-required'>('form')
   const [checkIn, setCheckIn] = useState<Date>()
   const [checkOut, setCheckOut] = useState<Date>()
   const [notes, setNotes] = useState('')
@@ -41,7 +41,9 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
       setUser(currentUser)
       if (!currentUser) {
         onClose()
-        router.push(`/auth/login?redirect=/property/${property?.id}`)
+        router.push(`/auth/register?role=user&redirect=/property/${property?.id}`)
+      } else if (!currentUser.activePlan) {
+        setStep('plan-required')
       }
     }
   }, [isOpen, property, router, onClose])
@@ -59,6 +61,11 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!property || !user || !checkIn || !checkOut) return
+
+    if (!user.activePlan) {
+      setStep('plan-required')
+      return
+    }
 
     setIsLoading(true)
 
@@ -112,6 +119,13 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
             </div>
 
             <div className="p-6">
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
               <DialogHeader className="mb-4">
                 <DialogTitle>Book This Property</DialogTitle>
               </DialogHeader>
@@ -139,11 +153,11 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                         <Button
                           variant="outline"
                           className={cn(
-                            "w-full justify-start text-left font-normal",
+                            "w-full justify-start text-left font-normal border-primary/20",
                             !checkIn && "text-muted-foreground"
                           )}
                         >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
                           {checkIn ? format(checkIn, "PPP") : "Select date"}
                         </Button>
                       </PopoverTrigger>
@@ -166,11 +180,11 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                         <Button
                           variant="outline"
                           className={cn(
-                            "w-full justify-start text-left font-normal",
+                            "w-full justify-start text-left font-normal border-primary/20",
                             !checkOut && "text-muted-foreground"
                           )}
                         >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
                           {checkOut ? format(checkOut, "PPP") : "Select date"}
                         </Button>
                       </PopoverTrigger>
@@ -209,14 +223,14 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 </div>
 
                 {/* Owner Contact */}
-                <div className="flex items-center gap-3 p-3 border border-border rounded-lg">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                    <User className="w-5 h-5 text-muted-foreground" />
+                <div className="flex items-center gap-3 p-3 border border-primary/20 bg-primary/5 rounded-lg">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-sm">{property.owner.name}</p>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Phone className="w-3 h-3" />
+                      <Phone className="w-3 h-3 text-primary" />
                       {property.owner.phone}
                     </div>
                   </div>
@@ -237,9 +251,16 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
               </form>
             </div>
           </>
-        ) : (
+        ) : step === 'success' ? (
           /* Success State */
-          <div className="p-8 text-center">
+          <div className="p-8 text-center relative">
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-0 p-2 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-8 h-8 text-primary" />
             </div>
@@ -260,6 +281,43 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 onClick={() => router.push('/dashboard/user')}
               >
                 View My Bookings
+              </Button>
+            </div>
+          </div>
+        ) : (
+          /* Plan Required State */
+          <div className="p-8 text-center relative">
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-6">
+              <ShieldAlert className="w-8 h-8 text-amber-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-foreground mb-2">Subscription Required</h3>
+            <p className="text-muted-foreground mb-8">
+              You need an active subscription plan to book properties. Join our premium community today!
+            </p>
+            <div className="space-y-4">
+              <Button
+                onClick={() => {
+                  onClose()
+                  router.push(`/plans?redirect=/property/${property.id}`)
+                }}
+                className="w-full h-12 bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 font-bold"
+              >
+                <CreditCard className="w-5 h-5" />
+                View Subscription Plans
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full"
+                onClick={onClose}
+              >
+                Maybe Later
               </Button>
             </div>
           </div>

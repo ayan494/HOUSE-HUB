@@ -3,9 +3,60 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, Crown, Sparkles } from 'lucide-react'
+import { CheckCircle, Crown, Sparkles, User, BadgeCheck } from 'lucide-react'
+import { getCurrentUser, updateUser } from '@/lib/store'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
+import type { User as UserType } from '@/lib/types'
 
 export default function UserPremiumPage() {
+    const router = useRouter()
+    const [user, setUser] = useState<UserType | null>(null)
+    const [isActivating, setIsActivating] = useState<string | null>(null)
+
+    useEffect(() => {
+        setUser(getCurrentUser())
+    }, [])
+
+    const handlePlanActivation = async (plan: 'simple' | 'standard' | 'premium' | 'ultimate') => {
+        if (!user) {
+            router.push('/auth/register')
+            return
+        }
+
+        const result = await Swal.fire({
+            title: `Activate ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan?`,
+            text: "This will enable instant booking for your account (Demo Mode).",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6699cc',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Activate it!'
+        })
+
+        if (result.isConfirmed) {
+            setIsActivating(plan)
+            // Simulate processing
+            await new Promise(resolve => setTimeout(resolve, 1500))
+
+            const updated = updateUser(user.id, { activePlan: plan })
+            setUser(updated)
+            setIsActivating(null)
+
+            await Swal.fire({
+                title: 'Plan Activated!',
+                text: `You have successfully subscribed to the ${plan} plan.`,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false,
+                borderRadius: '20px',
+            })
+
+            router.push('/dashboard/user')
+        }
+    }
+
     return (
         <div className="space-y-8">
             {/* Header */}
@@ -33,20 +84,24 @@ export default function UserPremiumPage() {
                     <CardContent>
                         <ul className="space-y-3 mb-8">
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">5 Property Bookings</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">Priority Support</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">Email Notifications</span>
                             </li>
                         </ul>
-                        <Button className="w-full rounded-xl font-bold bg-blue-600 hover:bg-blue-700 py-6">
-                            Choose Basic
+                        <Button
+                            className="w-full rounded-xl font-bold bg-blue-600 hover:bg-blue-700 py-6"
+                            onClick={() => handlePlanActivation('simple')}
+                            disabled={isActivating !== null || user?.activePlan === 'simple'}
+                        >
+                            {user?.activePlan === 'simple' ? 'Current Plan' : isActivating === 'simple' ? 'Activating...' : 'Choose Basic'}
                         </Button>
                     </CardContent>
                 </Card>
@@ -68,24 +123,28 @@ export default function UserPremiumPage() {
                     <CardContent>
                         <ul className="space-y-3 mb-8">
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-300 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-blue-200 shrink-0" />
                                 <span className="text-sm font-medium text-white">15 Property Bookings</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-300 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-blue-200 shrink-0" />
                                 <span className="text-sm font-medium text-white">24/7 Priority Support</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-300 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-blue-200 shrink-0" />
                                 <span className="text-sm font-medium text-white">SMS & Email Alerts</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-300 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-blue-200 shrink-0" />
                                 <span className="text-sm font-medium text-white">Exclusive Deals</span>
                             </li>
                         </ul>
-                        <Button className="w-full rounded-xl font-bold bg-white text-blue-600 hover:bg-blue-50 py-6">
-                            Choose Pro
+                        <Button
+                            className="w-full rounded-xl font-bold bg-white text-blue-600 hover:bg-blue-50 py-6"
+                            onClick={() => handlePlanActivation('standard')}
+                            disabled={isActivating !== null || user?.activePlan === 'standard'}
+                        >
+                            {user?.activePlan === 'standard' ? 'Current Plan' : isActivating === 'standard' ? 'Activating...' : 'Choose Pro'}
                         </Button>
                     </CardContent>
                 </Card>
@@ -102,28 +161,32 @@ export default function UserPremiumPage() {
                     <CardContent>
                         <ul className="space-y-3 mb-8">
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">Unlimited Bookings</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">VIP Support</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">All Notifications</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">Premium Deals</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
                                 <span className="text-sm font-medium">Personal Manager</span>
                             </li>
                         </ul>
-                        <Button className="w-full rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 py-6">
-                            Choose Premium
+                        <Button
+                            className="w-full rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 py-6"
+                            onClick={() => handlePlanActivation('premium')}
+                            disabled={isActivating !== null || user?.activePlan === 'premium'}
+                        >
+                            {user?.activePlan === 'premium' ? 'Current Plan' : isActivating === 'premium' ? 'Activating...' : 'Choose Premium'}
                         </Button>
                     </CardContent>
                 </Card>
@@ -158,8 +221,8 @@ export default function UserPremiumPage() {
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
+                            <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                                <CheckCircle className="w-5 h-5 text-primary" />
                             </div>
                             <div>
                                 <h4 className="font-bold text-slate-900">Exclusive Deals</h4>

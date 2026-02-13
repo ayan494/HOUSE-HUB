@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X } from 'lucide-react'
+import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X, Eye, EyeOff } from 'lucide-react'
 import { registerUser } from '@/lib/store'
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import { emailExists, addRegisteredUser } from '@/lib/email-validator'
@@ -25,6 +25,7 @@ function RegisterForm() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [role, setRole] = useState<'user' | 'owner'>(defaultRole)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -90,7 +91,7 @@ function RegisterForm() {
 
       await Swal.fire({
         title: 'Account Created!',
-        text: 'Your account has been successfully created.',
+        text: 'Your account has been successfully created. Please log in to continue.',
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
@@ -98,7 +99,9 @@ function RegisterForm() {
         borderRadius: '20px',
       })
 
-      router.push(role === 'owner' ? '/dashboard/owner' : '/')
+      const redirectUrl = searchParams.get('redirect')
+      const nextUrl = redirectUrl ? `/auth/login?redirect=${redirectUrl}` : '/auth/login'
+      router.push(nextUrl)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed')
     } finally {
@@ -199,7 +202,7 @@ function RegisterForm() {
                   </div>
                 )}
                 {email && !emailError && (
-                  <div className="flex items-center gap-2 text-sm text-green-600">
+                  <div className="flex items-center gap-2 text-sm text-primary">
                     <Check className="w-4 h-4" />
                     <span>Email is available</span>
                   </div>
@@ -227,12 +230,23 @@ function RegisterForm() {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Create a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 pr-10"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
                 </div>
 
                 {/* Password Requirements */}
@@ -245,51 +259,51 @@ function RegisterForm() {
                         <>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.minLength ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.minLength ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.minLength ? 'text-primary' : 'text-muted-foreground'}>
                               At least 8 characters
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasUppercase ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasUppercase ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasUppercase ? 'text-primary' : 'text-muted-foreground'}>
                               Uppercase Letters (A–Z)
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasLowercase ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasLowercase ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasLowercase ? 'text-primary' : 'text-muted-foreground'}>
                               Lowercase Letters (a–z)
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasNumber ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasNumber ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasNumber ? 'text-primary' : 'text-muted-foreground'}>
                               Numbers (0–9)
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             {reqs.hasSpecialChar ? (
-                              <Check className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4 text-primary" />
                             ) : (
                               <X className="w-4 h-4 text-red-500" />
                             )}
-                            <span className={reqs.hasSpecialChar ? 'text-green-600' : 'text-muted-foreground'}>
+                            <span className={reqs.hasSpecialChar ? 'text-primary' : 'text-muted-foreground'}>
                               Special Characters (! @ # $ % ^ & *)
                             </span>
                           </div>
@@ -318,8 +332,10 @@ function RegisterForm() {
               type="button"
               variant="outline"
               className="w-full h-11 mt-4"
+              style={{ borderColor: '#6699cc', color: '#6699cc' }}
               onClick={() => {
-                const callbackUrl = role === 'owner' ? '/dashboard/owner' : '/'
+                const redirectUrl = searchParams.get('redirect')
+                const callbackUrl = redirectUrl || (role === 'owner' ? '/dashboard/owner' : '/')
                 signIn('google', { callbackUrl })
               }}
             >
@@ -329,7 +345,11 @@ function RegisterForm() {
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Already have an account? </span>
-              <Link href="/auth/login" className="text-primary hover:underline font-medium">
+              <Link
+                href={searchParams.get('redirect') ? `/auth/login?redirect=${searchParams.get('redirect')}` : "/auth/login"}
+                className="hover:underline font-medium"
+                style={{ color: '#6699cc' }}
+              >
                 Sign in
               </Link>
             </div>

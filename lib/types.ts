@@ -35,6 +35,7 @@ export interface User {
   phone: string
   avatar?: string
   role: 'user' | 'owner'
+  activePlan?: 'simple' | 'standard' | 'premium' | 'ultimate'
 }
 
 export interface Booking {

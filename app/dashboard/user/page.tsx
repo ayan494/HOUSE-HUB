@@ -71,8 +71,8 @@ export default function UserDashboardPage() {
         <Card className="bg-white border-slate-200 shadow-sm rounded-2xl">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center">
-                <CheckCircle className="w-7 h-7 text-green-500" />
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <CheckCircle className="w-7 h-7 text-primary" />
               </div>
               <div>
                 <p className="text-3xl font-black text-slate-900">{confirmedBookings.length}</p>
@@ -156,7 +156,7 @@ export default function UserDashboardPage() {
                       className={cn(
                         "rounded-full px-4 py-1.5 font-bold uppercase tracking-widest text-[10px]",
                         booking.status === 'confirmed'
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                          ? 'bg-primary/10 text-primary hover:bg-primary/20'
                           : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
                       )}
                     >

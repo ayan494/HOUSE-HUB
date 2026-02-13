@@ -7,23 +7,24 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building, Calendar, Plus, TrendingUp, Eye, Crown, DollarSign } from 'lucide-react'
 import { getCurrentUser, getBookings } from '@/lib/store'
-import { properties } from '@/lib/data'
-import type { User, Booking } from '@/lib/types'
+import { properties, getOwnerProperties } from '@/lib/data'
+import type { User, Booking, Property } from '@/lib/types'
 
 export default function OwnerDashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [allBookings, setAllBookings] = useState<Booking[]>([])
+  const [myProperties, setMyProperties] = useState<Property[]>([])
 
   useEffect(() => {
     const currentUser = getCurrentUser()
     if (currentUser) {
       setUser(currentUser)
       setAllBookings(getBookings())
+      const props = getOwnerProperties(currentUser.email)
+      setMyProperties(props)
     }
   }, [])
 
-  // For MVP, show all properties as owner's properties
-  const myProperties = properties.slice(0, 4)
   const pendingBookings = allBookings.filter(b => b.status === 'pending')
 
   const totalViews = myProperties.reduce((acc, p) => acc + p.reviews * 10, 0)
@@ -94,8 +95,8 @@ export default function OwnerDashboardPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-green-500" />
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">PKR {(totalRevenue / 1000).toFixed(0)}K</p>

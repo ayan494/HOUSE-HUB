@@ -58,7 +58,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold mb-6 animate-fade-in"
             style={{ animationDelay: '0.1s' }}
           >
-            <MapPin className="w-3 h-3 md:w-4 md:h-4" style={{ color: '#6699cc' }} />
+            <MapPin className="w-3 h-3 md:w-4 md:h-4 text-primary" />
             PAKISTAN&apos;S PREMIER RENTAL PLATFORM
           </div>
 
@@ -67,7 +67,7 @@ export function Hero() {
             className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[1.1] animate-fade-in tracking-tight"
             style={{ animationDelay: '0.2s' }}
           >
-            Find Your <span className="italic" style={{ color: '#6699cc' }}>Dream</span>{' '}
+            Find Your <span className="italic text-primary">Dream</span>{' '}
             Home
           </h1>
 
@@ -84,7 +84,7 @@ export function Hero() {
             className="relative w-full max-w-3xl mx-auto group animate-fade-in px-2"
             style={{ animationDelay: '0.4s' }}
           >
-            <div className="relative flex flex-col sm:flex-row items-center p-2 bg-white rounded-3xl sm:rounded-full shadow-2xl border-4 border-white/10 transition-all duration-300 focus-within:ring-4 gap-2 sm:gap-0" style={{ '--tw-ring-color': 'rgba(102, 153, 204, 0.4)' } as React.CSSProperties}>
+            <div className="relative flex flex-col sm:flex-row items-center p-2 bg-white rounded-3xl sm:rounded-full shadow-2xl border-4 border-white/10 transition-all duration-300 focus-within:ring-4 gap-2 sm:gap-0" style={{ '--tw-ring-color': 'var(--ring)' } as React.CSSProperties}>
               <div className="flex-1 flex flex-col sm:flex-row items-center w-full gap-2 sm:gap-3 px-4 py-2 sm:py-0 sm:pl-6">
                 <input
                   type="text"
@@ -113,10 +113,7 @@ export function Hero() {
               <Button
                 type="submit"
                 disabled={isSearchDisabled}
-                className="w-full sm:w-auto rounded-xl sm:rounded-full px-8 py-3 sm:py-7 text-lg font-bold shadow-lg text-white transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ backgroundColor: isSearchDisabled ? '#999' : '#6699cc' }}
-                onMouseEnter={(e) => !isSearchDisabled && (e.currentTarget.style.backgroundColor = '#5588bb')}
-                onMouseLeave={(e) => !isSearchDisabled && (e.currentTarget.style.backgroundColor = '#6699cc')}
+                className="w-full sm:w-auto rounded-xl sm:rounded-full px-8 py-3 sm:py-7 text-lg font-bold shadow-lg text-white transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-primary hover:bg-primary/90"
               >
                 Search Now
               </Button>
@@ -144,15 +141,15 @@ export function Hero() {
           style={{ animationDelay: '0.6s' }}
         >
           <div className="text-center">
-            <div className="text-2xl sm:text-3xl md:text-5xl font-black" style={{ color: '#6699cc' }}>500+</div>
+            <div className="text-2xl sm:text-3xl md:text-5xl font-black text-primary">500+</div>
             <div className="text-[10px] sm:text-xs md:text-base text-gray-400 mt-1 font-bold tracking-widest uppercase">Properties</div>
           </div>
           <div className="text-center border-x border-white/10">
-            <div className="text-2xl sm:text-3xl md:text-5xl font-black" style={{ color: '#6699cc' }}>7+</div>
+            <div className="text-2xl sm:text-3xl md:text-5xl font-black text-primary">7+</div>
             <div className="text-[10px] sm:text-xs md:text-base text-gray-400 mt-1 font-bold tracking-widest uppercase">Cities</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl sm:text-3xl md:text-5xl font-black" style={{ color: '#6699cc' }}>1k+</div>
+            <div className="text-2xl sm:text-3xl md:text-5xl font-black text-primary">1k+</div>
             <div className="text-[10px] sm:text-xs md:text-base text-gray-400 mt-1 font-bold tracking-widest uppercase">Tenants</div>
           </div>
         </div>
