@@ -96,7 +96,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 shrink-0" style={{ backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' }}>
             <Home className="w-5 h-5 text-white" />
           </div>
-          {!isCollapsed && (
+          {isExpanded && (
             <span className="text-xl font-black text-slate-900 tracking-tight whitespace-nowrap">House<span style={{ color: '#6699cc' }}>Hub</span></span>
           )}
         </Link>
@@ -132,7 +132,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                   isActive
                     ? "bg-primary text-white shadow-lg shadow-primary/30 font-bold"
                     : "text-slate-500 hover:text-primary hover:bg-primary/5 font-medium",
-                  isCollapsed && "justify-center px-0"
+                  !isExpanded && "justify-center px-0"
                 )}
               >
                 <link.icon className={cn(
@@ -152,7 +152,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           onClick={handleLogout}
           className={cn(
             "flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-slate-500 hover:text-destructive hover:bg-destructive/5 transition-all font-bold group",
-            isCollapsed && "justify-center px-0"
+            !isExpanded && "justify-center px-0"
           )}
         >
           <LogOut className="w-5 h-5 shrink-0 text-slate-400 group-hover:text-destructive" />
