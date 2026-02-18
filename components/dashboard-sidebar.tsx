@@ -135,8 +135,9 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                   isCollapsed && "justify-center px-0"
                 )}
               >
-                "w-5 h-5 shrink-0 transition-transform duration-300",
-                isActive ? "text-white" : "text-slate-400 group-hover:text-primary"
+                <link.icon className={cn(
+                  "w-5 h-5 shrink-0 transition-transform duration-300",
+                  isActive ? "text-white" : "text-slate-400 group-hover:text-primary"
                 )} />
                 {isExpanded && <span className="text-sm transition-opacity duration-300 whitespace-nowrap">{link.label}</span>}
               </Link>
