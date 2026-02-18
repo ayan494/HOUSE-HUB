@@ -19,6 +19,8 @@ import {
   ChevronLeft,
   LayoutDashboard,
   Clock,
+  Pin,
+  PinOff,
 } from 'lucide-react'
 import { logoutUser } from '@/lib/store'
 import Swal from 'sweetalert2'
@@ -29,8 +31,11 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isPinned, setIsPinned] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+
+  const isExpanded = isPinned || isHovered
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -82,30 +87,32 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
 
   const SidebarContent = () => (
     <div className={cn(
-      "flex flex-col h-[100vh] bg-background/95 backdrop-blur-xl border-r border-border shadow-lg transition-all duration-300",
-      isCollapsed ? "w-[80px]" : "w-[280px]"
+      "flex flex-col h-[100vh] bg-background/95 backdrop-blur-xl border-r border-border shadow-lg transition-all duration-300 ease-in-out",
+      isExpanded ? "w-[280px]" : "w-[80px]"
     )}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border/50 gap-4">
-        <Link href="/" className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95" style={{ backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' }}>
+      <div className="flex items-center justify-between p-4 border-b border-border/50 gap-4 overflow-hidden">
+        <Link href="/" className={cn("flex items-center gap-3", !isExpanded && "justify-center w-full")}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 shrink-0" style={{ backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' }}>
             <Home className="w-5 h-5 text-white" />
           </div>
           {!isCollapsed && (
-            <span className="text-xl font-black text-slate-900 tracking-tight">House<span style={{ color: '#6699cc' }}>Hub</span></span>
+            <span className="text-xl font-black text-slate-900 tracking-tight whitespace-nowrap">House<span style={{ color: '#6699cc' }}>Hub</span></span>
           )}
         </Link>
-        {!isCollapsed && (
+        {isExpanded && (
           <Button
             variant="ghost"
             size="icon"
-            className="hidden md:flex h-9 w-9 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl"
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="hidden md:flex h-9 w-9 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl shrink-0"
+            onClick={() => setIsPinned(!isPinned)}
+            title={isPinned ? "Unpin Sidebar" : "Pin Sidebar"}
           >
-            <ChevronLeft className={cn(
-              "w-5 h-5 transition-transform",
-              isCollapsed && "rotate-180"
-            )} />
+            {isPinned ? (
+              <PinOff className="w-4 h-4" />
+            ) : (
+              <Pin className="w-4 h-4" />
+            )}
           </Button>
         )}
       </div>
@@ -128,11 +135,10 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                   isCollapsed && "justify-center px-0"
                 )}
               >
-                <link.icon className={cn(
-                  "w-5 h-5 shrink-0",
-                  isActive ? "text-white" : "text-slate-400 group-hover:text-primary"
+                "w-5 h-5 shrink-0 transition-transform duration-300",
+                isActive ? "text-white" : "text-slate-400 group-hover:text-primary"
                 )} />
-                {!isCollapsed && <span className="text-sm">{link.label}</span>}
+                {isExpanded && <span className="text-sm transition-opacity duration-300 whitespace-nowrap">{link.label}</span>}
               </Link>
             )
           })}
@@ -149,7 +155,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           )}
         >
           <LogOut className="w-5 h-5 shrink-0 text-slate-400 group-hover:text-destructive" />
-          {!isCollapsed && <span className="text-sm">Logout</span>}
+          {isExpanded && <span className="text-sm whitespace-nowrap">Logout</span>}
         </button>
       </div>
     </div>
@@ -158,17 +164,21 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className={cn(
-        "hidden md:block h-screen fixed top-0 left-0 z-30 transition-all duration-300",
-        isCollapsed ? "w-[80px]" : "w-[280px]"
-      )}>
+      <aside
+        className={cn(
+          "hidden md:block h-screen fixed top-0 left-0 z-30 transition-all duration-300 ease-in-out",
+          isExpanded ? "w-[280px]" : "w-[80px]"
+        )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <SidebarContent />
       </aside>
 
       {/* Sidebar Spacer for desktop to maintain layout flow */}
       <div className={cn(
-        "hidden md:block shrink-0 transition-all duration-300",
-        isCollapsed ? "w-[80px]" : "w-[280px]"
+        "hidden md:block shrink-0 transition-all duration-300 ease-in-out",
+        isPinned ? "w-[280px]" : "w-[80px]"
       )} />
 
       {/* Mobile Sidebar Trigger */}
