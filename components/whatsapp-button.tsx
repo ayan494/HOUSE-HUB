@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle } from 'lucide-react'
 
 export function WhatsAppButton() {
-    const whatsappNumber = "+923217654321" // Default support number
+    const whatsappNumber = "+923142412744" // Default support number
     const message = "Hello HouseHub! I'm interested in booking a property."
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(message)}`
 

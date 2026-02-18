@@ -92,15 +92,24 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
     )}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border/50 gap-4 overflow-hidden">
-        <Link href="/" className={cn("flex items-center gap-3", !isExpanded && "justify-center w-full")}>
+        <div className={cn(
+          "flex items-center gap-3 transition-opacity duration-300",
+          isExpanded ? "opacity-100" : "opacity-0 invisible sm:visible sm:opacity-100"
+        )}>
           <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 shrink-0" style={{ backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' }}>
             <Home className="w-5 h-5 text-white" />
           </div>
-          {isExpanded && (
-            <span className="text-xl font-black text-slate-900 tracking-tight whitespace-nowrap">House<span style={{ color: '#6699cc' }}>Hub</span></span>
-          )}
-        </Link>
-        {isExpanded && (
+          <span className={cn(
+            "text-xl font-black text-slate-900 tracking-tight whitespace-nowrap transition-all duration-300",
+            isExpanded ? "opacity-100 w-auto" : "opacity-0 w-0 overflow-hidden"
+          )}>
+            House<span style={{ color: '#6699cc' }}>Hub</span>
+          </span>
+        </div>
+        <div className={cn(
+          "transition-all duration-300",
+          isExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
+        )}>
           <Button
             variant="ghost"
             size="icon"
@@ -114,7 +123,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
               <Pin className="w-4 h-4" />
             )}
           </Button>
-        )}
+        </div>
       </div>
 
       {/* Navigation */}
@@ -135,11 +144,18 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                   !isExpanded && "justify-center px-0"
                 )}
               >
-                <link.icon className={cn(
-                  "w-5 h-5 shrink-0 transition-transform duration-300",
-                  isActive ? "text-white" : "text-slate-400 group-hover:text-primary"
-                )} />
-                {isExpanded && <span className="text-sm transition-opacity duration-300 whitespace-nowrap">{link.label}</span>}
+                <div className="flex items-center justify-center w-5 shrink-0">
+                  <link.icon className={cn(
+                    "w-5 h-5 transition-colors duration-300",
+                    isActive ? "text-white" : "text-slate-400 group-hover:text-primary"
+                  )} />
+                </div>
+                <span className={cn(
+                  "text-sm transition-all duration-300 whitespace-nowrap overflow-hidden",
+                  isExpanded ? "opacity-100 w-auto ml-3" : "opacity-0 w-0"
+                )}>
+                  {link.label}
+                </span>
               </Link>
             )
           })}
@@ -155,8 +171,15 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             !isExpanded && "justify-center px-0"
           )}
         >
-          <LogOut className="w-5 h-5 shrink-0 text-slate-400 group-hover:text-destructive" />
-          {isExpanded && <span className="text-sm whitespace-nowrap">Logout</span>}
+          <div className="flex items-center justify-center w-5 shrink-0">
+            <LogOut className="w-5 h-5 text-slate-400 group-hover:text-destructive transition-colors duration-300" />
+          </div>
+          <span className={cn(
+            "text-sm font-bold transition-all duration-300 whitespace-nowrap overflow-hidden",
+            isExpanded ? "opacity-100 w-auto ml-3" : "opacity-0 w-0"
+          )}>
+            Logout
+          </span>
         </button>
       </div>
     </div>
