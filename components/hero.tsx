@@ -52,10 +52,10 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 pt-24 pb-16 flex flex-col items-center">
-        <div className="w-full max-w-4xl mx-auto text-center">
+        <div className="w-full max-w-4xl mx-auto text-center px-2 sm:px-4">
           {/* Badge */}
           <div
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold mb-6 animate-fade-in"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 rounded-full text-[10px] md:text-sm font-semibold mb-6 animate-fade-in whitespace-nowrap"
             style={{ animationDelay: '0.1s' }}
           >
             <MapPin className="w-3 h-3 md:w-4 md:h-4 text-primary" />
@@ -64,7 +64,7 @@ export function Hero() {
 
           {/* Headline */}
           <h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[1.1] animate-fade-in tracking-tight"
+            className="text-2xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[1.1] animate-fade-in tracking-tight px-2"
             style={{ animationDelay: '0.2s' }}
           >
             Find Your <span className="italic text-primary">Dream</span>{' '}
@@ -73,7 +73,7 @@ export function Hero() {
 
           {/* Subheadline */}
           <p
-            className="text-base sm:text-lg md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto animate-fade-in font-medium px-2"
+            className="text-sm sm:text-lg md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto animate-fade-in font-medium px-4"
             style={{ animationDelay: '0.3s' }}
           >
             Type your requirements naturally. Discover premium apartments and houses across Pakistan with zero middlemen.
@@ -81,15 +81,15 @@ export function Hero() {
 
           <form
             onSubmit={handleSearch}
-            className="relative w-full max-w-3xl mx-auto group animate-fade-in px-2"
+            className="relative w-full max-w-3xl mx-auto group animate-fade-in px-4"
             style={{ animationDelay: '0.4s' }}
           >
             <div className="relative flex flex-col sm:flex-row items-center p-2 bg-white rounded-3xl sm:rounded-full shadow-2xl border-4 border-white/10 transition-all duration-300 focus-within:ring-4 gap-2 sm:gap-0" style={{ '--tw-ring-color': 'var(--ring)' } as React.CSSProperties}>
-              <div className="flex-1 flex flex-col sm:flex-row items-center w-full gap-2 sm:gap-3 px-4 py-2 sm:py-0 sm:pl-6">
+              <div className="flex-1 flex flex-col sm:flex-row items-center w-full gap-1 sm:gap-3 px-2 sm:px-4 py-2 sm:py-0 sm:pl-6 text-left">
                 <input
                   type="text"
                   placeholder="Budget (e.g. 30000)"
-                  className="w-full sm:flex-1 py-2 sm:py-4 text-base sm:text-lg bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium"
+                  className="w-full sm:flex-1 py-1 sm:py-4 text-sm sm:text-lg bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium"
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
                 />
@@ -97,7 +97,7 @@ export function Hero() {
                 <input
                   type="text"
                   placeholder="Location (e.g. Karachi)"
-                  className="w-full sm:flex-1 py-2 sm:py-4 text-base sm:text-lg bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium"
+                  className="w-full sm:flex-1 py-1 sm:py-4 text-sm sm:text-lg bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 />
@@ -105,7 +105,7 @@ export function Hero() {
                 <input
                   type="text"
                   placeholder="Type (e.g. Apartment)"
-                  className="w-full sm:flex-1 py-2 sm:py-4 text-base sm:text-lg bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium"
+                  className="w-full sm:flex-1 py-1 sm:py-4 text-sm sm:text-lg bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium"
                   value={propertyType}
                   onChange={(e) => setPropertyType(e.target.value)}
                 />
@@ -113,7 +113,7 @@ export function Hero() {
               <Button
                 type="submit"
                 disabled={isSearchDisabled}
-                className="w-full sm:w-auto rounded-xl sm:rounded-full px-8 py-3 sm:py-7 text-lg font-bold shadow-lg text-white transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-primary hover:bg-primary/90"
+                className="w-full sm:w-auto rounded-xl sm:rounded-full px-8 py-3 sm:py-7 text-base sm:text-lg font-bold shadow-lg text-white transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-primary hover:bg-primary/90"
               >
                 Search Now
               </Button>
@@ -122,12 +122,12 @@ export function Hero() {
 
           {/* Owner CTA */}
           <div
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in px-4"
             style={{ animationDelay: '0.5s' }}
           >
-            <p className="text-gray-300 font-medium text-sm sm:text-base">Are you a home owner?</p>
-            <Link href="/auth/register?role=owner">
-              <Button variant="outline" className="rounded-full px-6 py-4 border-2 border-white/30 text-white hover:bg-white hover:text-black transition-all bg-white/5 backdrop-blur-sm text-sm sm:text-base">
+            <p className="text-gray-300 font-medium text-xs sm:text-base">Are you a home owner?</p>
+            <Link href="/auth/register?role=owner" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto rounded-full px-6 py-4 border-2 border-white/30 text-white hover:bg-white hover:text-black transition-all bg-white/5 backdrop-blur-sm text-xs sm:text-base whitespace-nowrap">
                 List Your Property
                 <Calendar className="w-4 h-4 ml-2" />
               </Button>
@@ -137,7 +137,7 @@ export function Hero() {
 
         {/* Stats */}
         <div
-          className="mt-16 grid grid-cols-3 gap-2 sm:gap-4 md:gap-12 w-full max-w-4xl px-2 sm:px-4 py-6 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 animate-fade-in"
+          className="mt-16 grid grid-cols-3 gap-2 sm:gap-4 md:gap-12 w-full max-w-4xl px-4 py-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 animate-fade-in overflow-hidden"
           style={{ animationDelay: '0.6s' }}
         >
           <div className="text-center">

@@ -12,8 +12,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CalendarIcon, CheckCircle, MapPin, User, Phone, Star, X, ShieldAlert, CreditCard } from 'lucide-react'
+import { CalendarIcon, CheckCircle, MapPin, User, Phone, Star, X, ShieldAlert, CreditCard, MessageSquare } from 'lucide-react'
 import { format } from 'date-fns'
+import { Checkbox } from '@/components/ui/checkbox'
 import { getCurrentUser, addBooking } from '@/lib/store'
 import type { Property, User as UserType } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -31,6 +32,8 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
   const [step, setStep] = useState<'form' | 'success' | 'plan-required'>('form')
   const [checkIn, setCheckIn] = useState<Date>()
   const [checkOut, setCheckOut] = useState<Date>()
+  const [phone, setPhone] = useState('')
+  const [isWhatsApp, setIsWhatsApp] = useState(false)
   const [notes, setNotes] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [showReviewDialog, setShowReviewDialog] = useState(false)
@@ -54,13 +57,15 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
       setStep('form')
       setCheckIn(undefined)
       setCheckOut(undefined)
+      setPhone('')
+      setIsWhatsApp(false)
       setNotes('')
     }
   }, [isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!property || !user || !checkIn || !checkOut) return
+    if (!property || !user || !checkIn || !checkOut || !phone) return
 
     if (!user.activePlan) {
       setStep('plan-required')
@@ -77,6 +82,8 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
       userId: user.id,
       checkIn: checkIn.toISOString(),
       checkOut: checkOut.toISOString(),
+      phone,
+      isWhatsApp,
       notes,
       status: 'pending',
     })
@@ -97,7 +104,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-[500px] p-0 overflow-hidden mx-auto rounded-2xl md:rounded-3xl border-none shadow-2xl animate-in fade-in zoom-in duration-300">
         {step === 'form' ? (
           <>
             {/* Property Preview */}
@@ -201,14 +208,53 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                   </div>
                 </div>
 
+                {/* Phone & WhatsApp */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number (Required)</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+92 3XX XXXXXXX"
+                        className="pl-10 h-12 rounded-xl border-primary/20 focus-visible:ring-primary"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2 p-4 bg-primary/5 rounded-xl border border-primary/10">
+                    <Checkbox
+                      id="whatsapp"
+                      checked={isWhatsApp}
+                      onCheckedChange={(checked) => setIsWhatsApp(checked as boolean)}
+                    />
+                    <label
+                      htmlFor="whatsapp"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2 cursor-pointer"
+                    >
+                      <MessageSquare className="w-4 h-4 text-[#25D366]" />
+                      Allow contact via WhatsApp?
+                    </label>
+                  </div>
+                </div>
+
                 {/* Notes */}
                 <div className="space-y-2">
-                  <Label>Additional Notes (Optional)</Label>
+                  <Label htmlFor="notes" className="flex items-center gap-2">
+                    Additional Notes <span className="text-xs text-muted-foreground font-normal">(Explain your requirements)</span>
+                  </Label>
                   <Textarea
-                    placeholder="Any special requirements or questions..."
+                    id="notes"
+                    placeholder="Tell us more about your stay or special requests..."
+                    className="rounded-xl border-primary/20 focus-visible:ring-primary min-h-[100px]"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    rows={3}
+                    rows={4}
+                    required
                   />
                 </div>
 
@@ -243,8 +289,8 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 {/* Submit */}
                 <Button
                   type="submit"
-                  className="w-full h-12"
-                  disabled={!checkIn || !checkOut || isLoading}
+                  className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:-translate-y-1 active:translate-y-0"
+                  disabled={!checkIn || !checkOut || !phone || !notes || isLoading}
                 >
                   {isLoading ? 'Processing...' : 'Confirm Booking'}
                 </Button>
