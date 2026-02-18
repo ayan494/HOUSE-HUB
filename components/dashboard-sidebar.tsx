@@ -88,7 +88,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const SidebarContent = () => (
     <div className={cn(
       "flex flex-col h-[100vh] bg-background/95 backdrop-blur-xl border-r border-border shadow-lg transition-all duration-300 ease-in-out",
-      isExpanded ? "w-[280px]" : "w-[80px]"
+      isExpanded ? "w-64" : "w-20"
     )}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border/50 gap-4 overflow-hidden">
@@ -139,10 +139,11 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group",
                   isActive
-                    ? "bg-primary text-white shadow-lg shadow-primary/30 font-bold"
-                    : "text-slate-500 hover:text-primary hover:bg-primary/5 font-medium",
+                    ? "text-white font-bold"
+                    : "text-slate-500 hover:text-[#6699cc] hover:bg-[#6699cc]/5 font-medium",
                   !isExpanded && "justify-center px-0"
                 )}
+                style={isActive ? { backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' } : {}}
               >
                 <div className="flex items-center justify-center w-5 shrink-0">
                   <link.icon className={cn(
@@ -151,7 +152,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                   )} />
                 </div>
                 <span className={cn(
-                  "text-sm transition-all duration-300 whitespace-nowrap overflow-hidden",
+                  "text-sm transition-all duration-300 delay-150 whitespace-nowrap overflow-hidden",
                   isExpanded ? "opacity-100 w-auto ml-3" : "opacity-0 w-0"
                 )}>
                   {link.label}
@@ -175,7 +176,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             <LogOut className="w-5 h-5 text-slate-400 group-hover:text-destructive transition-colors duration-300" />
           </div>
           <span className={cn(
-            "text-sm font-bold transition-all duration-300 whitespace-nowrap overflow-hidden",
+            "text-sm font-bold transition-all duration-300 delay-150 whitespace-nowrap overflow-hidden",
             isExpanded ? "opacity-100 w-auto ml-3" : "opacity-0 w-0"
           )}>
             Logout
@@ -191,7 +192,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
       <aside
         className={cn(
           "hidden md:block h-screen fixed top-0 left-0 z-30 transition-all duration-300 ease-in-out",
-          isExpanded ? "w-[280px]" : "w-[80px]"
+          isExpanded ? "w-64" : "w-20"
         )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -202,7 +203,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
       {/* Sidebar Spacer for desktop to maintain layout flow */}
       <div className={cn(
         "hidden md:block shrink-0 transition-all duration-300 ease-in-out",
-        isPinned ? "w-[280px]" : "w-[80px]"
+        isExpanded ? "w-64" : "w-20"
       )} />
 
       {/* Mobile Sidebar Trigger */}
