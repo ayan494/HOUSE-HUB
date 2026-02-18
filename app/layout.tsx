@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider as CustomThemeProvider } from "@/contexts/theme-context";
-import { AISupportAgent } from "@/components/ai-support-agent";
+import AISupportAgent from "@/components/ai-support-agent";
 import './globals.css';
 
 const poppins = Poppins({

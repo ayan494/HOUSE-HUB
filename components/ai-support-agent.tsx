@@ -12,7 +12,7 @@ interface Message {
     content: string
 }
 
-export function AISupportAgent() {
+export default function AISupportAgent() {
     const [isOpen, setIsOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([
         { role: 'bot', content: "Hello! I'm your HouseHub Guide. How can I help you today?" }
