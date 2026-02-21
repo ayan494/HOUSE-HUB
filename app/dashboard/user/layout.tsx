@@ -5,6 +5,7 @@ import React from "react"
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
+import { DashboardNavbar } from '@/components/dashboard-navbar'
 import { getCurrentUser } from '@/lib/store'
 import type { User } from '@/lib/types'
 
@@ -16,6 +17,7 @@ export default function UserDashboardLayout({
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   useEffect(() => {
     const currentUser = getCurrentUser()
@@ -39,12 +41,15 @@ export default function UserDashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
-      <DashboardSidebar role="user" />
-      <main className="flex-1 p-3 pt-20 sm:p-4 md:p-6 md:pt-6 lg:p-8 overflow-x-hidden">
-        <div className="max-w-6xl mx-auto">
-          {children}
-        </div>
-      </main>
+      <DashboardSidebar role="user" open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
+      <div className="flex-1 flex flex-col min-w-0">
+        <DashboardNavbar onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden">
+          <div className="max-w-6xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

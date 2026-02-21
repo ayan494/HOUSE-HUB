@@ -3,60 +3,69 @@
 import { useRef, useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Star, Quote, MapPin } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Star, Quote, MapPin, Loader2 } from 'lucide-react'
 
-const testimonials = [
-  {
-    id: 1,
-    name: 'Aisha Rahman',
-    location: 'Lahore',
-    avatar: 'A',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-    rating: 5,
-    text: 'HouseHub made finding my dream apartment so easy! The direct connection with owners saved me from dealing with agents and their fees.',
-  },
-  {
-    id: 2,
-    name: 'Bilal Ahmed',
-    location: 'Karachi',
-    avatar: 'B',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-    rating: 5,
-    text: 'As a property owner, listing on HouseHub has been fantastic. I found reliable tenants within a week and the premium features really helped.',
-  },
-  {
-    id: 3,
-    name: 'Fatima Hassan',
-    location: 'Islamabad',
-    avatar: 'F',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-    rating: 5,
-    text: 'The filtering options are excellent. I could easily find properties within my budget and preferred locations. Highly recommended!',
-  },
-  {
-    id: 4,
-    name: 'Omar Khan',
-    location: 'Rawalpindi',
-    avatar: 'O',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
-    rating: 4,
-    text: 'Great platform for both tenants and owners. The booking system is smooth and the customer support team is very responsive.',
-  },
-  {
-    id: 5,
-    name: 'Sara Malik',
-    location: 'Lahore',
-    avatar: 'S',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
-    rating: 5,
-    text: 'I was skeptical at first, but HouseHub exceeded my expectations. Found a beautiful house in DHA within days of searching.',
-  },
-]
+interface Review {
+  _id: string;
+  userName: string;
+  rating: number;
+  text: string;
+  location?: string;
+  avatar?: string;
+  date: string;
+}
+
+import { getReviews } from '@/lib/store'
 
 export function Testimonials() {
+  const [reviews, setReviews] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
+
+  const staticReviews = [
+    {
+      _id: 's1',
+      userName: 'Ali Raza',
+      rating: 5,
+      text: "Rentora made my house hunting in Lahore so much easier. Found a great place in DHA in just 3 days!",
+      location: 'Lahore',
+      date: '2026-01-15'
+    },
+    {
+      _id: 's2',
+      userName: 'Zainab Bibi',
+      rating: 4,
+      text: "The search filters are very helpful. I could find exactly what I needed within my budget in Karachi.",
+      location: 'Karachi',
+      date: '2026-01-20'
+    },
+    {
+      _id: 's3',
+      userName: 'Hamza Malik',
+      rating: 5,
+      text: "Excellent platform! The owner verification gives peace of mind. Highly recommended for rentals in Islamabad.",
+      location: 'Islamabad',
+      date: '2026-02-05'
+    }
+  ]
+
+  useEffect(() => {
+    const loadReviews = () => {
+      try {
+        const storedReviews = getReviews()
+        setReviews([...storedReviews, ...staticReviews])
+      } catch (error) {
+        console.error('Error loading reviews:', error)
+        setReviews(staticReviews)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadReviews()
+  }, [])
 
   const checkScroll = () => {
     if (scrollRef.current) {
@@ -73,7 +82,7 @@ export function Testimonials() {
       ref.addEventListener('scroll', checkScroll)
       return () => ref.removeEventListener('scroll', checkScroll)
     }
-  }, [])
+  }, [reviews])
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -85,8 +94,21 @@ export function Testimonials() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="py-16 flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
+        <p className="text-muted-foreground">Loading reviews...</p>
+      </div>
+    )
+  }
+
+  if (reviews.length === 0) {
+    return null; // Or show a default message
+  }
+
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-end justify-between mb-10">
@@ -95,7 +117,7 @@ export function Testimonials() {
               What Our Users Say
             </h2>
             <p className="text-muted-foreground text-lg">
-              Join thousands of satisfied tenants and property owners.
+              Real feedback from our trusted community.
             </p>
           </div>
           <div className="hidden md:flex items-center gap-2">
@@ -104,7 +126,7 @@ export function Testimonials() {
               size="icon"
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              className="rounded-full"
+              className="rounded-full hover:bg-primary/10 transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
@@ -113,7 +135,7 @@ export function Testimonials() {
               size="icon"
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
-              className="rounded-full"
+              className="rounded-full hover:bg-primary/10 transition-colors"
             >
               <ChevronRight className="w-5 h-5" />
             </Button>
@@ -123,56 +145,56 @@ export function Testimonials() {
         {/* Carousel */}
         <div
           ref={scrollRef}
-          className="flex gap-8 overflow-x-auto scrollbar-hide pb-12 -mx-4 px-4 snap-x snap-mandatory pt-4"
+          className="flex gap-6 overflow-x-auto scrollbar-hide pb-12 -mx-4 px-4 snap-x snap-mandatory pt-4 touch-pan-x"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {testimonials.map((testimonial) => (
+          {reviews.map((review) => (
             <Card
-              key={testimonial.id}
-              className="flex-shrink-0 w-[320px] md:w-[400px] snap-start border-none bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-900/80 dark:to-slate-900/40 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-3 rounded-[2.5rem] overflow-visible mb-4 group"
+              key={review._id}
+              className="flex-shrink-0 w-[300px] md:w-[400px] snap-start border border-border bg-card shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 rounded-[2rem] overflow-hidden mb-4 group"
             >
               <CardContent className="p-8 relative">
-                {/* Decorative Elements */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center -rotate-12 transition-transform group-hover:rotate-0 group-hover:scale-110 duration-500">
-                  <Quote className="w-6 h-6 text-primary" />
+                {/* Decorative Quote */}
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-[#6699cc]/10 rounded-2xl flex items-center justify-center -rotate-12 transition-transform group-hover:rotate-0 duration-500">
+                  <Quote className="w-6 h-6 text-[#6699cc]" />
                 </div>
 
                 {/* Rating */}
-                <div className="flex gap-1.5 mb-8 justify-end">
+                <div className="flex gap-1 mb-6 justify-end">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
                       className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110`}
-                      style={{ transitionDelay: `${i * 50}ms` }}
-                      fill={i < testimonial.rating ? "#fbbf24" : "transparent"}
-                      color={i < testimonial.rating ? "#fbbf24" : "#e2e8f0"}
+                      fill={i < review.rating ? "#6699cc" : "transparent"}
+                      color={i < review.rating ? "#6699cc" : "#e2e8f0"}
                     />
                   ))}
                 </div>
 
-                {/* Text with elegant typography */}
-                <div className="relative mb-10">
-                  <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed font-medium italic">
-                    &ldquo;{testimonial.text}&rdquo;
+                {/* Review Text */}
+                <div className="mb-8">
+                  <p className="text-foreground text-lg leading-relaxed italic font-medium">
+                    &ldquo;{review.text}&rdquo;
                   </p>
                 </div>
 
-                {/* Author with premium feel */}
-                <div className="flex items-center gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
-                  <div className="relative">
-                    <div className="absolute -inset-1 bg-gradient-to-tr from-primary to-blue-400 rounded-full blur-[2px] opacity-20 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-14 h-14 rounded-full object-cover relative border-2 border-white dark:border-slate-900 shadow-sm"
-                    />
+                {/* Author Info */}
+                <div className="flex items-center gap-4 pt-6 border-t border-border">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#6699cc]/20 bg-muted flex items-center justify-center text-[#6699cc] font-bold text-lg">
+                    {review.avatar ? (
+                      <img src={review.avatar} alt={review.userName} className="w-full h-full object-cover" />
+                    ) : (
+                      review.userName.charAt(0).toUpperCase()
+                    )}
                   </div>
                   <div>
-                    <p className="font-bold text-slate-900 dark:text-white text-lg tracking-tight">{testimonial.name}</p>
-                    <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-semibold text-sm">
-                      <MapPin className="w-3 h-3 text-primary" />
-                      {testimonial.location}
-                    </div>
+                    <p className="font-bold text-foreground">{review.userName}</p>
+                    {review.location && (
+                      <div className="flex items-center gap-1 text-muted-foreground text-xs">
+                        <MapPin className="w-3 h-3 text-[#6699cc]" />
+                        {review.location}
+                      </div>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -180,9 +202,14 @@ export function Testimonials() {
           ))}
         </div>
 
-        {/* Mobile scroll hint */}
+        {/* Mobile Swipe Indicator */}
         <div className="flex md:hidden items-center justify-center gap-2 mt-4">
-          <span className="text-sm text-muted-foreground">Swipe to see more</span>
+          <div className="flex gap-1">
+            {reviews.map((_, i) => (
+              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === 0 ? 'w-4 bg-[#6699cc]' : 'bg-muted'}`} />
+            ))}
+          </div>
+          <span className="text-xs text-muted-foreground ml-2 font-medium">Swipe for more</span>
         </div>
       </div>
     </section>

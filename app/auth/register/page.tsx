@@ -4,13 +4,13 @@ import React from "react"
 
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Mail, Lock, User, Phone, ArrowRight, Building, Users, Chrome, Check, X, Eye, EyeOff } from 'lucide-react'
+import Image from 'next/image'
+import { Mail, Lock, User, Phone, ArrowRight, Building, Users, Check, X, Eye, EyeOff } from 'lucide-react'
 import { registerUser } from '@/lib/store'
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import { emailExists, addRegisteredUser } from '@/lib/email-validator'
@@ -96,7 +96,9 @@ function RegisterForm() {
         timer: 2000,
         showConfirmButton: false,
         timerProgressBar: true,
-        borderRadius: '20px',
+        customClass: {
+          popup: 'rounded-3xl',
+        },
       })
 
       const redirectUrl = searchParams.get('redirect')
@@ -113,18 +115,22 @@ function RegisterForm() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <Home className="w-6 h-6 text-primary-foreground" />
-          </div>
-          <span className="text-2xl font-bold text-foreground">HouseHub</span>
+        <Link href="/" className="flex items-center justify-center mb-8">
+          <Image
+            src="/rentora-logo.png"
+            alt="Rentora"
+            width={140}
+            height={48}
+            className="h-12 w-auto object-contain"
+            priority
+          />
         </Link>
 
         <Card className="border-border">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Create Account</CardTitle>
             <CardDescription>
-              Join HouseHub to find your perfect home
+              Join Rentora to find your perfect home
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -319,29 +325,6 @@ function RegisterForm() {
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </form>
-
-            {/* Divider */}
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex-1 h-px bg-border"></div>
-              <span className="text-xs text-muted-foreground">Or continue with</span>
-              <div className="flex-1 h-px bg-border"></div>
-            </div>
-
-            {/* Google Sign Up Button */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-11 mt-4"
-              style={{ borderColor: '#6699cc', color: '#6699cc' }}
-              onClick={() => {
-                const redirectUrl = searchParams.get('redirect')
-                const callbackUrl = redirectUrl || (role === 'owner' ? '/dashboard/owner' : '/')
-                signIn('google', { callbackUrl })
-              }}
-            >
-              <Chrome className="w-4 h-4 mr-2" />
-              Sign up with Google
-            </Button>
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Already have an account? </span>

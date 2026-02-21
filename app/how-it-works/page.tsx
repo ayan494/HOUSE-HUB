@@ -1,3 +1,5 @@
+"use client"
+
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { HowItWorks as HowItWorksSection } from '@/components/how-it-works'
@@ -5,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Search, Home, Users, Shield, MessageSquare, Clock, Star, Zap } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function HowItWorksPage() {
   const benefits = [
@@ -33,16 +36,26 @@ export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-24">
         {/* Hero */}
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
+            <div className="flex justify-center mb-8">
+              <div className="flex items-center gap-4 group">
+                <div className="flex items-center justify-center w-16 h-16 rounded-[2rem] bg-[#6699cc] text-white shadow-2xl shadow-[#6699cc]/20 transition-transform group-hover:scale-110">
+                  <Home className="w-10 h-10 fill-current" />
+                </div>
+                <span className="text-4xl font-black tracking-tighter text-foreground">
+                  Rentora
+                </span>
+              </div>
+            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              How HouseHub Works
+              How Rentora Works
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Finding your perfect home in Pakistan has never been easier. 
+              Finding your perfect home in Pakistan has never been easier.
               Follow our simple process to get started.
             </p>
             <div className="flex justify-center gap-4">
@@ -70,7 +83,7 @@ export default function HowItWorksPage() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Why Choose HouseHub?
+                Why Choose Rentora?
               </h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 We&apos;re committed to making your rental experience seamless and transparent.
@@ -106,7 +119,7 @@ export default function HowItWorksPage() {
                   Property Owners
                 </h2>
                 <p className="text-muted-foreground text-lg mb-6">
-                  List your property on HouseHub and connect with thousands of potential tenants. 
+                  List your property on Rentora and connect with thousands of potential tenants.
                   Our platform makes it easy to manage listings and receive booking requests.
                 </p>
                 <ul className="space-y-4 mb-8">
@@ -157,7 +170,7 @@ export default function HowItWorksPage() {
               Ready to Find Your Home?
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-8">
-              Join thousands of satisfied tenants who found their perfect home through HouseHub.
+              Join thousands of satisfied tenants who found their perfect home through Rentora.
             </p>
             <Link href="/properties">
               <Button size="lg" className="h-14 px-8 text-lg">

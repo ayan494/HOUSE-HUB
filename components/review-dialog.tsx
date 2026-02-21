@@ -31,7 +31,7 @@ export function ReviewDialog({ open, onOpenChange }: ReviewDialogProps) {
         // Save review (in real app, this would go to backend)
         toast({
             title: 'Thank you for your review!',
-            description: 'Your feedback helps us improve HouseHub.',
+            description: 'Your feedback helps us improve Rentora.',
         })
 
         // Reset and close
@@ -52,7 +52,7 @@ export function ReviewDialog({ open, onOpenChange }: ReviewDialogProps) {
                 <DialogHeader>
                     <DialogTitle className="text-2xl">How was your experience?</DialogTitle>
                     <DialogDescription>
-                        We'd love to hear your feedback about using HouseHub
+                        We'd love to hear your feedback about using Rentora
                     </DialogDescription>
                 </DialogHeader>
 
@@ -72,8 +72,8 @@ export function ReviewDialog({ open, onOpenChange }: ReviewDialogProps) {
                                 >
                                     <Star
                                         className={`w-10 h-10 transition-colors ${star <= (hoveredRating || rating)
-                                                ? 'fill-amber-400 text-amber-400'
-                                                : 'text-muted-foreground'
+                                            ? 'fill-amber-400 text-amber-400'
+                                            : 'text-muted-foreground'
                                             }`}
                                     />
                                 </button>
@@ -94,7 +94,7 @@ export function ReviewDialog({ open, onOpenChange }: ReviewDialogProps) {
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Tell us more (optional)</label>
                         <Textarea
-                            placeholder="Share your thoughts about HouseHub..."
+                            placeholder="Share your thoughts about Rentora..."
                             value={review}
                             onChange={(e) => setReview(e.target.value)}
                             rows={4}

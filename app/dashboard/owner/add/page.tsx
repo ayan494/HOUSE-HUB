@@ -12,8 +12,8 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ArrowLeft, Upload, Check, X, Building2 } from 'lucide-react'
 import Link from 'next/link'
-import { cities, amenitiesList, addProperty, updateProperty, getSavedProperties } from '@/lib/data'
-import { getCurrentUser } from '@/lib/store'
+import { cities, amenitiesList } from '@/lib/data'
+import { getCurrentUser, saveProperty, getProperties } from '@/lib/store'
 import type { Property, PropertyType } from '@/lib/types'
 
 function AddPropertyContent() {
@@ -40,7 +40,7 @@ function AddPropertyContent() {
 
   useEffect(() => {
     if (editId) {
-      const allProps = getSavedProperties()
+      const allProps = getProperties()
       const toEdit = allProps.find(p => p.id === editId)
       if (toEdit) {
         setName(toEdit.name)
@@ -79,14 +79,21 @@ function AddPropertyContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     const user = getCurrentUser()
-    if (!user || user.role !== 'owner') {
-      alert('Only owners can add properties')
+    if (!user) {
+      router.push('/auth/login?redirect=/dashboard/owner/add')
+      return
+    }
+
+    if (!name || !description || !city || !price || !bedrooms || !bathrooms || !area) {
+      alert('Please fill in all required fields')
       return
     }
 
     setIsLoading(true)
+
+    // Simulate delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 800))
 
     const ownerData = {
       id: user.id || user.email,
@@ -97,6 +104,7 @@ function AddPropertyContent() {
     }
 
     const payload: any = {
+      id: editId || Math.random().toString(36).substr(2, 9),
       name,
       description,
       city,
@@ -112,23 +120,22 @@ function AddPropertyContent() {
       isPremium: false,
       isFeatured: false,
       availableFrom: new Date().toISOString().split('T')[0],
+      rating: 0,
+      reviews: 0,
     }
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    if (editId) {
-      updateProperty({ ...payload, id: editId, rating: 0, reviews: 0 })
-    } else {
-      addProperty(payload)
+    try {
+      saveProperty(payload)
+      setIsSuccess(true)
+      setTimeout(() => {
+        router.push('/dashboard/owner/properties')
+      }, 2000)
+    } catch (error) {
+      console.error('Error saving property:', error)
+      alert('Failed to save property. please try again.')
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
-    setIsSuccess(true)
-
-    setTimeout(() => {
-      router.push('/dashboard/owner/properties')
-    }, 2000)
   }
 
   if (isSuccess) {

@@ -62,7 +62,7 @@ export function HowItWorks() {
             How It Works
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Finding your perfect home is easy with HouseHub. Follow these simple steps.
+            Finding your perfect home is easy with Rentora. Follow these simple steps.
           </p>
         </div>
 
@@ -71,11 +71,10 @@ export function HowItWorks() {
             <div
               key={step.title}
               ref={(el) => { stepRefs.current[index] = el }}
-              className={`relative text-center transition-all duration-500 ${
-                visibleSteps.has(index)
+              className={`relative text-center transition-all duration-500 ${visibleSteps.has(index)
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'
-              }`}
+                }`}
             >
               {/* Connector line */}
               {index < steps.length - 1 && (

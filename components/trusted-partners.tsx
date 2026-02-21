@@ -18,10 +18,10 @@ const scrollingPartners = [...partners, ...partners, ...partners, ...partners]
 
 export function TrustedPartners() {
     return (
-        <section className="py-24 md:py-32 border-y border-slate-100/80 dark:border-slate-800/40 bg-white/50 dark:bg-slate-950/30 overflow-hidden relative">
+        <section className="py-24 md:py-32 border-y border-border bg-secondary/30 overflow-hidden relative">
             {/* Ambient Background Glows */}
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#6699cc]/5 blur-[100px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
 
             <div className="container mx-auto px-4 mb-20 text-center relative z-10">
                 <motion.div
@@ -30,10 +30,10 @@ export function TrustedPartners() {
                     viewport={{ once: true }}
                     transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <h3 className="text-[10px] md:text-xs font-black uppercase tracking-[0.8em] text-slate-400 dark:text-slate-500 mb-3 ml-4">
+                    <h3 className="text-[10px] md:text-xs font-black uppercase tracking-[0.8em] text-muted-foreground mb-3 ml-4">
                         Trusted By Global Leaders
                     </h3>
-                    <div className="w-16 h-[2px] bg-gradient-to-r from-transparent via-[#6699cc]/50 to-transparent mx-auto rounded-full" />
+                    <div className="w-16 h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto rounded-full" />
                 </motion.div>
             </div>
 
@@ -65,10 +65,9 @@ export function TrustedPartners() {
                         >
                             <motion.div
                                 className="relative flex items-center justify-center transition-all duration-700 cursor-pointer flex-shrink-0"
-                                whileHover={{ scale: 1.08, y: -8 }}
+                                whileHover={{ scale: 1.08, y: -8, opacity: 1 }}
                                 initial={{ opacity: 0.3 }}
                                 whileInView={{ opacity: 0.4 }}
-                                whileHover={{ opacity: 1 }}
                             >
                                 <span
                                     className="text-4xl md:text-7xl font-black tracking-tighter transition-all duration-500 select-none"
@@ -78,7 +77,7 @@ export function TrustedPartners() {
                                     } as React.CSSProperties}
                                 >
                                     {/* Glass reflection text */}
-                                    <span className="relative z-10 text-slate-900/40 dark:text-slate-100/30 group-hover/partner:text-[var(--partner-color)] transition-colors duration-700">
+                                    <span className="relative z-10 text-foreground/40 group-hover/partner:text-[var(--partner-color)] transition-colors duration-700">
                                         {partner.name}
                                     </span>
 
@@ -96,14 +95,14 @@ export function TrustedPartners() {
                             </motion.div>
 
                             {/* Geometric Separator */}
-                            <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-slate-300 dark:bg-slate-800 flex-shrink-0 opacity-50" />
+                            <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-border flex-shrink-0 opacity-50" />
                         </div>
                     ))}
                 </motion.div>
 
                 {/* Edge Faders - Ultra Soft */}
-                <div className="absolute inset-y-0 left-0 w-32 md:w-96 bg-gradient-to-r from-white dark:from-slate-950 to-transparent z-20 pointer-events-none" />
-                <div className="absolute inset-y-0 right-0 w-32 md:w-96 bg-gradient-to-l from-white dark:from-slate-950 to-transparent z-20 pointer-events-none" />
+                <div className="absolute inset-y-0 left-0 w-32 md:w-96 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 w-32 md:w-96 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
             </div>
 
             <style jsx>{`

@@ -5,6 +5,7 @@ import { Poppins } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider as CustomThemeProvider } from "@/contexts/theme-context";
 import AISupportAgent from "@/components/ai-support-agent";
+import LoadingScreen from "@/components/loading-screen";
 import './globals.css';
 
 const poppins = Poppins({
@@ -14,12 +15,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'HouseHub - Find Your Perfect Home in Pakistan',
-  description: 'Search, discover, and connect directly with house owners near you. HouseHub is Pakistan\'s premier house and apartment rental platform.',
+  title: 'Rentora - Find Your Perfect Home in Pakistan',
+  description: 'Search, discover, and connect directly with house owners near you. Rentora is Pakistan\'s premier house and apartment rental platform.',
   icons: {
-    icon: '/logo.svg',
-    shortcut: '/logo.svg',
-    apple: '/logo.svg',
+    icon: '/rentora-logo.png',
+    shortcut: '/rentora-logo.png',
+    apple: '/rentora-logo.png',
   },
 };
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} font-sans antialiased overflow-x-hidden`}>
         <CustomThemeProvider>
+          <LoadingScreen />
           {children}
           <AISupportAgent />
           <Analytics />

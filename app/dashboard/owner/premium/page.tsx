@@ -53,7 +53,7 @@ export default function PremiumPage() {
         <CardContent className="pt-8 pb-8 text-center relative">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--premium)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <Crown className="w-16 h-16 mx-auto text-[var(--premium)] mb-4" />
-          <h2 className="text-3xl font-bold text-foreground mb-2">HouseHub Premium</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Rentora Premium</h2>
           <p className="text-muted-foreground max-w-md mx-auto">
             Unlock the full potential of your listings with premium features designed to help you find tenants faster.
           </p>
@@ -66,8 +66,8 @@ export default function PremiumPage() {
           <button
             onClick={() => setSelectedPlan('monthly')}
             className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${selectedPlan === 'monthly'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
               }`}
           >
             Monthly
@@ -75,8 +75,8 @@ export default function PremiumPage() {
           <button
             onClick={() => setSelectedPlan('yearly')}
             className={`px-6 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${selectedPlan === 'yearly'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
               }`}
           >
             Yearly

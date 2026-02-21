@@ -62,13 +62,13 @@ export function CategoryCards() {
     }
 
     return (
-        <section className="py-24 bg-slate-50/50 dark:bg-slate-900/10 overflow-hidden">
+        <section className="py-24 bg-secondary/30 overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-20">
-                    <h2 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
+                    <h2 className="text-4xl md:text-6xl font-black text-foreground mb-6 tracking-tight">
                         Explore by <span className="text-[#6699cc]">Category</span>
                     </h2>
-                    <p className="text-slate-500 dark:text-slate-400 text-xl font-medium max-w-2xl mx-auto">
+                    <p className="text-muted-foreground text-xl font-medium max-w-2xl mx-auto">
                         Find exactly what you&apos;re looking for with our curated property categories.
                     </p>
                 </div>

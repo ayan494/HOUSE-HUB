@@ -7,24 +7,23 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building, Calendar, Plus, TrendingUp, Eye, Crown, DollarSign } from 'lucide-react'
 import { getCurrentUser, getBookings } from '@/lib/store'
-import { properties, getOwnerProperties } from '@/lib/data'
-import type { User, Booking, Property } from '@/lib/types'
+import { properties } from '@/lib/data'
+import type { User, Booking } from '@/lib/types'
 
 export default function OwnerDashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [allBookings, setAllBookings] = useState<Booking[]>([])
-  const [myProperties, setMyProperties] = useState<Property[]>([])
 
   useEffect(() => {
     const currentUser = getCurrentUser()
     if (currentUser) {
       setUser(currentUser)
       setAllBookings(getBookings())
-      const props = getOwnerProperties(currentUser.email)
-      setMyProperties(props)
     }
   }, [])
 
+  // For MVP, show all properties as owner's properties
+  const myProperties = properties.slice(0, 4)
   const pendingBookings = allBookings.filter(b => b.status === 'pending')
 
   const totalViews = myProperties.reduce((acc, p) => acc + p.reviews * 10, 0)

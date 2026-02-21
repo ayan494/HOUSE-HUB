@@ -98,7 +98,7 @@ function PlansContent() {
                         Choose Your Plan
                     </h1>
                     <p className="mt-4 text-xl text-muted-foreground">
-                        Scale your property listings with HouseHub and reach more tenants.
+                        Scale your property listings with Rentora and reach more tenants.
                     </p>
                 </div>
 
@@ -153,7 +153,7 @@ function PlansContent() {
                 </div>
 
                 <div className="mt-16 text-center text-muted-foreground">
-                    <p className="font-medium">All plans include basic HouseHub features. Prices are in PKR and billed monthly.</p>
+                    <p className="font-medium">All plans include basic Rentora features. Prices are in PKR and billed monthly.</p>
                     <div className="mt-4 flex justify-center gap-8">
                         <span className="flex items-center gap-2 font-medium">
                             <Shield className="w-4 h-4 text-[#6699cc]" /> Secure Payment

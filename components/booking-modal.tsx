@@ -104,11 +104,11 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-[500px] p-0 overflow-hidden mx-auto rounded-2xl md:rounded-3xl border-none shadow-2xl animate-in fade-in zoom-in duration-300">
+      <DialogContent className="w-[95%] sm:max-w-[500px] max-h-[90vh] overflow-y-auto p-0 mx-auto rounded-2xl md:rounded-3xl border-none shadow-2xl animate-in fade-in zoom-in duration-300">
         {step === 'form' ? (
           <>
             {/* Property Preview */}
-            <div className="relative h-40 bg-muted">
+            <div className="relative h-32 sm:h-40 bg-muted flex-shrink-0">
               <Image
                 src={property.images[0] || "/placeholder.svg"}
                 alt={property.name}
@@ -125,7 +125,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6 pb-28">
               <button
                 onClick={onClose}
                 className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-colors"
@@ -152,7 +152,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 )}
 
                 {/* Date Selection */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <Label>Check-in Date</Label>
                     <Popover>
@@ -250,11 +250,10 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                   <Textarea
                     id="notes"
                     placeholder="Tell us more about your stay or special requests..."
-                    className="rounded-xl border-primary/20 focus-visible:ring-primary min-h-[100px]"
+                    className="rounded-xl border-primary/20 focus-visible:ring-primary min-h-[80px]"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    rows={4}
-                    required
+                    rows={3}
                   />
                 </div>
 
@@ -290,7 +289,7 @@ export function BookingModal({ property, isOpen, onClose }: BookingModalProps) {
                 <Button
                   type="submit"
                   className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:-translate-y-1 active:translate-y-0"
-                  disabled={!checkIn || !checkOut || !phone || !notes || isLoading}
+                  disabled={!checkIn || !checkOut || !phone || isLoading}
                 >
                   {isLoading ? 'Processing...' : 'Confirm Booking'}
                 </Button>

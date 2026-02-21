@@ -15,7 +15,7 @@ interface Message {
 export default function AISupportAgent() {
     const [isOpen, setIsOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'bot', content: "Hello! I'm your HouseHub Guide. How can I help you today?" }
+        { role: 'bot', content: "Hello! I'm your Rentora Guide. How can I help you today?" }
     ])
     const [input, setInput] = useState('')
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -59,24 +59,24 @@ export default function AISupportAgent() {
             return "As an owner, you can manage all incoming bookings from the 'Bookings' tab in your dashboard. You can view user details and contact them directly."
         }
         if (q.includes('color') || q.includes('theme')) {
-            return "HouseHub's signature brand color is #6699cc. We designed the platform to be clean, modern, and easy to use."
+            return "Rentora's signature brand color is #6699cc. We designed the platform to be clean, modern, and easy to use."
         }
         if (q.includes('pakistan') || q.includes('where')) {
-            return "HouseHub is Pakistan's premier platform for easy house rentals, covering all major cities like Karachi, Lahore, Islamabad, and more."
+            return "Rentora is Pakistan's premier platform for easy house rentals, covering all major cities like Karachi, Lahore, Islamabad, and more."
         }
 
         return "I'm here to help! You can ask me about searching for houses, subscription plans, listing properties, or how to manage bookings."
     }
 
     return (
-        <div className="fixed bottom-6 right-6 z-[100]">
+        <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[100]">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[500px] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden"
+                        className="absolute bottom-20 right-0 w-[calc(100vw-2rem)] sm:w-[380px] max-h-[70vh] sm:h-[500px] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden"
                     >
                         {/* Header */}
                         <div className="p-4 bg-[#6699cc] text-white flex items-center justify-between">
@@ -85,7 +85,7 @@ export default function AISupportAgent() {
                                     <Bot className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-sm">HouseHub Guide</h3>
+                                    <h3 className="font-bold text-sm">Rentora Guide</h3>
                                     <div className="flex items-center gap-1.5">
                                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                                         <span className="text-[10px] opacity-90">Always Active</span>
@@ -157,7 +157,7 @@ export default function AISupportAgent() {
                                 </Button>
                             </div>
                             <p className="text-[10px] text-slate-400 text-center mt-2">
-                                Your AI-Powered HouseHub Assistant
+                                Your AI-Powered Rentora Assistant
                             </p>
                         </div>
                     </motion.div>

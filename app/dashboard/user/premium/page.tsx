@@ -50,7 +50,9 @@ export default function UserPremiumPage() {
                 icon: 'success',
                 timer: 2000,
                 showConfirmButton: false,
-                borderRadius: '20px',
+                customClass: {
+                    popup: 'rounded-3xl',
+                },
             })
 
             router.push('/dashboard/user')

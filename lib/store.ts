@@ -1,12 +1,14 @@
 "use client"
 
-import type { User, Booking } from './types'
+import type { User, Booking, Property } from './types'
 import { getUserByEmail } from './email-validator'
 
 const STORAGE_KEYS = {
   USER: 'househub_user',
   BOOKINGS: 'househub_bookings',
   RECENTLY_VIEWED: 'househub_recently_viewed',
+  PROPERTIES: 'househub_properties',
+  REVIEWS: 'househub_reviews',
 }
 
 // User management
@@ -145,4 +147,64 @@ export function addToRecentlyViewed(property: Property): void {
   // Add to beginning
   const updated = [property, ...filtered].slice(0, 12) // Keep last 12
   localStorage.setItem(STORAGE_KEYS.RECENTLY_VIEWED, JSON.stringify(updated))
+}
+// Property management
+export function getProperties(): Property[] {
+  if (typeof window === 'undefined') return []
+  const stored = localStorage.getItem(STORAGE_KEYS.PROPERTIES)
+  return stored ? JSON.parse(stored) : []
+}
+
+export function saveProperty(property: Property): void {
+  if (typeof window === 'undefined') return
+  const properties = getProperties()
+  const index = properties.findIndex(p => p.id === property.id)
+
+  if (index !== -1) {
+    properties[index] = property
+  } else {
+    properties.push(property)
+  }
+
+  localStorage.setItem(STORAGE_KEYS.PROPERTIES, JSON.stringify(properties))
+}
+
+export function deleteProperty(id: string): void {
+  if (typeof window === 'undefined') return
+  const properties = getProperties()
+  const updated = properties.filter(p => p.id !== id)
+  localStorage.setItem(STORAGE_KEYS.PROPERTIES, JSON.stringify(updated))
+}
+
+import { properties as staticProperties } from './data'
+
+export function getPropertiesById(id: string): Property | undefined {
+  const properties = getProperties()
+  const found = properties.find(p => p.id === id)
+  if (found) return found
+  return staticProperties.find(p => p.id === id)
+}
+
+export function getOwnerProperties(email: string): Property[] {
+  const properties = getProperties()
+  return properties.filter(p => p.owner.email === email)
+}
+
+// Review management
+export function getReviews(): any[] {
+  if (typeof window === 'undefined') return []
+  const stored = localStorage.getItem(STORAGE_KEYS.REVIEWS)
+  return stored ? JSON.parse(stored) : []
+}
+
+export function saveReview(review: any): void {
+  if (typeof window === 'undefined') return
+  const reviews = getReviews()
+  const newReview = {
+    ...review,
+    _id: Math.random().toString(36).substr(2, 9),
+    date: new Date().toISOString()
+  }
+  reviews.push(newReview)
+  localStorage.setItem(STORAGE_KEYS.REVIEWS, JSON.stringify(reviews))
 }

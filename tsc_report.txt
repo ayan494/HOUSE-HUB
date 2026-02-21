@@ -1,0 +1,58 @@
+﻿app/auth/login/page.tsx(47,18): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; timer: number; showConfirmButton: boolean; timerProgressBar: boolean; borderRadius: string; }' is not assignable to parameter of type 'string'.
+app/auth/login/page.tsx(208,61): error TS2322: Type 'boolean | ""' is not assignable to type 'boolean | undefined'.
+  Type '""' is not assignable to type 'boolean | undefined'.
+app/auth/register/page.tsx(93,18): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; timer: number; showConfirmButton: boolean; timerProgressBar: boolean; borderRadius: string; }' is not assignable to parameter of type 'string'.
+app/dashboard/owner/add/page.tsx(17,25): error TS2724: '"@/lib/types"' has no exported member named 'PropertyType'. Did you mean 'Property'?
+app/dashboard/owner/add/page.tsx(43,24): error TS2304: Cannot find name 'getSavedProperties'.
+app/dashboard/owner/add/page.tsx(44,36): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/dashboard/owner/bookings/page.tsx(137,62): error TS2339: Property 'totalPrice' does not exist on type 'Booking'.
+app/dashboard/owner/properties/page.tsx(10,10): error TS2305: Module '"@/lib/data"' has no exported member 'getOwnerProperties'.
+app/dashboard/owner/properties/page.tsx(10,30): error TS2305: Module '"@/lib/data"' has no exported member 'deleteProperty'.
+app/dashboard/owner/properties/page.tsx(48,35): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; showCancelButton: boolean; confirmButtonColor: string; cancelButtonColor: string; confirmButtonText: string; background: string; borderRadius: string; }' is not assignable to parameter of type 'string'.
+app/dashboard/owner/properties/page.tsx(71,22): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; timer: number; showConfirmButton: boolean; borderRadius: string; }' is not assignable to parameter of type 'string'.
+app/dashboard/user/premium/page.tsx(47,24): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; timer: number; showConfirmButton: boolean; borderRadius: string; }' is not assignable to parameter of type 'string'.
+app/page.tsx(40,26): error TS2552: Cannot find name 'properties'. Did you mean 'allProperties'?
+components/booking-modal.tsx(85,7): error TS2353: Object literal may only specify known properties, and 'phone' does not exist in type 'Omit<Booking, "id" | "createdAt">'.
+components/dashboard-sidebar.tsx(34,31): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; showCancelButton: boolean; confirmButtonColor: string; cancelButtonColor: string; confirmButtonText: string; borderRadius: string; }' is not assignable to parameter of type 'string'.
+components/dashboard-sidebar.tsx(48,18): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; timer: number; showConfirmButton: boolean; timerProgressBar: boolean; borderRadius: string; }' is not assignable to parameter of type 'string'.
+components/header.tsx(39,31): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; showCancelButton: boolean; confirmButtonColor: string; cancelButtonColor: string; confirmButtonText: string; borderRadius: string; }' is not assignable to parameter of type 'string'.
+components/header.tsx(54,18): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(options: SweetAlertOptions): Promise<SweetAlertResult<any>>', gave the following error.
+    Object literal may only specify known properties, and 'borderRadius' does not exist in type 'SweetAlertOptions'.
+  Overload 2 of 2, '(title?: string | undefined, html?: string | undefined, icon?: SweetAlertIcon | undefined): Promise<SweetAlertResult<any>>', gave the following error.
+    Argument of type '{ title: string; text: string; icon: string; timer: number; showConfirmButton: boolean; timerProgressBar: boolean; borderRadius: string; }' is not assignable to parameter of type 'string'.
+lib/store.ts(134,38): error TS2304: Cannot find name 'Property'.
+lib/store.ts(140,47): error TS2304: Cannot find name 'Property'.
+

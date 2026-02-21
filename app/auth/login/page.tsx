@@ -4,13 +4,13 @@ import React from "react"
 
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Mail, Lock, ArrowRight, Chrome, Check, X, Eye, EyeOff } from 'lucide-react'
+import Image from 'next/image'
+import { Mail, Lock, ArrowRight, Check, X, Eye, EyeOff } from 'lucide-react'
 import { loginUser } from '@/lib/store'
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import Swal from 'sweetalert2'
@@ -50,7 +50,9 @@ function LoginForm() {
         timer: 1500,
         showConfirmButton: false,
         timerProgressBar: true,
-        borderRadius: '20px',
+        customClass: {
+          popup: 'rounded-3xl',
+        },
       })
 
       const redirectUrl = searchParams.get('redirect')
@@ -73,11 +75,15 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <Home className="w-6 h-6 text-primary-foreground" />
-          </div>
-          <span className="text-2xl font-bold text-foreground">HouseHub</span>
+        <Link href="/" className="flex items-center justify-center mb-8">
+          <Image
+            src="/rentora-logo.png"
+            alt="Rentora"
+            width={140}
+            height={48}
+            className="h-12 w-auto object-contain"
+            priority
+          />
         </Link>
 
         <Card className="border-border">
@@ -200,30 +206,11 @@ function LoginForm() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full h-11" disabled={isLoading || (password && !isPasswordValid(password))}>
+              <Button type="submit" className="w-full h-11" disabled={!!(isLoading || (password && !isPasswordValid(password)))}>
                 {isLoading ? 'Signing in...' : 'Sign In'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </form>
-
-            {/* Divider */}
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex-1 h-px bg-border"></div>
-              <span className="text-xs text-muted-foreground">Or continue with</span>
-              <div className="flex-1 h-px bg-border"></div>
-            </div>
-
-            {/* Google Sign In Button */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-11 mt-4"
-              style={{ borderColor: '#6699cc', color: '#6699cc' }}
-              onClick={() => signIn('google', { callbackUrl: redirect })}
-            >
-              <Chrome className="w-4 h-4 mr-2" />
-              Sign in with Google
-            </Button>
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Don&apos;t have an account? </span>

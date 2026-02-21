@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Home, Clock, CheckCircle, Search } from 'lucide-react'
-import { getCurrentUser, getUserBookings } from '@/lib/store'
-import { getPropertyById } from '@/lib/data'
+import { getCurrentUser, getUserBookings, getPropertiesById } from '@/lib/store'
 import type { Booking, User } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -128,7 +127,7 @@ export default function UserDashboardPage() {
           ) : (
             <div className="space-y-4">
               {bookings.slice(0, 3).map((booking) => {
-                const property = getPropertyById(booking.propertyId)
+                const property = getPropertiesById(booking.propertyId)
                 if (!property) return null
 
                 return (

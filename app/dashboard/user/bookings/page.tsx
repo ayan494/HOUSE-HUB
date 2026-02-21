@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, MapPin, Phone, User, ArrowRight } from 'lucide-react'
-import { getCurrentUser, getUserBookings } from '@/lib/store'
-import { getPropertyById } from '@/lib/data'
+import { getCurrentUser, getUserBookings, getPropertiesById } from '@/lib/store'
 import type { Booking, User as UserType } from '@/lib/types'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
@@ -65,7 +64,7 @@ export default function UserBookingsPage() {
       ) : (
         <div className="space-y-6">
           {bookings.map((booking) => {
-            const property = getPropertyById(booking.propertyId)
+            const property = getPropertiesById(booking.propertyId)
             if (!property) return null
 
             return (

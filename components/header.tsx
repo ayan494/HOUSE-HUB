@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet'
-import { Menu, Home, User, LogOut } from 'lucide-react'
+import { Menu, User, LogOut, Home } from 'lucide-react'
 import { getCurrentUser, logoutUser } from '@/lib/store'
 import type { User as UserType } from '@/lib/types'
 import {
@@ -43,7 +44,9 @@ export function Header() {
       confirmButtonColor: '#6699cc',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, sign out!',
-      borderRadius: '20px',
+      customClass: {
+        popup: 'rounded-3xl',
+      },
     })
 
     if (result.isConfirmed) {
@@ -57,7 +60,9 @@ export function Header() {
         timer: 1500,
         showConfirmButton: false,
         timerProgressBar: true,
-        borderRadius: '20px',
+        customClass: {
+          popup: 'rounded-3xl',
+        },
       })
 
       window.location.href = '/'
@@ -86,12 +91,12 @@ export function Header() {
         <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo Container */}
           <div className="flex-1 flex items-center">
-            <Link href="/" className="flex items-center gap-3 group shrink-0">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95" style={{ backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' }}>
-                <Home className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center gap-2 group shrink-0">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 transition-transform group-hover:scale-110">
+                <Home className="w-6 h-6 fill-current" />
               </div>
-              <span className={`text-xl md:text-2xl font-black tracking-tight transform transition-colors duration-300 ${logoColor}`}>
-                House<span style={{ color: '#6699cc' }}>Hub</span>
+              <span className={`text-2xl font-black tracking-tighter transition-colors group-hover:text-primary ${logoColor}`}>
+                Rentora
               </span>
             </Link>
           </div>
@@ -194,12 +199,14 @@ export function Header() {
                 </SheetHeader>
                 <div className="h-full flex flex-col p-8">
                   <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                        <Home className="w-5 h-5 text-white" />
+                    <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2 group">
+                      <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+                        <Home className="w-5 h-5 fill-current" />
                       </div>
-                      <span className="text-xl font-black">House<span className="text-primary">Hub</span></span>
-                    </div>
+                      <span className="text-xl font-black tracking-tighter text-foreground">
+                        Rentora
+                      </span>
+                    </Link>
                     <ThemeToggle />
                   </div>
 

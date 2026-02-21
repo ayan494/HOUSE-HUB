@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Bed, Bath, Square, Plus, Edit, Trash2, Crown, Home } from 'lucide-react'
-import { getOwnerProperties, deleteProperty } from '@/lib/data'
-import { getCurrentUser } from '@/lib/store'
+import { getCurrentUser, getOwnerProperties, deleteProperty } from '@/lib/store'
 import type { Property } from '@/lib/types'
 import Swal from 'sweetalert2'
 
@@ -18,12 +17,22 @@ export default function OwnerPropertiesPage() {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        const user = getCurrentUser()
-        if (user && user.role === 'owner') {
-            const props = getOwnerProperties(user.email)
-            setMyProperties(props)
+        const fetchMyProperties = () => {
+            const user = getCurrentUser()
+            if (user && user.role === 'owner') {
+                try {
+                    const filtered = getOwnerProperties(user.email)
+                    setMyProperties(filtered)
+                } catch (error) {
+                    console.error('Error loading owner properties:', error)
+                } finally {
+                    setIsLoading(false)
+                }
+            } else {
+                setIsLoading(false)
+            }
         }
-        setIsLoading(false)
+        fetchMyProperties()
     }, [])
 
     const handleDelete = async (id: string, name: string) => {
@@ -36,20 +45,29 @@ export default function OwnerPropertiesPage() {
             cancelButtonColor: '#64748b',
             confirmButtonText: 'Yes, Delete it!',
             background: '#ffffff',
-            borderRadius: '20px',
+            customClass: {
+                popup: 'rounded-3xl',
+            },
         })
 
         if (result.isConfirmed) {
-            deleteProperty(id)
-            setMyProperties(prev => prev.filter(p => p.id !== id))
-            Swal.fire({
-                title: 'Deleted!',
-                text: 'Your property has been removed.',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false,
-                borderRadius: '20px',
-            })
+            try {
+                deleteProperty(id)
+                setMyProperties(prev => prev.filter(p => p.id !== id))
+                await Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Your property has been deleted.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'rounded-3xl',
+                    },
+                })
+            } catch (error) {
+                console.error('Error deleting property:', error)
+                alert('Failed to delete property')
+            }
         }
     }
 

@@ -7,14 +7,41 @@ import { Footer } from '@/components/footer'
 import { PropertyCard } from '@/components/property-card'
 import { SearchFilters } from '@/components/search-filters'
 import { BookingModal } from '@/components/booking-modal'
-import { filterProperties, properties as allProperties } from '@/lib/data'
 import type { Property } from '@/lib/types'
+import { getProperties } from '@/lib/store'
+import { properties as staticProperties } from '@/lib/data'
 
 function PropertiesContent() {
   const searchParams = useSearchParams()
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
   const [isBookingOpen, setIsBookingOpen] = useState(false)
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties)
+  const [allProperties, setAllProperties] = useState<Property[]>([])
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadProperties = () => {
+      try {
+        const storedProperties = getProperties()
+
+        // Merge stored properties with static properties
+        const combined = [...storedProperties]
+        staticProperties.forEach(p => {
+          if (!combined.some(cp => cp.id === p.id)) {
+            combined.push(p)
+          }
+        })
+
+        setAllProperties(combined)
+      } catch (error) {
+        console.error('Error loading properties:', error)
+        setAllProperties(staticProperties)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadProperties()
+  }, [])
 
   useEffect(() => {
     const query = searchParams.get('q') || undefined
@@ -24,13 +51,26 @@ function PropertiesContent() {
     const bedrooms = searchParams.get('bedrooms') ? Number(searchParams.get('bedrooms')) : undefined
     const amenities = searchParams.get('amenities')?.split(',').filter(Boolean) || undefined
 
-    const filtered = filterProperties({
-      city: city === 'all' ? undefined : city,
-      minPrice,
-      maxPrice,
-      bedrooms,
-      amenities,
-      query,
+    // Use current allProperties instead of static data
+    const filtered = allProperties.filter(property => {
+      if (city && city !== 'all' && property.city !== city) return false
+      if (minPrice && property.price < minPrice) return false
+      if (maxPrice && property.price > maxPrice) return false
+      if (bedrooms && property.bedrooms < bedrooms) return false
+
+      if (query) {
+        const searchTerms = query.toLowerCase().split(' ')
+        const propertyText = `${property.name} ${property.location} ${property.city} ${property.description} ${property.propertyType}`.toLowerCase()
+
+        const matchesText = searchTerms.every(term => propertyText.includes(term))
+        if (!matchesText) return false
+      }
+
+      if (amenities && amenities.length > 0) {
+        const hasAllAmenities = amenities.every(a => property.amenities.includes(a))
+        if (!hasAllAmenities) return false
+      }
+      return true
     })
 
     // Sort: featured first, then premium, then by rating
@@ -43,7 +83,7 @@ function PropertiesContent() {
     })
 
     setFilteredProperties(filtered)
-  }, [searchParams])
+  }, [searchParams, allProperties])
 
   const handleBookClick = (property: Property) => {
     setSelectedProperty(property)

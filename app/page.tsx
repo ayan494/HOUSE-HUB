@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from '@/components/header'
 import { Hero } from '@/components/hero'
 import { FeaturedCarousel } from '@/components/featured-carousel'
@@ -11,7 +11,8 @@ import { Footer } from '@/components/footer'
 import { BookingModal } from '@/components/booking-modal'
 import { CategoryCards } from '@/components/category-cards'
 import { TrustedPartners } from '@/components/trusted-partners'
-import { properties, getPremiumProperties, getFeaturedProperties } from '@/lib/data'
+import { getProperties } from '@/lib/store'
+import { properties as staticProperties } from '@/lib/data'
 import type { Property } from '@/lib/types'
 import { FadeIn } from '@/components/animations/fade-in'
 import { NightSky } from '@/components/animations/night-sky'
@@ -19,10 +20,37 @@ import { NightSky } from '@/components/animations/night-sky'
 export default function HomePage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
   const [isBookingOpen, setIsBookingOpen] = useState(false)
+  const [allProperties, setAllProperties] = useState<Property[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const premiumProperties = getPremiumProperties()
-  const featuredProperties = getFeaturedProperties()
-  const allProperties = properties.slice(0, 8)
+  useEffect(() => {
+    const loadProperties = () => {
+      try {
+        const storedProperties = getProperties()
+
+        // Merge stored properties with static properties, avoiding duplicates by ID
+        const combined = [...storedProperties]
+        staticProperties.forEach(p => {
+          if (!combined.some(cp => cp.id === p.id)) {
+            combined.push(p)
+          }
+        })
+
+        setAllProperties(combined)
+      } catch (error) {
+        console.error('Error loading properties:', error)
+        setAllProperties(staticProperties)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadProperties()
+  }, [])
+
+  const premiumProperties = allProperties.filter(p => p.isPremium)
+  const featuredProperties = allProperties.filter(p => p.isFeatured)
+  const homeProperties = allProperties.slice(0, 8)
 
   const handleBookClick = (property: Property) => {
     setSelectedProperty(property)
@@ -71,7 +99,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <FadeIn delay={0.3} direction="up" fullWidth>
             <PropertyGrid
-              properties={allProperties}
+              properties={homeProperties}
               title="Browse All Properties"
               subtitle="Find your next home from our extensive collection"
               onBookClick={handleBookClick}
@@ -81,10 +109,6 @@ export default function HomePage() {
 
         <FadeIn delay={0.2} direction="up" fullWidth>
           <TrustedPartners />
-        </FadeIn>
-
-        <FadeIn delay={0.2} direction="left" fullWidth>
-          <Testimonials />
         </FadeIn>
       </main>
 

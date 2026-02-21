@@ -5,8 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar, CheckCircle, XCircle, Clock } from 'lucide-react'
-import { getCurrentUser, getBookings, updateBookingStatus } from '@/lib/store'
-import { getPropertyById } from '@/lib/data'
+import { getCurrentUser, getBookings, updateBookingStatus, getPropertiesById } from '@/lib/store'
 import type { Booking, User } from '@/lib/types'
 import { format } from 'date-fns'
 import Link from 'next/link'
@@ -23,7 +22,7 @@ export default function OwnerBookingsPage() {
             // Fetch all bookings and filter for those belonging to this owner's properties
             const allBookings = getBookings()
             const ownerBookings = allBookings.filter(booking => {
-                const property = getPropertyById(booking.propertyId)
+                const property = getPropertiesById(booking.propertyId)
                 return property && property.owner.id === user.id
             })
             setBookings(ownerBookings)
@@ -35,7 +34,7 @@ export default function OwnerBookingsPage() {
         // Refresh bookings
         const allBookings = getBookings()
         const ownerBookings = allBookings.filter(booking => {
-            const property = getPropertyById(booking.propertyId)
+            const property = getPropertiesById(booking.propertyId)
             return property && currentUser && property.owner.id === currentUser.id
         })
         setBookings(ownerBookings)
@@ -88,7 +87,7 @@ export default function OwnerBookingsPage() {
 
             <div className="space-y-4">
                 {bookings.map((booking) => {
-                    const property = getPropertyById(booking.propertyId)
+                    const property = getPropertiesById(booking.propertyId)
                     if (!property) return null
 
                     return (
