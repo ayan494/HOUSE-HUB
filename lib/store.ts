@@ -36,12 +36,13 @@ export function loginUser(email: string, password: string): User {
   }
 
   const user: User = {
-    id: registeredUser.email, // Use email as ID for consistency with registered list
+    id: registeredUser.email,
     name: registeredUser.name,
+    username: registeredUser.username,
     email: registeredUser.email,
     phone: registeredUser.phone,
     role: registeredUser.role,
-    activePlan: undefined, // Default to no plan on login if not stored
+    activePlan: undefined,
   }
 
   // Check if we have an active plan stored for this user
@@ -54,10 +55,11 @@ export function loginUser(email: string, password: string): User {
   return user
 }
 
-export function registerUser(name: string, email: string, phone: string, role: 'user' | 'owner'): User {
+export function registerUser(name: string, email: string, username: string, phone: string, role: 'user' | 'owner'): User {
   const user: User = {
     id: email,
     name,
+    username,
     email,
     phone,
     role,

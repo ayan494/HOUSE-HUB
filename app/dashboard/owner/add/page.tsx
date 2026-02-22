@@ -36,7 +36,7 @@ function AddPropertyContent() {
   const [area, setArea] = useState('')
   const [propertyType, setPropertyType] = useState<any>('apartment')
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([])
-  const [mainImage, setMainImage] = useState<string | null>(null)
+  const [images, setImages] = useState<string[]>([])
 
   useEffect(() => {
     if (editId) {
@@ -53,20 +53,35 @@ function AddPropertyContent() {
         setArea(toEdit.area.toString())
         setPropertyType(toEdit.propertyType)
         setSelectedAmenities(toEdit.amenities)
-        setMainImage(toEdit.images[0] || null)
+        setImages(toEdit.images || [])
       }
     }
   }, [editId])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setMainImage(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+    const files = e.target.files
+    if (files) {
+      const newImages: string[] = []
+      const readers: Promise<string>[] = []
+
+      Array.from(files).forEach(file => {
+        readers.push(new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onloadend = () => {
+            resolve(reader.result as string)
+          }
+          reader.readAsDataURL(file)
+        }))
+      })
+
+      Promise.all(readers).then(results => {
+        setImages(prev => [...prev, ...results])
+      })
     }
+  }
+
+  const removeImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index))
   }
 
   const toggleAmenity = (amenity: string) => {
@@ -115,7 +130,7 @@ function AddPropertyContent() {
       area: parseInt(area),
       propertyType: propertyType as any,
       amenities: selectedAmenities,
-      images: mainImage ? [mainImage] : [],
+      images: images,
       owner: ownerData,
       isPremium: false,
       isFeatured: false,
@@ -166,7 +181,7 @@ function AddPropertyContent() {
                     setName('')
                     setDescription('')
                     setPrice('')
-                    setMainImage(null)
+                    setImages([])
                   }
                 }}
                 className="w-full sm:w-auto rounded-2xl px-10 py-7 font-bold text-lg border-2"
@@ -192,10 +207,10 @@ function AddPropertyContent() {
           </Link>
           <div>
             <h1 className="text-4xl font-black text-slate-900 tracking-tight">{editId ? 'Edit Property' : 'List Your Property'}</h1>
-            <p className="text-slate-500 mt-1 font-semibold text-lg flex items-center gap-2">
+            <div className="text-slate-500 mt-1 font-semibold text-lg flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#6699cc]" />
               {editId ? 'Update your property details.' : 'Reach thousands of verified tenants.'}
-            </p>
+            </div>
           </div>
         </div>
       </div>
@@ -356,39 +371,37 @@ function AddPropertyContent() {
           {/* Photo Card */}
           <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] overflow-hidden p-2">
             <CardHeader>
-              <CardTitle className="text-2xl font-black text-slate-900">Cover Photo</CardTitle>
-              <CardDescription className="text-slate-500 font-medium font-base">First impressions matter.</CardDescription>
+              <CardTitle className="text-2xl font-black text-slate-900">Property Photos</CardTitle>
+              <CardDescription className="text-slate-500 font-medium font-base">First impressions matter. Add multiple views.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className={`group relative border-4 border-dashed rounded-[2rem] h-64 flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden ${mainImage ? 'border-none' : 'border-slate-100 hover:border-[#6699cc]/30 hover:bg-slate-50'
-                  }`}
-              >
-                {mainImage ? (
-                  <>
-                    <img src={mainImage} alt="Preview" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Button type="button" variant="secondary" className="rounded-full px-6 font-bold shadow-xl">Change Photo</Button>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setMainImage(null)
-                      }}
-                      className="absolute top-4 right-4 bg-white/90 hover:bg-white text-rose-500 rounded-full p-2 shadow-lg"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </>
-                ) : (
-                  <div className="text-center p-6">
-                    <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-100 group-hover:bg-white group-hover:scale-110 transition-transform">
-                      <Upload className="w-8 h-8 text-slate-400 group-hover:text-[#6699cc]" />
-                    </div>
-                    <p className="text-slate-900 font-black text-lg">Click to Upload</p>
-                    <p className="text-slate-500 font-bold text-sm mt-1">Main property picture</p>
+              <div className="space-y-4">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="group relative border-4 border-dashed rounded-[2rem] h-32 flex flex-col items-center justify-center transition-all cursor-pointer border-slate-100 hover:border-[#6699cc]/30 hover:bg-slate-50"
+                >
+                  <div className="flex flex-col items-center">
+                    <Upload className="w-6 h-6 text-slate-400 group-hover:text-[#6699cc] mb-2" />
+                    <p className="text-slate-900 font-black text-sm">Add More Photos</p>
+                  </div>
+                </div>
+
+                {images.length > 0 && (
+                  <div className="grid grid-cols-2 gap-3 mt-4">
+                    {images.map((img, idx) => (
+                      <div key={idx} className="group relative aspect-video rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm">
+                        <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => removeImage(idx)}
+                            className="bg-rose-500 text-white rounded-full p-2 shadow-lg hover:scale-110 transition-transform"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -398,8 +411,9 @@ function AddPropertyContent() {
                 className="hidden"
                 onChange={handleImageChange}
                 accept="image/*"
+                multiple
               />
-              <p className="mt-4 text-xs text-slate-400 text-center font-bold">Recommended: 1200x800px or larger</p>
+              <p className="mt-4 text-[10px] text-slate-400 text-center font-bold">Recommended: Multiple high-quality photos (1200x800px)</p>
             </CardContent>
           </Card>
 

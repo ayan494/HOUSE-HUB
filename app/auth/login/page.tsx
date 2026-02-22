@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
-import { Mail, Lock, ArrowRight, Check, X, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, User, ArrowRight, Check, X, Eye, EyeOff } from 'lucide-react'
 import { loginUser } from '@/lib/store'
 import { validatePassword, isPasswordValid } from '@/lib/password-validator'
 import Swal from 'sweetalert2'
@@ -20,6 +20,7 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
 
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -30,7 +31,7 @@ function LoginForm() {
     e.preventDefault()
     setError('')
 
-    if (!email || !password) {
+    if (!email || !password || !username) {
       setError('Please fill in all fields')
       return
     }
@@ -42,6 +43,14 @@ function LoginForm() {
 
     try {
       const loggedUser = loginUser(email, password)
+
+      // Since our mock login currently only checks email/password, 
+      // we'll just ensure the username is checked if needed, 
+      // but for now we follow the user's request to just "be there".
+      if (loggedUser.username !== username) {
+        // Optionally enforce correct username if we want to be strict
+        // but I'll skip literal enforcement unless requested to avoid lockouts for old users
+      }
 
       await Swal.fire({
         title: 'Welcome Back!',
@@ -100,6 +109,22 @@ function LoginForm() {
                   {error}
                 </div>
               )}
+
+              <div className="space-y-4">
+                <Label htmlFor="username">Username</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="8 alphabets"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 8))}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>

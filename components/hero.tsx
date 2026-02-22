@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Search, MapPin, Wallet, Building } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { HeroVisual } from '@/components/hero-visual'
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 
 export function Hero() {
   const router = useRouter()
@@ -97,14 +98,13 @@ export function Hero() {
                     />
                   </div>
                 </div>
-                <Button
+                <InteractiveHoverButton
                   type="submit"
                   disabled={isSearchDisabled}
-                  className="bg-[#8b5cf6] hover:bg-[#8b5cf6]/90 text-white font-black py-7 px-8 rounded-2xl hero-glow-purple transition-all active:scale-95 text-base"
+                  className="py-7 px-10 text-base h-auto"
                 >
-                  <Search className="w-5 h-5 mr-2" />
                   Find Perfect Home
-                </Button>
+                </InteractiveHoverButton>
               </div>
             </form>
 

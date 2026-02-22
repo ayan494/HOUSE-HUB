@@ -9,6 +9,7 @@ import { Building, Calendar, Plus, TrendingUp, Eye, Crown, DollarSign } from 'lu
 import { getCurrentUser, getBookings } from '@/lib/store'
 import { properties } from '@/lib/data'
 import type { User, Booking } from '@/lib/types'
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 
 export default function OwnerDashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -40,10 +41,9 @@ export default function OwnerDashboardPage() {
           </p>
         </div>
         <Link href="/dashboard/owner/add">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
+          <InteractiveHoverButton className="h-11">
             Add Property
-          </Button>
+          </InteractiveHoverButton>
         </Link>
       </div>
 
@@ -179,10 +179,9 @@ export default function OwnerDashboardPage() {
                 </Button>
               </Link>
               <Link href="/dashboard/owner/premium" className="block">
-                <Button variant="outline" className="w-full justify-start border-border text-foreground hover:bg-muted hover:text-foreground">
-                  <Crown className="w-4 h-4 mr-2" />
+                <InteractiveHoverButton className="w-full text-sm py-4 h-auto">
                   Upgrade to Premium
-                </Button>
+                </InteractiveHoverButton>
               </Link>
             </CardContent>
           </Card>
@@ -195,9 +194,9 @@ export default function OwnerDashboardPage() {
                 Get featured placement and reach more tenants.
               </p>
               <Link href="/dashboard/owner/premium" className="w-full mt-auto">
-                <Button className="w-full bg-[var(--premium)] hover:bg-[var(--premium)]/90 text-[var(--premium-foreground)]">
+                <InteractiveHoverButton className="w-full py-5 text-sm h-auto bg-[var(--premium)]">
                   Upgrade Now
-                </Button>
+                </InteractiveHoverButton>
               </Link>
             </CardContent>
           </Card>

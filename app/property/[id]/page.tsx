@@ -27,14 +27,15 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
-import { getPropertyById, properties } from '@/lib/data'
+import { getPropertiesById } from '@/lib/store'
+import { properties } from '@/lib/data'
 import type { Property } from '@/lib/types'
 
 import { addToRecentlyViewed } from '@/lib/store'
 
 export default function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params)
-  const property = getPropertyById(resolvedParams.id)
+  const property = getPropertiesById(resolvedParams.id)
 
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)

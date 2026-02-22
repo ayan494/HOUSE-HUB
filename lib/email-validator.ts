@@ -9,6 +9,7 @@ const REGISTERED_USERS_KEY = 'househub_registered_users'
 export interface RegisteredUser {
   email: string
   name: string
+  username: string
   phone: string
   role: 'user' | 'owner'
   registeredAt: string

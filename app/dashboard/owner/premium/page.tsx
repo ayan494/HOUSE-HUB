@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Check, Crown, Star, TrendingUp, Eye, Zap, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 
 export default function PremiumPage() {
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('monthly')
@@ -114,10 +115,9 @@ export default function PremiumPage() {
               )}
             </div>
 
-            <Button className="w-full h-12 bg-[var(--premium)] hover:bg-[var(--premium)]/90 text-[var(--premium-foreground)]">
-              <Crown className="w-5 h-5 mr-2" />
+            <InteractiveHoverButton className="w-full h-12 bg-[var(--premium)] text-white font-bold h-auto py-5">
               Upgrade Now
-            </Button>
+            </InteractiveHoverButton>
 
             <div className="space-y-3">
               {[

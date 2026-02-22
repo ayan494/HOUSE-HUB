@@ -9,6 +9,7 @@ import { Calendar, Home, Clock, CheckCircle, Search } from 'lucide-react'
 import { getCurrentUser, getUserBookings, getPropertiesById } from '@/lib/store'
 import type { Booking, User } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 
 export default function UserDashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -89,16 +90,14 @@ export default function UserDashboardPage() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
           <Link href="/properties">
-            <Button className="rounded-xl px-6 py-6 font-bold shadow-lg shadow-primary/20">
-              <Search className="w-5 h-5 mr-2" />
+            <InteractiveHoverButton className="px-8 py-6 h-auto text-lg shadow-lg shadow-primary/20">
               Browse Properties
-            </Button>
+            </InteractiveHoverButton>
           </Link>
           <Link href="/dashboard/user/bookings">
-            <Button variant="outline" className="rounded-xl px-6 py-6 border-slate-200 font-bold hover:bg-slate-50">
-              <Calendar className="w-5 h-5 mr-2" />
+            <InteractiveHoverButton className="px-8 py-6 h-auto text-lg bg-transparent border border-slate-200 text-slate-900 group-hover:text-white transition-colors">
               View My Bookings
-            </Button>
+            </InteractiveHoverButton>
           </Link>
         </CardContent>
       </Card>

@@ -5,9 +5,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet'
-import { Menu, User, LogOut, Home } from 'lucide-react'
+import { Menu, User, LogOut, Home, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { getCurrentUser, logoutUser } from '@/lib/store'
 import type { User as UserType } from '@/lib/types'
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
+import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,121 +80,120 @@ export function Header() {
 
   // Dynamic classes based on scroll - always show background for visibility
   const headerBg = scrolled
-    ? 'bg-background/95 backdrop-blur-xl shadow-[0_2px_20px_rgba(0,0,0,0.05)] border-b border-border'
-    : 'bg-background/80 backdrop-blur-md border-b border-border/50'
-
-  const textColor = 'text-foreground'
-  const navTextColor = 'text-muted-foreground'
-  const logoColor = 'text-foreground'
+    ? 'bg-white/80 backdrop-blur-md shadow-2xl border border-white/40'
+    : 'bg-white/60 backdrop-blur-sm border border-white/20 shadow-xl'
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerBg}`}>
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between h-14 md:h-16">
-          {/* Logo Container */}
-          <div className="flex-1 flex items-center">
-            <Link href="/" className="flex items-center gap-2 group shrink-0">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 transition-transform group-hover:scale-110">
-                <Home className="w-6 h-6 fill-current" />
-              </div>
-              <span className={`text-2xl font-black tracking-tighter transition-colors group-hover:text-primary ${logoColor}`}>
-                Rentora
-              </span>
+    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 md:px-0">
+      <header className={cn(
+        "w-full max-w-7xl h-16 md:h-20 rounded-full transition-all duration-500 flex items-center px-6 md:px-10 gap-4",
+        headerBg
+      )}>
+        {/* Logo Section (Left for all) */}
+        <div className="flex items-center gap-2 flex-1">
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
+            <Image
+              src="/rentora-logo.png"
+              alt="Rentora"
+              width={140}
+              height={48}
+              className="h-10 md:h-12 w-auto object-contain"
+              priority
+            />
+          </Link>
+        </div>
+
+        {/* Desktop Navigation - Centered */}
+        <nav className="hidden lg:flex items-center gap-10 mx-auto">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-bold uppercase tracking-widest transition-all duration-300 relative group text-slate-500"
+            >
+              {link.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
-          </div>
+          ))}
+        </nav>
 
-          {/* Desktop Navigation - Centered */}
-          <nav className="hidden lg:flex items-center gap-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-bold uppercase tracking-widest transition-all duration-300 relative group ${navTextColor}`}
-                style={{ '--hover-color': '#6699cc' } as React.CSSProperties}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#6699cc')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '')}
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full" style={{ backgroundColor: '#6699cc' }} />
-              </Link>
-            ))}
-          </nav>
 
-          {/* Desktop Actions Container */}
-          <div className="flex-1 hidden lg:flex items-center justify-end gap-4">
-            <ThemeToggle />
+
+
+        {/* Right Section: Mobile Menu+Mood / Desktop Actions+Mood */}
+        <div className="flex flex-1 items-center justify-end gap-3 md:gap-4">
+          <div className="hidden lg:flex items-center gap-4">
+
+
             {user ? (
               <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className={`relative flex items-center gap-3 px-2 hover:bg-muted ${textColor}`}
+                  <button
+                    className="relative flex items-center gap-3 px-2 py-1 rounded-xl hover:bg-muted transition-colors outline-none text-slate-800"
                     onMouseEnter={() => setIsDropdownOpen(true)}
                   >
-                    <Avatar className="w-10 h-10 border-2" style={{ borderColor: 'rgba(102, 153, 204, 0.2)' }}>
+                    <Avatar className="w-10 h-10 border-2 border-primary/20">
                       {user.avatar && (
-                        <AvatarImage
-                          src={user.avatar}
-                          alt={user.name}
-                          className="object-cover rounded-full"
-                        />
+                        <AvatarImage src={user.avatar} alt={user.name} className="object-cover rounded-full" />
                       )}
-                      <AvatarFallback className="text-white font-bold" style={{ backgroundColor: '#6699cc' }}>
+                      <AvatarFallback className="text-white font-bold bg-primary">
                         {user.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-bold">{user.name}</span>
-                  </Button>
+                    <span className="font-bold">{user.username}</span>
+                  </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  sideOffset={8}
-                  className="w-56 p-2 rounded-2xl absolute right-0 top-full z-[100] shadow-2xl border border-border bg-popover ring-1 ring-black/5"
+                  sideOffset={12}
+                  className="w-52 p-2 rounded-2xl shadow-2xl border border-border bg-popover"
                   onMouseLeave={() => setIsDropdownOpen(false)}
                 >
                   <DropdownMenuItem asChild className="rounded-xl cursor-pointer py-3 focus:bg-primary/5">
                     <Link href={user.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'}>
-                      <User className="w-4 h-4 mr-3 text-primary" />
-                      User Dashboard
+                      <LayoutDashboard className="w-4 h-4 mr-3 text-primary" />
+                      Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="my-2" />
-                  <DropdownMenuItem onClick={handleLogout} className="rounded-xl cursor-pointer py-3 text-destructive focus:bg-destructive/5">
+                  <DropdownMenuSeparator className="my-1" />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="rounded-xl cursor-pointer py-3 text-destructive focus:bg-destructive/5"
+                  >
                     <LogOut className="w-4 h-4 mr-3" />
-                    Sign Out
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-6">
                 <Link href="/auth/login">
-                  <Button variant="ghost" className={`font-bold hover:bg-muted ${textColor}`}>
-                    Login
-                  </Button>
+                  <span className="text-sm font-bold text-slate-600 hover:text-primary transition-colors cursor-pointer">
+                    Owner Login
+                  </span>
                 </Link>
-                <Link href="/auth/register?role=owner">
-                  <Button className="rounded-full px-6 font-bold shadow-lg" style={{ backgroundColor: '#6699cc', boxShadow: '0 10px 15px -3px rgba(102, 153, 204, 0.2)' }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#5588bb')} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#6699cc')}>
-                    List Property
-                  </Button>
+                <Link href="/auth/login">
+                  <InteractiveHoverButton className="h-11 md:h-12 px-8">
+                    Find a Home
+                  </InteractiveHoverButton>
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Mobile Right Section */}
-          <div className="flex lg:hidden items-center gap-2">
-            <ThemeToggle />
+          {/* Mobile Menu (Right) */}
+          <div className="flex lg:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-12 h-12 rounded-2xl active:scale-95 transition-all bg-muted hover:bg-muted/80 text-foreground"
+                  className="w-10 h-10 rounded-xl active:scale-95 transition-all bg-slate-50 hover:bg-slate-100 text-slate-500"
                 >
                   <Menu className="w-6 h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-[400px] p-0 border-none bg-background">
+              <SheetContent side="right" className="w-[85vw] sm:w-[400px] p-0 border-none bg-background">
                 <SheetHeader className="sr-only">
                   <SheetTitle>Navigation Menu</SheetTitle>
                   <SheetDescription>Main navigation for mobile devices</SheetDescription>
@@ -207,6 +208,16 @@ export function Header() {
                         Rentora
                       </span>
                     </Link>
+                    {user && (
+                      <Link
+                        href={user.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'}
+                        onClick={() => setIsOpen(false)}
+                        className="flex flex-col items-end hover:opacity-80 transition-opacity"
+                      >
+                        <span className="text-xs font-bold text-primary leading-none">{user.username}</span>
+                        <span className="text-[10px] text-muted-foreground leading-none mt-1">Nickname</span>
+                      </Link>
+                    )}
                     <ThemeToggle />
                   </div>
 
@@ -229,16 +240,7 @@ export function Header() {
                   <div className="mt-8 pt-8 border-t border-border flex flex-col gap-4">
                     {user ? (
                       <>
-                        <Link
-                          href={user.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'}
-                          onClick={() => setIsOpen(false)}
-                          className="w-full"
-                        >
-                          <Button className="w-full py-7 rounded-2xl font-bold text-lg gap-3">
-                            <User className="w-5 h-5" />
-                            Go to Dashboard
-                          </Button>
-                        </Link>
+
                         <Button
                           variant="outline"
                           className="w-full py-7 rounded-2xl font-bold text-lg text-destructive hover:bg-destructive/5"
@@ -267,8 +269,12 @@ export function Header() {
               </SheetContent>
             </Sheet>
           </div>
+
+          <div className="flex items-center pl-2 md:pl-4 md:border-l border-slate-200">
+            <ThemeToggle />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   )
 }

@@ -22,6 +22,7 @@ function RegisterForm() {
   const defaultRole = searchParams.get('role') as 'user' | 'owner' || 'user'
 
   const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
@@ -45,12 +46,24 @@ function RegisterForm() {
     }
   }
 
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^a-zA-Z]/g, '')
+    if (val.length <= 8) {
+      setUsername(val)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
-    if (!name || !email || !phone || !password) {
+    if (!name || !username || !email || !phone || !password) {
       setError('Please fill in all fields')
+      return
+    }
+
+    if (username.length !== 8) {
+      setError('Username must be exactly 8 alphabets')
       return
     }
 
@@ -81,13 +94,14 @@ function RegisterForm() {
       addRegisteredUser({
         email,
         name,
+        username,
         phone,
         role,
         registeredAt: new Date().toISOString(),
       })
 
       // Then register and set current user
-      registerUser(name, email, phone, role)
+      registerUser(name, email, username, phone, role)
 
       await Swal.fire({
         title: 'Account Created!',
@@ -186,6 +200,25 @@ function RegisterForm() {
                     className="pl-10"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="username">Username (Nickname)</Label>
+                <div className="relative">
+                  <ArrowRight className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground rotate-180" />
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="8 alphabets"
+                    value={username}
+                    onChange={handleUsernameChange}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground px-1">
+                  Exactly 8 letters. Currently: {username.length}/8
+                </p>
               </div>
 
               <div className="space-y-2">

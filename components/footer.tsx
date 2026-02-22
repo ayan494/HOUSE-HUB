@@ -12,12 +12,13 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#6699cc] text-white shadow-lg shadow-[#6699cc]/20 transition-transform group-hover:scale-110">
-                <Home className="w-6 h-6 fill-current" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-foreground">
-                Rentora
-              </span>
+              <Image
+                src="/rentora-logo.png"
+                alt="Rentora"
+                width={140}
+                height={48}
+                className="h-10 w-auto object-contain brightness-0 invert"
+              />
             </Link>
             <p className="text-muted-foreground text-sm mb-6">
               Pakistan&apos;s premier platform for house and apartment rentals.

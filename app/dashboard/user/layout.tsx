@@ -20,6 +20,13 @@ export default function UserDashboardLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   useEffect(() => {
+    // Redirect to home on page refresh
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+    if (nav?.type === 'reload') {
+      router.push('/')
+      return
+    }
+
     const currentUser = getCurrentUser()
     if (!currentUser) {
       router.push('/auth/login?redirect=/dashboard/user')
@@ -44,7 +51,7 @@ export default function UserDashboardLayout({
       <DashboardSidebar role="user" open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
       <div className="flex-1 flex flex-col min-w-0">
         <DashboardNavbar onMenuClick={() => setIsSidebarOpen(true)} />
-        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden">
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 pt-24 sm:pt-24 md:pt-24 lg:pt-24 overflow-x-hidden">
           <div className="max-w-6xl mx-auto">
             {children}
           </div>

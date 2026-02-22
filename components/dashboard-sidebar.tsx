@@ -89,15 +89,16 @@ export function DashboardSidebar({ role, open, onOpenChange }: DashboardSidebarP
 
   const SidebarContent = () => (
     <div className="flex flex-col h-[100vh] bg-background border-r border-border shadow-sm w-64">
-      {/* Header */}
-      <div className="flex items-center p-6 border-b border-border/50">
-        <Link href="/" className="flex items-center gap-3 active:scale-95 transition-transform">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#6699cc] text-white shadow-lg shadow-[#6699cc]/20">
-            <Home className="w-5 h-5 fill-current" />
-          </div>
-          <span className="text-xl font-black tracking-tighter text-foreground">
-            Rentora
-          </span>
+      {/* Header — centered icon only */}
+      <div className="flex items-center justify-center py-8 border-b border-border/50">
+        <Link href={role === 'owner' ? '/dashboard/owner' : '/dashboard/user'} className="active:scale-95 transition-transform">
+          <Image
+            src="/rentora-logo.png"
+            alt="Rentora"
+            width={160}
+            height={55}
+            className="h-10 w-auto object-contain"
+          />
         </Link>
       </div>
 
