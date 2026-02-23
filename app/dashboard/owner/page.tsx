@@ -6,32 +6,39 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building, Calendar, Plus, TrendingUp, Eye, Crown, DollarSign } from 'lucide-react'
-import { getCurrentUser, getBookings } from '@/lib/store'
-import { properties } from '@/lib/data'
-import type { User, Booking } from '@/lib/types'
+import { getCurrentUser, getBookings, getOwnerProperties } from '@/lib/store'
+import { properties as staticProperties } from '@/lib/data'
+import type { User, Booking, Property } from '@/lib/types'
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
+import { calculateNetProfit } from '@/lib/utils'
 
 export default function OwnerDashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [allBookings, setAllBookings] = useState<Booking[]>([])
+  const [myProperties, setMyProperties] = useState<Property[]>([])
 
   useEffect(() => {
     const currentUser = getCurrentUser()
     if (currentUser) {
       setUser(currentUser)
       setAllBookings(getBookings())
+      // Get properties from localStorage for this owner
+      const owned = getOwnerProperties(currentUser.email)
+      // If no properties in localStorage, show a slice from static data for demo
+      // but in real case it should be from owned
+      setMyProperties(owned.length > 0 ? owned : staticProperties.slice(0, 4))
     }
   }, [])
 
-  // For MVP, show all properties as owner's properties
-  const myProperties = properties.slice(0, 4)
   const pendingBookings = allBookings.filter(b => b.status === 'pending')
 
-  const totalViews = myProperties.reduce((acc, p) => acc + p.reviews * 10, 0)
-  const totalRevenue = myProperties.reduce((acc, p) => acc + p.price, 0)
+  const totalViews = myProperties.reduce((acc, p) => acc + (p.reviews || 0) * 10, 0)
+  const grossRevenue = myProperties.reduce((acc, p) => acc + p.price, 0)
+  const netProfit = calculateNetProfit(grossRevenue)
+  const commissionDeducted = grossRevenue > netProfit
 
   return (
-    <div className="space-y-8 text-foreground">
+    <div className="space-y-8 text-foreground relative z-10">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -49,7 +56,7 @@ export default function OwnerDashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="bg-white/50 dark:bg-white/[0.02] backdrop-blur-xl border-white/20 dark:border-white/5 shadow-2xl transition-all duration-300 hover:shadow-primary/5">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -63,7 +70,7 @@ export default function OwnerDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/50 dark:bg-white/[0.02] backdrop-blur-xl border-white/20 dark:border-white/5 shadow-2xl transition-all duration-300 hover:shadow-primary/5">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center">
@@ -77,7 +84,7 @@ export default function OwnerDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/50 dark:bg-white/[0.02] backdrop-blur-xl border-white/20 dark:border-white/5 shadow-2xl transition-all duration-300 hover:shadow-primary/5">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
@@ -91,15 +98,18 @@ export default function OwnerDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/50 dark:bg-white/[0.02] backdrop-blur-xl border-white/20 dark:border-white/5 shadow-2xl transition-all duration-300 hover:shadow-primary/5">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                 <DollarSign className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">PKR {(totalRevenue / 1000).toFixed(0)}K</p>
-                <p className="text-sm text-muted-foreground">Monthly Value</p>
+                <p className="text-2xl font-bold text-foreground">PKR {(netProfit / 1000).toFixed(1)}K</p>
+                <p className="text-sm text-muted-foreground">Net Profit</p>
+                {commissionDeducted && (
+                  <p className="text-[10px] text-amber-600 mt-1">0.5% platform fee applied</p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -161,7 +171,7 @@ export default function OwnerDashboardPage() {
 
         {/* Quick Actions & Premium */}
         <div className="space-y-6">
-          <Card>
+          <Card className="bg-white/50 dark:bg-white/[0.02] backdrop-blur-xl border-white/20 dark:border-white/5 shadow-2xl transition-all duration-300 hover:shadow-primary/5">
             <CardHeader>
               <CardTitle className="text-lg text-foreground">Quick Actions</CardTitle>
             </CardHeader>

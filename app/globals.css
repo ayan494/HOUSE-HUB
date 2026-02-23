@@ -148,14 +148,27 @@
   }
 
   .dark {
-    --background: #000000;
-    --foreground: #ffffff;
-    --card: #0a0a0a;
-    --card-foreground: #ffffff;
-    --popover: #0a0a0a;
-    --popover-foreground: #ffffff;
+    /* Premium AI "Night Mood" Palette */
+    --background: #020204;
+    /* True Midnight Black */
+    --foreground: #f8fafc;
+    --card: rgba(10, 10, 15, 0.7);
+    --card-foreground: #f8fafc;
+    --popover: rgba(10, 10, 15, 0.95);
+    --popover-foreground: #f8fafc;
     --primary: #6699cc;
-    --border: #1a1a1a;
+    --primary-foreground: #ffffff;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --accent: #334155;
+    --accent-foreground: #f8fafc;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: rgba(255, 255, 255, 0.1);
+    --input: rgba(255, 255, 255, 0.05);
+    --ring: #6699cc;
   }
 
   * {
@@ -167,6 +180,16 @@
     @apply bg-background text-foreground;
     overflow-x: hidden !important;
     width: 100%;
+    cursor: none !important;
+  }
+
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    cursor: none !important;
   }
 }
 
@@ -210,4 +233,27 @@
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
+}
+
+/* View Transitions Premium Animation */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
 }

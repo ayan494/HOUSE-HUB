@@ -24,12 +24,15 @@ export const metadata: Metadata = {
   },
 };
 
+import CustomCursor from "@/components/custom-cursor";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} font-sans antialiased overflow-x-hidden`}>
         <CustomThemeProvider>
           <LoadingScreen />
+          <CustomCursor />
           {children}
           <AISupportAgent />
           <Analytics />

@@ -248,15 +248,12 @@ export function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {
                     >
                         <Menu className="w-6 h-6" />
                     </Button>
-                    <Link href={user?.role === 'owner' ? '/dashboard/owner' : '/dashboard/user'} className="md:hidden">
-                        <Image
-                            src="/rentora-logo.png"
-                            alt="Rentora"
-                            width={100}
-                            height={34}
-                            className="h-7 w-auto object-contain"
-                        />
-                    </Link>
+
+                    <div className="flex flex-col items-start">
+                        <h1 className="text-sm md:text-base font-black text-slate-800 tracking-tight">
+                            {user?.role === 'owner' ? 'Owner Dashboard' : 'User Dashboard'}
+                        </h1>
+                    </div>
 
                     {/* Wallet Strip - Hidden on small mobile */}
                     <div className="hidden sm:flex items-center gap-2 bg-[#2ecc71]/10 px-4 py-2 rounded-xl border border-[#2ecc71]/20 group hover:bg-[#2ecc71]/20 transition-all cursor-default">

@@ -51,9 +51,15 @@ export default function OwnerDashboardLayout({
   if (!user) return null
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
+    <div className="flex min-h-screen bg-[#F8FAFC] dark:bg-[#050505] transition-colors duration-500 relative">
+      {/* Ambient Mood Glows */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 dark:bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] animate-pulse delay-700" />
+      </div>
+
       <DashboardSidebar role="owner" open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
         <DashboardNavbar onMenuClick={() => setIsSidebarOpen(true)} />
         <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 pt-24 sm:pt-24 md:pt-24 lg:pt-24 overflow-x-hidden">
           <div className="max-w-6xl mx-auto">

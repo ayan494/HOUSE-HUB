@@ -6,11 +6,11 @@ import { Hero } from '@/components/hero'
 import { FeaturedCarousel } from '@/components/featured-carousel'
 import { PropertyGrid } from '@/components/property-grid'
 import { HowItWorks } from '@/components/how-it-works'
-import { Testimonials } from '@/components/testimonials'
 import { Footer } from '@/components/footer'
 import { BookingModal } from '@/components/booking-modal'
 import { CategoryCards } from '@/components/category-cards'
 import { TrustedPartners } from '@/components/trusted-partners'
+import { TestimonialMarquee } from '@/components/testimonial-marquee'
 import { getProperties } from '@/lib/store'
 import { properties as staticProperties } from '@/lib/data'
 import type { Property } from '@/lib/types'
@@ -109,6 +109,10 @@ export default function HomePage() {
 
         <FadeIn delay={0.2} direction="up" fullWidth>
           <TrustedPartners />
+        </FadeIn>
+
+        <FadeIn delay={0.1} direction="up" fullWidth>
+          <TestimonialMarquee />
         </FadeIn>
       </main>
 

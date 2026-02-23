@@ -42,6 +42,8 @@ export interface User {
   location?: string
   role: 'user' | 'owner'
   activePlan?: 'simple' | 'standard' | 'premium' | 'ultimate'
+  subscriptionStatus?: 'FreeTrial' | 'Active' | 'Basic'
+  isFirstMonth?: boolean
 }
 
 export interface Booking {

@@ -31,6 +31,7 @@ const mockProperties = [
 
 export function HeroVisual() {
     const [currentIndex, setCurrentIndex] = useState(0)
+    const [showAll, setShowAll] = useState(false)
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -41,33 +42,119 @@ export function HeroVisual() {
 
     const property = mockProperties[currentIndex]
 
+    const containerVariants = {
+        initial: { opacity: 0, scale: 0.8, rotateY: 20 },
+        animate: { opacity: 1, scale: 1, rotateY: 10 },
+    }
+
+    const phoneVariants = {
+        initial: { rotateY: 10, rotateZ: 0, y: 0, scale: 1 },
+        hover: {
+            rotateY: 0,
+            rotateZ: 0,
+            y: -60,
+            scale: 1.1,
+            transition: {
+                type: "spring",
+                stiffness: 260,
+                damping: 20
+            }
+        }
+    }
+
+    const glowVariants = {
+        initial: { opacity: 0.1, scale: 1, blur: "120px" },
+        hover: {
+            opacity: 0.6,
+            scale: 2,
+            transition: { duration: 0.4, ease: "circOut" }
+        }
+    }
+
+    const card1Variants = {
+        initial: { x: 0, y: 0, rotate: 0, opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.5 } },
+        hover: {
+            x: 60,
+            y: -40,
+            rotate: -8,
+            scale: 1.15,
+            transition: { duration: 0.4, ease: "circOut" }
+        }
+    }
+
+    const card2Variants = {
+        initial: { x: 0, y: 0, rotate: 0, opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.5 } },
+        hover: {
+            x: -60,
+            y: 40,
+            rotate: 8,
+            scale: 1.15,
+            transition: { duration: 0.4, ease: "circOut" }
+        }
+    }
+
+    const innerCardVariants = {
+        initial: { scale: 1 },
+        hover: {
+            scale: 1.08,
+            transition: { duration: 0.4, ease: "circOut" }
+        }
+    }
+
+    const pulseVariants = {
+        initial: { scale: 1 },
+        hover: {
+            scale: [1, 1.1, 1],
+            transition: { duration: 1.5, repeat: Infinity, ease: "linear" }
+        }
+    }
+
+    const shimmerVariants = {
+        initial: { x: "-150%", skewX: -20 },
+        hover: {
+            x: "250%",
+            transition: {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "linear",
+                repeatDelay: 1
+            }
+        }
+    }
+
     return (
-        <div className="relative w-full h-full flex items-center justify-center py-12 px-4 select-none md:pointer-events-auto">
+        <div className="relative w-full h-full flex flex-col items-center justify-center py-12 px-4 select-none md:pointer-events-auto group">
             {/* Background Glows */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-purple-500/10 rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-cyan-500/5 rounded-full blur-[80px]" />
+            <motion.div
+                variants={glowVariants}
+                initial="initial"
+                whileHover="hover"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/20 rounded-full blur-[120px] pointer-events-none"
+            />
 
             {/* Main 3D Container */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.8, rotateY: 20 }}
-                animate={{ opacity: 1, scale: 1, rotateY: 10 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-                className="relative perspective-[1000px] z-10"
+                variants={containerVariants}
+                initial="initial"
+                animate="animate"
+                whileHover="hover"
+                className="relative perspective-[1000px] z-10 flex flex-col items-center"
             >
+                {/* Phone Body */}
                 <motion.div
-                    animate={{
-                        y: [0, -15, 0],
-                        rotateZ: [-1, 1, -1],
-                    }}
-                    transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                    className="relative w-[280px] h-[580px] bg-[#111] rounded-[3rem] border-[8px] border-[#222] shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden"
+                    variants={phoneVariants}
+                    className="relative w-[280px] h-[580px] bg-[#111] rounded-[3rem] border-[8px] border-[#222] shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer"
                 >
+                    {/* Shimmer Effect */}
+                    <motion.div
+                        variants={shimmerVariants}
+                        className="absolute inset-0 w-20 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent z-50 pointer-events-none"
+                    />
+
                     {/* Status Bar */}
-                    <div className="h-6 w-full px-8 pt-4 flex justify-between items-center bg-black/50 backdrop-blur-sm">
+                    <div className="h-6 w-full px-8 pt-4 flex justify-between items-center bg-black/50 backdrop-blur-sm z-40">
                         <div className="text-[10px] text-white">9:41</div>
                         <div className="flex gap-1">
                             <div className="w-4 h-2 bg-white/30 rounded-full" />
@@ -76,10 +163,10 @@ export function HeroVisual() {
                     </div>
 
                     {/* Screen Content */}
-                    <div className="p-4 space-y-4">
+                    <div className="p-4 space-y-4 relative z-30">
                         {/* Header */}
                         <div className="flex justify-between items-center mb-4">
-                            <div className="w-10 h-10 rounded-full bg-purple-500/20 border border-purple-500/30" />
+                            <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30" />
                             <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10" />
                         </div>
 
@@ -90,7 +177,10 @@ export function HeroVisual() {
                         </div>
 
                         {/* Main Property Card inside phone */}
-                        <div className="relative h-[280px] w-full">
+                        <motion.div
+                            variants={innerCardVariants}
+                            className="relative h-[280px] w-full"
+                        >
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={property.id}
@@ -106,7 +196,7 @@ export function HeroVisual() {
                                             alt={property.name}
                                             className="w-full h-full object-cover opacity-60"
                                         />
-                                        <div className="absolute top-2 left-2 bg-cyan-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg">
+                                        <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg">
                                             <ShieldCheck className="w-2 h-2" /> Verified
                                         </div>
                                         <div className="absolute top-2 right-2 bg-white/10 backdrop-blur-md p-1.5 rounded-full">
@@ -126,13 +216,18 @@ export function HeroVisual() {
                                             <span className="text-[9px] truncate">{property.location}</span>
                                         </div>
                                         <div className="flex justify-between items-center pt-1 border-t border-white/5 mt-1">
-                                            <span className="text-xs text-purple-400 font-black">{property.price}</span>
-                                            <div className="bg-purple-600 text-white text-[9px] px-3 py-1 rounded-full font-bold">Book Now</div>
+                                            <span className="text-xs text-primary font-black">{property.price}</span>
+                                            <motion.div
+                                                variants={pulseVariants}
+                                                className="bg-primary text-white text-[9px] px-3 py-1 rounded-full font-bold shadow-lg"
+                                            >
+                                                Book Now
+                                            </motion.div>
                                         </div>
                                     </div>
                                 </motion.div>
                             </AnimatePresence>
-                        </div>
+                        </motion.div>
 
                         {/* Secondary Lists */}
                         <div className="grid grid-cols-2 gap-2 mt-4">
@@ -142,45 +237,68 @@ export function HeroVisual() {
                     </div>
                 </motion.div>
 
-                {/* Floating Glass Cards */}
-                <motion.div
-                    animate={{ x: [0, 10, 0], y: [0, 5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute -top-6 -right-12 p-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-20"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center border border-cyan-500/40">
-                            <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                        </div>
-                        <div>
-                            <p className="text-[10px] font-bold text-white leading-tight">Verified Owner</p>
-                            <p className="text-[8px] text-gray-400">Identity Confirmed</p>
-                        </div>
-                    </div>
-                </motion.div>
+                {/* Floating Glass Cards - Hidden by default unless showAll is true */}
+                <AnimatePresence>
+                    {showAll && (
+                        <>
+                            <motion.div
+                                variants={card1Variants}
+                                initial="initial"
+                                animate="visible"
+                                exit="initial"
+                                whileHover="hover"
+                                className="absolute -top-6 -right-12 p-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-20 pointer-events-none"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/40">
+                                        <ShieldCheck className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-white leading-tight">Verified Owner</p>
+                                        <p className="text-[8px] text-gray-400">Identity Confirmed</p>
+                                    </div>
+                                </div>
+                            </motion.div>
 
-                <motion.div
-                    animate={{ x: [0, -10, 0], y: [0, -5, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    className="absolute bottom-12 -left-16 p-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-20"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/40">
-                            <MapPin className="w-4 h-4 text-purple-400" />
-                        </div>
-                        <div>
-                            <p className="text-[10px] font-bold text-white leading-tight">Elite Location</p>
-                            <p className="text-[8px] text-gray-400">Prime Spot</p>
-                        </div>
-                    </div>
-                </motion.div>
+                            <motion.div
+                                variants={card2Variants}
+                                initial="initial"
+                                animate="visible"
+                                exit="initial"
+                                whileHover="hover"
+                                className="absolute bottom-12 -left-16 p-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-20 pointer-events-none"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/40">
+                                        <MapPin className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-white leading-tight">Elite Location</p>
+                                        <p className="text-[8px] text-gray-400">Prime Spot</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
+
+                {/* Toggle Button */}
+                <div className="mt-8 flex justify-center">
+                    <button
+                        onClick={() => setShowAll(!showAll)}
+                        className="px-6 py-2.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold hover:bg-primary hover:text-white transition-all duration-300 backdrop-blur-sm"
+                    >
+                        {showAll ? "Hide Visuals" : "View All Visuals"}
+                    </button>
+                </div>
             </motion.div>
 
             {/* Shadow */}
             <motion.div
                 animate={{ scaleX: [0.8, 1, 0.8], opacity: [0.2, 0.4, 0.2] }}
+                whileHover={{ scaleX: 1.2, opacity: 0.1, y: 10 }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-4 w-40 h-8 bg-black/60 rounded-[50%] blur-xl"
+                className="absolute bottom-0 w-40 h-8 bg-black/60 rounded-[50%] blur-xl"
             />
         </div>
     )

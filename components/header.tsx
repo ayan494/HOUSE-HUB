@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Menu, User, LogOut, Home, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { getCurrentUser, logoutUser } from '@/lib/store'
 import type { User as UserType } from '@/lib/types'
@@ -18,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ThemeToggle } from '@/components/theme-toggle'
 import Swal from 'sweetalert2'
 
 export function Header() {
@@ -123,7 +123,7 @@ export function Header() {
         {/* Right Section: Mobile Menu+Mood / Desktop Actions+Mood */}
         <div className="flex flex-1 items-center justify-end gap-3 md:gap-4">
           <div className="hidden lg:flex items-center gap-4">
-
+            <ThemeToggle />
 
             {user ? (
               <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
@@ -166,7 +166,7 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2 sm:gap-4 ml-auto lg:ml-0">
                 <Link href="/auth/login">
                   <span className="text-sm font-bold text-slate-600 hover:text-primary transition-colors cursor-pointer">
                     Owner Login
@@ -239,17 +239,14 @@ export function Header() {
 
                   <div className="mt-8 pt-8 border-t border-border flex flex-col gap-4">
                     {user ? (
-                      <>
-
-                        <Button
-                          variant="outline"
-                          className="w-full py-7 rounded-2xl font-bold text-lg text-destructive hover:bg-destructive/5"
-                          onClick={handleLogout}
-                        >
-                          <LogOut className="w-5 h-5 mr-3" />
-                          Sign Out
-                        </Button>
-                      </>
+                      <Button
+                        variant="outline"
+                        className="w-full py-7 rounded-2xl font-bold text-lg text-destructive hover:bg-destructive/5"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="w-5 h-5 mr-3" />
+                        Sign Out
+                      </Button>
                     ) : (
                       <div className="grid grid-cols-2 gap-4">
                         <Link href="/auth/login" onClick={() => setIsOpen(false)}>
@@ -270,11 +267,8 @@ export function Header() {
             </Sheet>
           </div>
 
-          <div className="flex items-center pl-2 md:pl-4 md:border-l border-slate-200">
-            <ThemeToggle />
-          </div>
         </div>
-      </header>
-    </div>
+      </header >
+    </div >
   )
 }
